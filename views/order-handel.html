@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    
+    <title>订单处理</title>
+
+    <link href="css/Global.css" rel="stylesheet" />
+    <link href="css/eleoooMobile.css" rel="stylesheet" />
+
+</head>
+<body>
+<header><a href="#" class="return"></a>订单处理</header>
+<div class="title-header2">
+    <img src="images/user.png" alt="" align="absmiddle">
+    <span>18665900149</span> 
+    <img src="images/clock.png" alt="" style="margin-left:20px;">
+    <span>00:01:09</span>
+</div>
+<div class="content">
+	<ul class="h_order">
+    	<li>
+            <h2>超值汉堡套餐(配冷饮一杯+薯片或曲奇)</h2>
+            <div class="menu_show"><span>香葱照烧鸡排套fdfdfdff餐</span><span>1份</span><span>70.00</span></div>
+            <div class="menu_down"><span>单价：70.00</span><span>调价：<input name="" type="text" class="input zq"></span><span><input name="" type="button" value="暂缺" class="red"></span></div>
+        </li>
+    	<li>
+            <h2>超值汉堡套餐(配冷饮一杯+薯片或曲奇)</h2>
+            <div class="menu_show"><span>香葱照烧鸡排套餐</span><span>1份</span><span>70.00</span></div>
+            <div class="menu_down"><span>单价：70.00</span><span>调价：<input name="" type="text" class="input zq"></span><span><input name="" type="button" value="暂缺" class="red"></span></div>
+        </li>
+    	<li>
+            <h2>超值汉堡套餐(配冷饮一杯+薯片或曲奇)</h2>
+            <div class="menu_show"><span>香葱照烧鸡排fdfdfd套餐</span><span>1份</span><span>70.00</span></div>
+            <div class="menu_down"><span>单价：70.00</span><span>调价：<input name="" type="text" class="input zq"></span><span><input name="" type="button" value="暂缺" class="red"></span></div>
+        </li>
+    	<li>
+            <h2>超值汉堡套餐(配冷饮一杯+薯片或曲奇)</h2>
+            <div class="menu_show"><span>香葱照烧鸡排套餐</span><span>1份</span><span>70.00</span></div>
+            <div class="menu_down"><span>单价：70.00</span><span>调价：<input name="" type="text" class="input zq"></span><span><input name="" type="button" value="暂缺" class="red"></span></div>
+        </li>
+    </ul>
+    <ul class="warm">
+    	<li>总计：<span class="price">95.00</span>　　其中送餐费 <span class="price">3.00</span> </li>
+    	<li>备注：汉堡包要微辣，带点番茄酱过来！ </li>
+    	<li>地址：电子科技大厦A座3199室 </li>
+        <li class="em_review">回复<em></em></li>
+    </ul>
+    <ul class="review">
+    	<li><a href="javascript:void(0)"><input name="" type="radio" value="">订单已经确认，餐厅开始备餐。</a></li>
+    	<li><a href="javascript:void(0)"><input name="" type="radio" value="">抱歉，XXX今天暂缺，请修改后重新下单。</a></li>
+    	<li><a href="javascript:void(0)"><input name="" type="radio" value="">经餐厅确认：XXX价格调整为XX元。</a></li>
+    	<li><a href="javascript:void(0)"><input name="" type="radio" value="">抱歉，当前暂不外送，请选择其他餐厅。</a></li>
+    	<li><a href="javascript:void(0)"><input name="" type="radio" value="">订单已取消。</a></li>
+        <li><input type="button" class="btn green" value="回复" /></li>
+    </ul>
+</div>
+    <footer>
+    	<a href="#" class="nav_on"><span class="order">订单</span></a>
+    	<a href="#"><span class="menu">菜单</span></a>
+    	<a href="#"><span class="sale">促销</span> </a>
+    	<a href="#"><span class="service">客服 </span></a>
+    	<a href="#"><span class="finance">财务</span></a>
+    </footer>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script type="text/ecmascript">
+	$(function(){
+			$(".em_review").click(function(){
+				$(".review").show();
+				})
+		})
+</script>
+</body>
+</html>

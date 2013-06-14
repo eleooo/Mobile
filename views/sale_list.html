@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    
+    <title>促销列表</title>
+
+    <link href="css/Global.css" rel="stylesheet" />
+    <link href="css/eleoooMobile.css" rel="stylesheet" />
+
+</head>
+<body>
+    <header>
+    <a href="#" class="return"></a>
+    促销列表
+    </header>
+    <div class="deal_link">
+    	<a href="#">已审核</a>
+    	<a href="#">待审核</a>
+    </div>
+    <div class="title-header">
+    	<div class="mall_cate">默认<em></em></div>
+        <div class="th-int">
+        2013-03-18 至 2013-03-18 
+     </div>
+     </div>
+    <div class="content">
+      <ul class="slist">
+        <li>
+        	<p class="ps1"><a href="#">NO.02</a>2013-03-012 至 2013-03-18</p>
+            <p class="ps2">铁板牛肉饭套餐+配茶树菇老鸭汤 </p>
+            <p class="ps3">
+            <span class="t_red">待审核</span>
+            <span class="ps_right">
+                <input name="" type="button" value="修改" class="yellow">
+                <input name="" type="button" value="删除" class="red">
+            </span> 
+            </p>
+         </li>
+        <li>
+        	<p class="ps1"><a href="#">NO.03</a>2013-03-012 至 2013-03-18</p>
+            <p class="ps2">铁板牛肉饭套餐+配茶树菇老鸭汤 </p>
+            <p class="ps3">
+            <span class="t_red">待审核</span>
+            <span class="ps_right">
+                <input name="" type="button" value="修改" class="yellow">
+                <input name="" type="button" value="删除" class="red">
+            </span> 
+            </p>
+         </li>
+        <li>
+        	<p class="ps1"><a href="#">NO.01</a>2013-03-012 至 2013-03-18</p>
+            <p class="ps2">铁板牛肉饭套餐+配茶树菇老鸭汤 </p>
+            <p class="ps3">
+            <span class="t_green">已审核</span>
+            <span class="ps_right">
+                <input name="" type="button" value="修改" class="yellow">
+                <input name="" type="button" value="查看" class="green">
+            </span> 
+            </p>
+         </li>
+      </ul>
+</div>
+    <footer>
+    	<a href="#"><span class="order">订单</span></a>
+    	<a href="#"><span class="menu">菜单</span></a>
+    	<a href="#"><span class="sale">促销</span> </a>
+    	<a href="#"><span class="service">客服 </span></a>
+    	<a href="#" class="nav_on"><span class="finance">财务</span></a>
+    </footer>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script type="text/ecmascript">
+	$(function(){
+			$(".mall_cate").click(function(){
+				$(this).toggleClass("mall_on");
+				$(".deal_link").toggle();
+				})
+		})
+</script>
+</body>
+</html>

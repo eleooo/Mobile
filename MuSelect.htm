@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mulit select test</title>
+    <link href="MuSelect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <script src="src/lib/jquery/jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="MuSelect/js/jquery.multi-select.js" type="text/javascript"></script>
+</head>
+<body>
+<select id="slMenus" multiple="multiple" >
+    <optgroup label="Group 1" >
+        <option label="val1" value="g1val1" data-price='1.00'>val1</option>
+        <option label="val2" value="g1val2" data-price='12.00'>val2</option>
+        <option label="val3" value="g1val3" data-price='11.00'>val3</option>
+        <option label="val4" value="g1val4" data-price='12.10'>val4</option>
+        <option label="val5" value="g1val5" data-price='13.20'>val5</option>
+    </optgroup>
+    <optgroup label="Group 2">
+        <option label="val1" value="g2val1" data-price='2.00'>val1</option>
+        <option label="val2" value="g2val2" data-price='31.00'>val2</option>
+        <option label="val3" value="g2val3" data-price='41.00'>val3</option>
+        <option label="val4" value="g2val4" data-price='51.00'>val4</option>
+        <option label="val5" value="g2val5" data-price='25.00'>val5</option>
+    </optgroup>
+        <optgroup label="Group 3">
+        <option label="g3val1" value="g3val1" data-price='1.00'>val1</option>
+        <option label="g3val2" value="g3val2" data-price='1.00'>val2</option>
+        <option label="g3val3" value="g3val3" data-price='1.00'>val3</option>
+        <option label="g3val4" value="g3val4" data-price='1.00'>val4</option>
+        <option label="g3val5" value="g3val5" data-price='1.00'>val5</option>
+    </optgroup>
+</select>
+    <script type="text/javascript">
+        $(function () {
+            $("#slMenus").multiSelect();
+        });
+        var onOk = function () {
+            
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿<header><a href="javascript:app.closeDlg();" class="return"></a>订单处理</header>
+<div class="title-header2">
+    <img src="images/user.png" alt="" align="absmiddle" />
+    <span>{{=it.memberphonenumber}}</span>
+    <img src="images/clock.png" alt="" style="margin-left: 20px;" />
+    <span>{{=it.timespan}}</span>
+</div>
+<div class="content">
+    <ul class="h_order">
+{{for(var i = 0;i<it.details.length;i++){}}
+{{var item = it.details[i];}}
+        <li>
+            <h2>
+                {{=item.dir}}</h2>
+            <div class="menu_show">
+                <span>{{=item.menu}}</span><span>{{=item.amount}}份</span><span>{{=item.sum}}</span></div>
+            <div class="menu_down">
+                <span>单价：{{=item.price}}</span><span>调价：<input type="text" class="input zq" onchange="app.OrderHandle.changePrice(this)" data-id="{{=item.id}}" data-price="{{=item.price}}" /></span><span>
+                <input type="button" value="暂缺" class="green" tap="outOfStock" data-id="{{=item.id}}" /></span></div>
+        </li>
+{{}}}
+    </ul>
+    <ul class="warm">
+        <li>总计：<span class="price">{{=it.sum}}</span> 其中送餐费 <span class="price">{{=it.servicesum}}</span> </li>
+        <li>备注：{{=it.memo}} </li>
+        <li>地址：{{=it.address}} </li>
+        <li class="em_review" tap="toggleReview">回复<em></em></li>
+    </ul>
+    <ul class="review" id="reviewContainer">
+        <li><a href="javascript:void(0)" tap="selectMsn">
+            <input name="msnType" type="radio" value="0" checked="checked" /><span>订单已经确认，餐厅开始备餐。</span></a></li>
+        <li><a href="javascript:void(0)" tap="selectMsn">
+            <input name="msnType" type="radio" value="1" /><span>抱歉，XXX今天暂缺，请修改后重新下单。</span></a></li>
+        <li><a href="javascript:void(0)" tap="selectMsn">
+            <input name="msnType" type="radio" value="2" /><span>经餐厅确认：XXX价格调整为XX元。</span></a></li>
+        <li><a href="javascript:void(0)" tap="selectMsn">
+            <input name="msnType" type="radio" value="3" /><span>抱歉，当前暂不外送，请选择其他餐厅。</span></a></li>
+        <li><a href="javascript:void(0)" tap="selectMsn">
+            <input name="msnType" type="radio" value="4" /><span>订单已取消。</span></a></li>
+        <li>
+            <input type="button" class="btn green" value="回复" id="btnReview" tap="confirmOrder" /></li>
+    </ul>
+</div>
