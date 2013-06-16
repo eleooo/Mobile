@@ -4,7 +4,6 @@ var fileArray = [
 "../lib/jquery/jquery.mobile.js",
 //"../lib/mobiscroll-2.5.4/mobiscroll.custom-2.5.4.min.js",
 "../lib/Common.js",
-"../lib/Database.js",
 "../DataStorage.js",
 "../EleoooWrapper.js",
 "../Application.js"];

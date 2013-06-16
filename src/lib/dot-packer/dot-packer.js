@@ -38,10 +38,8 @@ function dotpacker(viewDir, outputFileName, ns, def) {
     }
 
     function ucfirst(str) {
-        var str = str.toLowerCase();
-        str = str.replace(/\b\w+\b/g, function (word) {
-            return word.substring(0, 1).toUpperCase() + word.substring(1);
-        });
+        var s = str.charAt(0);
+        str = str.replace(s, s.toUpperCase());
         return str;
     }
 

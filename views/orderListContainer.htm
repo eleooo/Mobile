@@ -1,5 +1,0 @@
-﻿{{for(var i=0;i<it.orders.length;i++{}}
-{{var item = it.orders[i],status = app.OrderList.calcItemInfo(item,it);}}
-<li status="{{=status.status}}"><span><img src="images/user.png" alt="" align="absmiddle"></span><span orderid="{{=item.ID}}" tap="showTempView">{{=item.MemberPhoneNumber}}<u>NO.{{=item.OrderNum}}</u></span><span
-        class="pRight"><input name="" type="button" class="dr_btn red" value="{{=status.text}}" tap="showHandleView" orderid="{{=item.ID}}" /></span></li>
-{{}}}

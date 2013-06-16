@@ -1,4 +1,5 @@
-﻿; (function () {
+﻿/// <reference path="jquery/jquery-1.7.js" />
+(function () {
     Date.prototype.format = function (formatStr) {
         var str = formatStr;
         if (!formatStr) {
@@ -88,3 +89,19 @@
         a.splice(b, 1);
     };
 })(window);
+(function($, window, document, undefined) {
+    var $window = $(window);
+    $.fn.lazyload = function(options) {
+        var elements = this;
+        var settings = {load : null};
+        var isTap = false;
+        $.extend(settings, options);
+        $(window).bind("scrollstop",function(){
+            if(!isTap && settings.load && $(window).scrollTop() == ($(document).height() - $(window).height())){
+                settings.load();
+            }
+        });
+        
+        return this;
+    };
+})(jQuery, window, document);

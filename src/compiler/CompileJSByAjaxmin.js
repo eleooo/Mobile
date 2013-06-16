@@ -5,7 +5,6 @@ var fileArray = [
 "../lib/mobiscroll-2.5.4/mobiscroll.custom-2.5.4.min.js",
 "../lib/Common.js",
 "../DataStorage.js",
-"../lib/Database.js",
 "../EleoooWrapper.js",
 "../Application.js"];
 //read all view presenter 

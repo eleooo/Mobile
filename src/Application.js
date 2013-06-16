@@ -8,13 +8,12 @@
         var dlgContainer;
         var _def;
         var presenter = {};
-        var isSynDataStarted = false;
         var currentView = false;
         var footer = false;
         var orderListViewName = "OrderList";
         var _orderId;
         var oldViewName = false;
-        var oldViewHtml = false;
+        //var oldViewHtml = false;
         var voice = false;
         var isCordova = false;
         p.init = function (def) {
@@ -27,12 +26,11 @@
         }
         function initPresenter(view) {
             if (!$.isPlainObject(presenter[view])) {
-                presenter[view] = eval("new _" + view + "()");
+                presenter[view] = eval("new $_" + view + "()");
                 p[view] = presenter[view];
             }
         }
         function ready() {
-            p.logInfo("application is ready.");
             container = $("#mainContainer").tap(touchTap);
             dlgContainer = $("#dlgContainer").tap(touchTap);
             (footer = $("#footer")).find("a").tap(function () {
@@ -42,60 +40,67 @@
                 else {
                     $(".nav_on", footer).removeClass("nav_on");
                     nav.addClass("nav_on");
-                    if (nav.attr("view"))
-                        showView(nav.attr("view"));
+                    var view = nav.attr("view");
+                    if (view) {
+                        var s = view.charAt(0);
+                        view = view.replace(s, s.toUpperCase());
+                        showView(view);
+                    }
                 }
             });
             if (DataStorage.IsAutoLogin())
-                p.showOrderListView();
+                footer.find("a[view='orderList']").tap();
             else
                 p.showLoginView();
         }
         function showView(view) {
+            $(window).unbind("scrollstop");
             initPresenter(view);
             if ($.isFunction(VT[view])) {
                 if (presenter[view] && $.isFunction(presenter[view].renderView)) {
                     presenter[view].renderView(function (viewData) {
                         oldViewName = currentView;
-                        oldViewHtml = isDlgView(oldViewName) ? dlgContainer.html() : container.html();
                         currentView = view;
+                        if (oldViewName) {
+                            if ($.isFunction(presenter[oldViewName].onClose)) { presenter[oldViewName].onClose(); }
+                            presenter[oldViewName]["visible"] = false;
+                        }
                         (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](viewData)).show();
+                        presenter[view]["visible"] = true;
                         if (presenter[view] && $.isFunction(presenter[view].onLoad))
                             presenter[view].onLoad(false);
                     });
                 }
                 else {
                     oldViewName = currentView;
-                    oldViewHtml = container.html();
+                    if (oldViewName) {
+                        if ($.isFunction(presenter[oldViewName].onClose)) { presenter[oldViewName].onClose(); }
+                        presenter[oldViewName]["visible"] = false;
+                    }
                     (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](undefined)).show();
                     currentView = view;
+                    presenter[view]["visible"] = true;
                     if (presenter[view] && $.isFunction(presenter[view].onLoad))
                         presenter[view].onLoad(false);
                 }
             }
         }
-        function prcessSynOrderResult(result) {
-            presenter[orderListViewName].saveSynResult(result, function () {
-                if (currentView == orderListViewName && result.data.orders.length > 0) {
-                    presenter[orderListViewName].refreshOrderList();
-                }
-                setTimeout(function () {
-                    EleoooWrapper.SynOrderData(prcessSynOrderResult);
-                }, 3000);
-            });
-        }
-        function beginSynOrderData() {
-            if (isSynDataStarted)
-                return;
-            DataStorage.initStorage(undefined);
-            EleoooWrapper.SynOrderData(prcessSynOrderResult);
-            isSynDataStarted = true;
+        function getObject(type) {
+            if (type.indexOf('.') == -1) {
+                return presenter[currentView][type];
+            } else {
+                return eval(type);
+            }
         }
         function touchTap(event) {
-            app.trace("tapping...");
+            //app.trace("tapping...");
             var tar = $(event.target);
-            if (tar.attr("id") != container.attr("id") && tar.attr(event.type) && $.isFunction(presenter[currentView][tar.attr(event.type)])) {
-                presenter[currentView][tar.attr(event.type)].call(tar, event);
+            var fnName = tar.attr(event.type);
+            if (tar.attr("id") != container.attr("id") && fnName) {
+                var fn = getObject(fnName);
+                if ($.isFunction(fn)) {
+                    fn.call(tar, tar, event);
+                }
             }
         }
         function isDlgView(viewName) {
@@ -110,18 +115,27 @@
         }
 
         p.closeDlg = function () {
-            if (oldViewHtml && oldViewName) {
-                dlgContainer.hide();
-                container.show();
+            if (oldViewName) {
+                presenter[oldViewName]["visible"] = true;
+                if ($.isFunction(presenter[currentView].onClose))
+                    presenter[currentView].onClose();
+                presenter[currentView]["visible"] = false;
                 if ($.isFunction(presenter[oldViewName].onLoad))
                     presenter[oldViewName].onLoad(true);
-                footer.show();
+                oldViewName = currentView;
+            } else {
+                oldViewName = currentView;
+                presenter[oldViewName]["visible"] = false;
             }
+            container.show();
+            footer.show();
             if (voice) {
                 voice.stop();
                 voice.release();
                 voice = null;
             }
+            dlgContainer.hide();
+            dlgContainer.html("");
         }
         p.showLoginView = function () {
             showView("Login");
@@ -134,34 +148,44 @@
         }
         p.showOrderListView = function () {
             showView(orderListViewName);
-            beginSynOrderData();
         }
         p.showDetailView = function () {
             showView("Detail");
+            return false;
         }
         p.showMenuView = function () {
             showView("Menu");
+            return false;
         }
         p.showHallView = function () {
             showView("Hall");
+            return false;
         }
         p.showReviewView = function () {
             showView("Review");
+            return false;
         }
         p.showRushView = function () {
             showView("Rush");
+            return false;
         }
         p.showRushRecordView = function () {
             showView("RushRecord");
+            return false;
         }
         p.showSaleView = function () {
             showView("Sale");
+            return false;
         }
         p.showSaleListView = function () {
             showView("SaleList");
+            return false;
         }
         p.showTempView = function () {
             showView("Temp");
+            return false;
+        }
+        p.logout = function () {
         }
         p.logInfo = function (message) {
             console.log(message);
@@ -174,12 +198,15 @@
         }
         p.bindDateSelector = function (txtBox) {
             $("#" + txtBox).scroller("destroy").scroller({
+                preset: "date",
                 theme: 'android',
                 mode: 'scroller',
                 display: 'modal',
-                lang: 'zh'
+                lang: 'zh',
+                dateFormat: 'yy-mm-dd'
             });
         }
+
         p.play = function (url) {
             if (voice) {
                 voice.stop();

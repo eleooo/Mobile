@@ -1,12 +1,13 @@
 ﻿<header class="leftHeader">
-    <div class="search"><input class="input s_input" type="text" value="输入会员账号搜索" id="txtUserPhone"/></div>
+    <div class="search"><input class="input s_input" type="text" value="" defVal="输入会员账号搜索" id="txtOrderListUserPhone"/></div>
     订单记录
     </header>
 <div class="title-header">
     <div class="th-int">
-        <input type="text" value="{{=it.beginDate}}" id="txtBeginDate" />
+        <input type="text" value="{{=it.beginDate}}" id="txtOrderListBeginDate" />
         至
-        <input type="text" value="{{=it.endDate}}" id="txtEndDate" />
+        <input type="text" value="{{=it.endDate}}" id="txtOrderListEndDate" />
+        <input type="button" value="确定" tap="showOrderList" />
     </div>
 </div>
 <div class="content" style="padding-bottom: 120px;">
@@ -14,12 +15,12 @@
     </ul>
     <div class="state">
         <div class="s1" id="s1">
-            <a href="javascript:void(0)" status="inProgress"><i class="i_red">0</i>待处理</a> <a href="javascript:void(0)" status="modified">
+            <a href="javascript:void(0)" status="inprogress"><i class="i_red">0</i>待处理</a> <a href="javascript:void(0)" status="modified">
                 <i class="i_yellow">0</i>已修改</a> <a href="javascript:void(0)" status="urge"><i class="i_red">0</i>催餐中</a>
             <a href="javascript:void(0)" status="canceled"><i class="i_yellow">0</i>已取消</a> <a href="javascript:void(0)" status="all">全部</a>
         </div>
         <div class="s2" id="s2">
-            总计<i status="sumOk">0.00</i> 现金<i status="sum">0.00</i> 储值<i status="sumCash">0.00</i> 积分<i status="sumPoint">0.00</i> <span>返回</span>
+            总计<i status="sumok">0.00</i> 现金<i status="sum">0.00</i> 储值<i status="sumcash">0.00</i> 积分<i status="sumpoint">0.00</i> <span>返回</span>
         </div>
     </div>
 </div>

@@ -5,7 +5,7 @@
 //Login success result:{code:0,message:'success',data{ UserID:0,UserPhone:'',WebAuthKey:'',CompanyID:0 }}
 //Version success result:{code:0,data:'1.0.0'}
 //SendPassword post {phone:''} success {code:0,message:''}
-//SynOrderData success {code:0,orders[{},{}]}
+//GetOrders success {code:0,orders[{},{}]}
 //GetOrderTemps post data: {orderId:0} , result data:{code:0,message:'',data:{memberphonenumber:'',timespan:'',temps:[]}}
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
@@ -16,10 +16,13 @@
             Login: iniAPI('App', false, 'Login'),
             SendPassword: iniAPI('App', false, 'SendPassword'),
             Version: iniAPI('App', false, 'Version'),
-            SynOrderData: iniAPI('Order', true, 'SynOrderData'),
-            GetOrderDetail: iniAPI('Order', true, 'GetOrderDetail'),
-            GetOrderTemps: iniAPI('Order', true, 'GetOrderTemps'),
-            SendOrderTemps: iniAPI('Order', true, 'SendOrderTemps')
+            GetOrders: iniAPI('OrderMeal', true, 'GetOrders'),
+            GetOrderDetail: iniAPI('OrderMeal', true, 'GetOrderDetail'),
+            GetOrderTemps: iniAPI('OrderMeal', true, 'GetOrderTemps'),
+            SendOrderTemps: iniAPI('OrderMeal', true, 'SendOrderTemps'),
+            ConfirmOrder: iniAPI('OrderMeal', true, 'ConfirmOrder'),
+            FacebookQuery: iniAPI('FaceBook', true, 'QueryM'),
+            ReplyFacebook: iniAPI('FaceBook', true, 'Add')
         };
         function iniAPI(name, isAuth, action) {
             action = action || "Query";
@@ -34,14 +37,13 @@
                 return;
             }
             if (api.isAuth) {
-                data["eleoooAuth"] = DataStorage.WebAuthKey();
+                data["eleMobileAuth"] = DataStorage.WebAuthKey();
             }
             var url = getAPI(api);
             if (xhrs[url]) {
-                xhrs[url].abort();
-                app.trace("abort calling...");
+                return;
             }
-            var xhr = $.ajax({
+            $.ajax({
                 url: url,
                 data: data,
                 dataType: "jsonp",
@@ -51,7 +53,7 @@
                     app.trace("complete calling...");
                 }
             });
-            xhrs[url] = xhr;
+            xhrs[url] = true;
         }
         return {
             Login: function (phoneNum, pwd, fnCallback) {
@@ -72,21 +74,20 @@
             SendPassword: function (phoneNum, fnCallback) {
                 execute(WebAPI.SendPassword, { userPhone: phoneNum }, fnCallback);
             },
-            SynOrderData: function (fnCallback) {
-                var data = {
-                    UserID: DataStorage.UserID(),
-                    CompanyID: DataStorage.CompanyID(),
-                    LatestUpdateOn: DataStorage.LatestUpdateOn(),
-                    supportDatabase: DataStorage.supportDatabase(),
-                    dtBegin: app.OrderList.getBeginDate(),
-                    dtEnd: app.OrderList.getEndDate(),
-                    phone: app.OrderList.getPhone()
-                };
-
-                execute(WebAPI.SynOrderData, data, fnCallback);
+            GetOrders: function (data, fnCallback) {
+                execute(WebAPI.GetOrders, data, fnCallback);
             },
             OrderDetail: function (orderId, fnCallback) {
                 execute(WebAPI.OrderDetail, { orderId: orderId }, fnCallback);
+            },
+            ConfirmOrder: function (data, fnCallback) {
+                execute(WebAPI.ConfirmOrder, data, fnCallback);
+            },
+            FacebookQuery: function (data, fnCallback) {
+                execute(WebAPI.FacebookQuery, data, fnCallback);
+            },
+            ReplyFacebook: function (data, fnCallback) {
+                execute(WebAPI.ReplyFacebook, data, fnCallback);
             },
             getUrl: function (name) {
                 var api = WebAPI[name];

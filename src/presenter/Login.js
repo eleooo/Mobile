@@ -23,8 +23,8 @@
         }
         p.isDlgView = true;
         p.onLoad = function (isReturn) {
-            txtUserPhone = $("#cbSavePwd");
-            txtUserPwd = $("#txtUserPwd");
+            txtUserPhone = $("#txtLoginUserPhone");
+            txtUserPwd = $("#txtLoginUserPwd");
             cbAutoLogin = $("#cbAutoLogin");
             cbSavePwd = $("#cbSavePwd");
             if (DataStorage.IsSavePwd()) {
@@ -53,7 +53,10 @@
                         DataStorage.IsSavePwd(true);
                     if (cbAutoLogin.attr("checked"))
                         DataStorage.IsAutoLogin(true);
+                    app.closeDlg();
                     app.showOrderListView();
+                } else {
+                    app.logError(result.message);
                 }
             });
         }
@@ -81,5 +84,5 @@
             $('#sendPwd').toggle();
         }
     }
-    window._Login = _Login;
+    window.$_Login = _Login;
 })(window);

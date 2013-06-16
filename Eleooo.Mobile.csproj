@@ -78,6 +78,8 @@
     <Content Include="src\lib\jquery\jquery.mobile.js" />
     <Content Include="src\lib\jquery\jquery.mobile.min.js" />
     <Content Include="MuSelect.htm" />
+    <Content Include="src\presenter\Hall.js" />
+    <Content Include="src\presenter\Review.js" />
     <Content Include="test.html" />
     <Content Include="src\Application.js" />
     <Content Include="src\DataStorage.js" />
@@ -204,7 +206,6 @@
     <Content Include="src\lib\dot-packer\node_modules\uglify-js\tmp\instrument.js" />
     <Content Include="src\lib\dot-packer\node_modules\uglify-js\tmp\test.js" />
     <Content Include="src\lib\dot-packer\node_modules\uglify-js\uglify-js.js" />
-    <Content Include="src\lib\Database.js" />
     <Content Include="src\lib\ios\cordova.ios.js" />
     <Content Include="src\lib\mobiscroll-2.5.4\css\mobiscroll.custom-2.5.4.min.css" />
     <Content Include="src\lib\mobiscroll-2.5.4\css\wp_icons.png" />
@@ -213,7 +214,6 @@
     <Content Include="src\presenter\Login.js" />
     <Content Include="src\presenter\Order.js" />
     <Content Include="src\compiler\CompileView.js" />
-    <Content Include="scripts\Sql.sql" />
     <Content Include="views\balance.html" />
     <Content Include="css\eleoooMobile.css" />
     <Content Include="css\Global.css" />
@@ -233,14 +233,14 @@
     <Content Include="views\menu.html" />
     <Content Include="views\orderHandle.html" />
     <Content Include="views\orderList.html" />
-    <Content Include="views\orderListContainer.htm" />
+    <Content Include="views\orderListContainer.html" />
     <Content Include="views\review.html" />
     <Content Include="views\rush.html" />
     <Content Include="views\rushRecord.html" />
     <Content Include="views\sale.html" />
     <Content Include="views\saleList.html" />
     <Content Include="views\temp.html" />
-    <Content Include="views\tempContainer.htm" />
+    <Content Include="views\tempContainer.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -248,18 +248,10 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="WebForm1.aspx" />
     <Content Include="XMLFile1.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
