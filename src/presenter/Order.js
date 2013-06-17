@@ -119,8 +119,13 @@
                     calcItemInfo(el, sumInfo);
                 });
             } else {
-                $("li", container).hide().find("[status='" + status + "']").show().each(function (i, el) {
-                    calcItemInfo(el, sumInfo);
+                container.find("li").each(function (i, el) {
+                    if (el.getAttribute("status") == status) {
+                        el.style.display = "list-item";
+                        calcItemInfo(el, sumInfo);
+                    }
+                    else
+                        el.style.display = "none";
                 });
             }
             setSummaryInfo(sumInfo);

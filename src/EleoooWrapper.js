@@ -10,7 +10,8 @@
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
     var _EleoooWrapper = function () {
-        var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
+        //var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
+        var servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
         var xhrs = {};
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
@@ -22,7 +23,9 @@
             SendOrderTemps: iniAPI('OrderMeal', true, 'SendOrderTemps'),
             ConfirmOrder: iniAPI('OrderMeal', true, 'ConfirmOrder'),
             FacebookQuery: iniAPI('FaceBook', true, 'QueryM'),
-            ReplyFacebook: iniAPI('FaceBook', true, 'Add')
+            ReplyFacebook: iniAPI('FaceBook', true, 'Add'),
+            GetMyInfo: iniAPI('User', true, 'Query'),
+            SaveMyInfo: iniAPI('User', true, 'Edit')
         };
         function iniAPI(name, isAuth, action) {
             action = action || "Query";
@@ -36,6 +39,7 @@
                 fnCallback({ code: -1, message: 'No network connect.' });
                 return;
             }
+            data = data || {};
             if (api.isAuth) {
                 data["__t"] = DataStorage.WebAuthKey();
             }
@@ -87,6 +91,12 @@
             },
             ReplyFacebook: function (data, fnCallback) {
                 execute(WebAPI.ReplyFacebook, data, fnCallback);
+            },
+            GetMyInfo: function (fnCallback) {
+                execute(WebAPI.GetMyInfo, null, fnCallback);
+            },
+            SaveMyInfo: function (data, fnCallback) {
+                execute(WebAPI.SaveMyInfo, data, fnCallback);
             },
             getUrl: function (name) {
                 var api = WebAPI[name];

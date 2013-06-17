@@ -122,7 +122,9 @@
                 presenter[currentView]["visible"] = false;
                 if ($.isFunction(presenter[oldViewName].onLoad))
                     presenter[oldViewName].onLoad(true);
-                oldViewName = currentView;
+                var v = currentView;
+                currentView = oldViewName;
+                oldViewName = v;
             } else {
                 oldViewName = currentView;
                 presenter[oldViewName]["visible"] = false;
@@ -186,6 +188,7 @@
             return false;
         }
         p.logout = function () {
+            p.showLoginView();
         }
         p.logInfo = function (message) {
             console.log(message);
