@@ -3,17 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eleooo.Mobile", "Eleooo.Mobile.csproj", "{0E9CC310-F9CB-4BFC-ABD4-296C3A0EE40E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{185074A7-7A9D-48D3-808D-D2BC20B849A9}"
-	ProjectSection(SolutionItems) = preProject
-		Library\Eleooo.BLL.dll = Library\Eleooo.BLL.dll
-		Library\Eleooo.Common.dll = Library\Eleooo.Common.dll
-		Library\Eleooo.DAL.dll = Library\Eleooo.DAL.dll
-		Library\Eleooo.Web.dll = Library\Eleooo.Web.dll
-		Library\ICSharpCode.SharpZipLib.dll = Library\ICSharpCode.SharpZipLib.dll
-		Library\Newtonsoft.Json.dll = Library\Newtonsoft.Json.dll
-		Library\SubSonic.dll = Library\SubSonic.dll
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

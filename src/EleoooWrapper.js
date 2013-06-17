@@ -9,7 +9,7 @@
 //GetOrderTemps post data: {orderId:0} , result data:{code:0,message:'',data:{memberphonenumber:'',timespan:'',temps:[]}}
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
-    var EleoooWrapper = function () {
+    var _EleoooWrapper = function () {
         var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
         var xhrs = {};
         var WebAPI = {
@@ -37,7 +37,7 @@
                 return;
             }
             if (api.isAuth) {
-                data["eleMobileAuth"] = DataStorage.WebAuthKey();
+                data["__t"] = DataStorage.WebAuthKey();
             }
             var url = getAPI(api);
             if (xhrs[url]) {
@@ -57,13 +57,12 @@
         }
         return {
             Login: function (phoneNum, pwd, fnCallback) {
-                execute(WebAPI.Login, { userPhone: phoneNum, userPwd: pwd }, function (result) {
+                execute(WebAPI.Login, { u: phoneNum, p: pwd, s: 2 }, function (result) {
                     if (result.code == 0) {
-                        DataStorage.CompanyID(result.data.CompanyID);
-                        DataStorage.UserID(result.data.UserID);
-                        DataStorage.UserPhone(result.data.UserPhone);
-                        DataStorage.WebAuthKey(result.data.WebAuthKey);
-
+                        DataStorage.CompanyID(result.data.c);
+                        DataStorage.UserID(result.data.id);
+                        DataStorage.UserPhone(result.data.p);
+                        DataStorage.WebAuthKey(result.data.t);
                     }
                     fnCallback(result);
                 });
@@ -104,5 +103,5 @@
             }
         };
     }
-    window.EleoooWrapper = new EleoooWrapper();
+    window.EleoooWrapper = new _EleoooWrapper();
 })();

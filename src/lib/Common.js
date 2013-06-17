@@ -22,9 +22,14 @@
         str = str.replace(/s|S/g, this.getSeconds());
 
         str = str.replace(/iii/g, this.getMilliseconds() < 10 ? '00' + this.getMilliseconds() : (this.getMilliseconds() < 100 ? '0' + this.getMilliseconds() : this.getMilliseconds()));
-
+        
         return str;
     };
+    Number.prototype.round = function (v) {
+        var vv = Math.pow(10, v);
+        var num = this;
+        return (Math.round(num * vv) / vv);
+    }
     String.prototype.endsWith = function (a) {
         return this.substr(this.length - a.length) === a;
     };
