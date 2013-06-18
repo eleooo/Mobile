@@ -224,6 +224,9 @@
                 voice.play();
             }
         }
+        p.isCordovaApp = function () {
+            return isCordova;
+        }
         p.hasNetwork = function () {
             if (!isCordova)
                 return true;

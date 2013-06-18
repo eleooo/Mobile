@@ -387,7 +387,7 @@
                 options.fileKey = "voice";
                 options.fileName = rfUrl;
                 options.mimeType = "media/mp3";
-                options.params = { id: app.currentOrderId(), message: message };
+                options.params = { id: app.currentOrderId(), m: message };
                 var ft = new FileTransfer();
                 ft.upload(imageURI, encodeURI(EleoooWrapper.getUrl("SendOrderTemps")), function (r) {
                     hasRf = false;
@@ -405,7 +405,7 @@
                 sendVoiceMessageCore(message);
             else
                 EleoooWrapper.callServices("SendOrderTemps", {
-                    message: message,
+                    m: message,
                     id: app.currentOrderId()
                 }, function (result) {
                     if (result.code < 0)
@@ -430,6 +430,10 @@
             }
         }
         function recordVoice(isTouchStarting) {
+            if (!app.isCordovaApp() && isTouchStarting) {
+                app.logError("暂不支持此操作.");
+                return;
+            }
             if (isTouchStarting) {
                 if (!rv) {
                     rv = new Media(rfUrl);
