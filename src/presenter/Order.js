@@ -1,4 +1,5 @@
-﻿/// <reference path="../../js/app.js" />
+﻿/// <reference path="../Application.js" />
+/// <reference path="../lib/Common.js" />
 
 (function () {
     var _OrderList = function () {
@@ -17,8 +18,8 @@
         var p = _OrderList.prototype;
         function getSumInfoObj() {
             var sumInfo = {
-                counter: { notstarted: 0, inprogress: 0, modified: 0, urge: 0, canceled: 0, completed: 0, all: 0 },
-                summary: { sum: 0, sumok: 0, sumcash: 0, sumpoint: 0 }
+                counter: { notstarted: numeral(0), inprogress: numeral(0), modified: numeral(0), urge: numeral(0), canceled: numeral(0), completed: numeral(0), all: numeral(0) },
+                summary: { sum: numeral(0), sumok: numeral(0), sumcash: numeral(0), sumpoint: numeral(0) }
             };
             return sumInfo;
         }
@@ -37,7 +38,7 @@
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
                 order["status"] = getOrderStatus(order);
-                item = $(VT["OrderListContainer"](order));
+                item = $(VT["OrderListItem"](order));
                 for (var o in order) {
                     if (o && o != "ID" && o != "status")
                         item.attr(o.toLowerCase(), order[o]);
@@ -57,6 +58,7 @@
             });
             container.append(items);
             setSummaryInfo(sumInfo);
+            delete sumInfo;
         }
         function getOrderStatus(item) {
             var status;
@@ -79,35 +81,22 @@
         }
         function setSummaryInfo(data) {
             for (var c in data.counter) {
-                $("a[status='" + c + "']", s1).find("i").text(data.counter[c]);
+                $("a[status='" + c + "']", s1).find("i").text(data.counter[c].format('0'));
             }
             for (var s in data.summary) {
-                var d = data.summary[s];
-                console.log(d);
-                $("i[status='" + s + "']", s2).text(d);
+                $("i[status='" + s + "']", s2).text(data.summary[s].format('0.00'));
             }
         }
         function calcItemInfo(item, data) {
-            //public enum OrderStatus
-            //{
-            //    Commonn = 1,
-            //    NotStart = 2,
-            //    Modified = 3,
-            //    InProgress = 4,
-            //    Canceled = 5,
-            //    Completed = 6,
-            //} 
-            //counter: { notStarted: 0, inProgress: 0, modified: 0, urge: 0, canceled: 0, completed: 0 },
-            //summary: { sum: 0, sumOk: 0, sumCash: 0, sumPoint: 0 },
             var status = item.getAttribute("status");
             if (data.counter[status] != undefined) {
-                data.counter[status] += 1;
+                data.counter[status].add(1);
             }
-            data.counter.all += 1;
-            data.summary.sum += (parseFloat(item.getAttribute("ordersum")) || 0);
-            data.summary.sumok += (parseFloat(item.getAttribute("ordersumok")) || 0);
-            data.summary.sumcash += (parseFloat(item.getAttribute("orderpaycash")) || 0);
-            data.summary.sumpoint += (parseFloat(item.getAttribute("orderpoint")) || 0);
+            data.counter.all.add(1);
+            data.summary.sum.add(item.getAttribute("ordersum"));
+            data.summary.sumok.add(item.getAttribute("ordersumok"));
+            data.summary.sumcash.add(item.getAttribute("orderpaycash"));
+            data.summary.sumpoint.add(item.getAttribute("orderpoint"));
         }
         function filterOrderList() {
             var status = $(this).attr("status");
@@ -129,6 +118,7 @@
                 });
             }
             setSummaryInfo(sumInfo);
+            delete sumInfo;
         }
         function getOrders(isSyn, fn) {
             if (isLoading) {
@@ -232,19 +222,10 @@
         var orders = {}, _order = {};
         var p = _OrderHandle.prototype;
         var chgPriceLog = {}, outOfStockLog = {}, isProcess = false;
-        function __round(dec, num) {
-            var dd = 1;
-            var tempnum;
-            for (i = 0; i < num; i++) {
-                dd *= 10;
-            }
-            tempnum = dec * dd;
-            tempnum = Math.round(tempnum);
-            return tempnum / dd;
-        };
+
         function __calcOrderSum() {
             var order;
-            var sum = 0;
+            var sum = numeral(0);
             var itemSum = 0;
             var price;
             for (var o in orders) {
@@ -253,20 +234,22 @@
                 if (order.IsCompanyItem && itemSum == 0) {
                     itemSum = order.OrderSum;
                 }
-                sum += (order.IsCompanyItem ? order.OrderQty - 1 : order.OrderQty) * price;
+                sum.add((order.IsCompanyItem ? order.OrderQty - 1 : order.OrderQty) * price);
             }
-            _order.OrderSumOk = __round(sum + itemSum, 2);
+            _order.OrderSumOk = sum.add(itemSum).round(2);
+            delete sum;
         };
         function __appendChgPriceLog(menuId, order) {
             //XXXXX价格调整为XX元
             if (order) {
-                var NewPrice = order["NewPrice"];
-                if (NewPrice >= 0) {
-                    chgPriceLog[menuId] = order.MenuName + "价格调整为" + NewPrice + "元";
+                var NewPrice = numeral(order["NewPrice"]);
+                if (NewPrice.valueOf() >= 0) {
+                    chgPriceLog[menuId] = order.MenuName + "价格调整为" + NewPrice.format('0.00') + "元";
                 } else if (chgPriceLog[menuId])
                     delete chgPriceLog[menuId];
                 __calcOrderSum();
                 __refreshMsnMessage();
+                delete NewPrice;
             }
         }
         function __appendOutOfStockLog(menuId, order) {
@@ -285,8 +268,10 @@
             var cbMsnType = $('input:radio[value="1"]', reviewContainer).attr("data-message", "");
             var content = "";
             if (log1.length > 0) {
-                content = "经餐厅确认：" + log1.join("，") + "，您的订单总计为" + (_order.OrderSumOk + _order.ServiceSum) + "元。";
+                var sum = numeral(_order.OrderSumOk).add(_order.ServiceSum);
+                content = "经餐厅确认：" + log1.join("，") + "，您的订单总计为" + sum.format('0.00') + "元。";
                 cbMsnType.eq(1).attr("data-message", content).siblings("span").html(content);
+                delete sum;
             }
             if (log2.length > 0) {
                 content = "很抱歉，" + log2.join("，") + "今天暂缺，请修改后重新下单。";
@@ -315,7 +300,7 @@
             var NewPrice = parseFloat(el.val()) || 0;
             var order = orders[menuId];
             if (order) {
-                NewPrice = NewPrice < 0 ? 0 : NewPrice;
+                //NewPrice = NewPrice < 0 ? 0 : NewPrice;
                 order["NewPrice"] = NewPrice;
                 __appendChgPriceLog(menuId, order);
                 $('input:radio[value="1"]', reviewContainer).eq(1).attr("checked", true);
@@ -374,7 +359,7 @@
                 orderSessionVal: _order.orderSessionVal,
                 msnType: type,
                 message: message,
-                orders: JSON.stringify(Opts.orders)
+                orders: JSON.stringify(orders)
             };
             isProcess = true;
             EleoooWrapper.ConfirmOrder(args, function (result) {
@@ -392,7 +377,6 @@
 
     var _Temp = function () {
         var p = _Temp.prototype;
-        var temps = false;
         var tempContainer = false;
         var rv = false;
         var rfUrl = "voice.mp3";
@@ -403,11 +387,14 @@
                 options.fileKey = "voice";
                 options.fileName = rfUrl;
                 options.mimeType = "media/mp3";
-                options.params = { orderId: app.currentOrderId(), message: message };
+                options.params = { id: app.currentOrderId(), message: message };
                 var ft = new FileTransfer();
                 ft.upload(imageURI, encodeURI(EleoooWrapper.getUrl("SendOrderTemps")), function (r) {
                     hasRf = false;
-                    refreshTempsList(undefined);
+                    var result = JSON.parse(r.responseText);
+                    if (result.code > -1) {
+                        renderTempItem(result.data);
+                    }
                 }, function (error) {
                     app.logError(error.source);
                 }, options);
@@ -419,18 +406,28 @@
             else
                 EleoooWrapper.callServices("SendOrderTemps", {
                     message: message,
-                    orderId: app.currentOrderId()
+                    id: app.currentOrderId()
                 }, function (result) {
                     if (result.code < 0)
                         app.logError(result.message);
                     else {
                         hasRf = false;
-                        refreshTempsList(undefined);
+                        renderTempItem(result.data);
                     }
                 });
         }
+        function renderTempItem(item) {
+            var el = tempContainer.find("#" + item.id);
+            if (el.length > 0) {
+                el.replaceWith(VT["TempItem"](item));
+            } else {
+                tempContainer.appned(VT["TempItem"](item));
+            }
+        }
         function renderTempList(data) {
-            tempContainer.html(VT["TempContainer"](data));
+            for (var i = 0; i < data.length; i++) {
+                renderTempItem(data[i]);
+            }
         }
         function recordVoice(isTouchStarting) {
             if (isTouchStarting) {
@@ -445,15 +442,12 @@
                 rv = false;
             }
         }
-        function refreshTempsList(fnCallback) {
-            EleoooWrapper.callServices("GetOrderTemps", { orderId: app.currentOrderId() }, function (result) {
+        function getTempsList() {
+            EleoooWrapper.callServices("GetOrderTemps", { id: app.currentOrderId() }, function (result) {
                 if (result.code == 0) {
-                    if ($.isFunction(fnCallback)) {
-                        temps = result.data.temps;
-                        fnCallback(result.data);
-                    } else {
-                        renderTempList(result.data.temps);
-                    }
+                    renderTempList(result.data.temps);
+                    $("#phone").text(result.data.phone);
+                    $("#timespan").text(result.data.timespan);
                 }
             });
         }
@@ -461,12 +455,9 @@
         p.onLoad = function (isReturn) {
             tempContainer = $("#tempContainer");
             $("#recordVoice").bind("vmousedown", function () { recordVoice(true); })
-                         .bind("vmouseup", function () { recordVoice(false); });
+                             .bind("vmouseup", function () { recordVoice(false); });
             hasRf = false;
-            renderTempList(temps);
-        }
-        p.renderView = function (fnCallback) {
-            refreshTempsList(fnCallback);
+            getTempsList();
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));

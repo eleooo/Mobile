@@ -1,0 +1,20 @@
+﻿{{var item = it;}}
+{{if(it.type==1){}}
+<li class="guest" id="{{=it.id}}">
+    <time>{{=it.time}}</time>
+    <span>{{=(it.voice && (it.isplay === 0))?'<i></i>':''}}<em></em>
+    {{if(it.voice){}}
+        <img src="images/voice2.png" alt="" align="middle" tempid="{{=it.id}}" voice="{{=it.voice}}" tap="playVoice"/>
+    {{}}}
+    {{=it.desc}}</span>
+</li>
+{{}else{}}
+<li class="shop" id="{{=it.id}}">
+    <time>{{=it.time}}</time>
+    <span>{{=(it.voice && (it.isplay === 0))?'<i></i>':''}}<em></em>
+    {{if(it.voice){}}
+        <img src="images/voice2.png" alt="" align="middle" tempid="{{=it.id}}" voice="{{=it.voice}}" tap="playVoice"/>
+    {{}}}
+    {{=it.desc}}</span>
+</li>
+{{}}}

@@ -1,5 +1,8 @@
-﻿/// <reference path="../js/app.js" />
-/// <reference path="../js/templates.js" />
+﻿/// <reference path="../lib/jquery/jquery-1.7.js" />
+/// <reference path="../lib/jquery/jquery.mobile.js" />
+/// <reference path="../lib/Common.js" />
+/// <reference path="../DataStorage.js" />
+/// <reference path="../EleoooWrapper.js" />
 
 (function () {
     var Application = function () {
@@ -59,25 +62,25 @@
             if ($.isFunction(VT[view])) {
                 if (presenter[view] && $.isFunction(presenter[view].renderView)) {
                     presenter[view].renderView(function (viewData) {
-                        oldViewName = currentView;
-                        currentView = view;
-                        if (oldViewName) {
-                            if ($.isFunction(presenter[oldViewName].onClose)) { presenter[oldViewName].onClose(); }
-                            presenter[oldViewName]["visible"] = false;
+                        if (currentView) {
+                            if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
+                            presenter[currentView]["visible"] = false;
                         }
                         (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](viewData)).show();
                         presenter[view]["visible"] = true;
+                        oldViewName = currentView;
+                        currentView = view;
                         if (presenter[view] && $.isFunction(presenter[view].onLoad))
                             presenter[view].onLoad(false);
                     });
                 }
                 else {
-                    oldViewName = currentView;
-                    if (oldViewName) {
-                        if ($.isFunction(presenter[oldViewName].onClose)) { presenter[oldViewName].onClose(); }
-                        presenter[oldViewName]["visible"] = false;
+                    if (currentView) {
+                        if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
+                        presenter[currentView]["visible"] = false;
                     }
                     (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](undefined)).show();
+                    oldViewName = currentView;
                     currentView = view;
                     presenter[view]["visible"] = true;
                     if (presenter[view] && $.isFunction(presenter[view].onLoad))
@@ -118,7 +121,7 @@
             if (oldViewName) {
                 presenter[oldViewName]["visible"] = true;
                 if ($.isFunction(presenter[currentView].onClose))
-                    presenter[currentView].onClose();
+                    presenter[currentView].onClose(oldViewName);
                 presenter[currentView]["visible"] = false;
                 if ($.isFunction(presenter[oldViewName].onLoad))
                     presenter[oldViewName].onLoad(true);
@@ -138,6 +141,7 @@
             }
             dlgContainer.hide();
             dlgContainer.html("");
+            return false;
         }
         p.showLoginView = function () {
             showView("Login");
