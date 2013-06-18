@@ -107,8 +107,8 @@
             }
         }
         function isDlgView(viewName) {
-            var isDlgView = presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
-            return isDlgView;
+            var isDlg = presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
+            return isDlg;
         }
         p.currentOrderId = function (orderId) {
             if (orderId === undefined)
