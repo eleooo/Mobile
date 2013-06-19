@@ -464,8 +464,8 @@
         p.isDlgView = true;
         p.onLoad = function (isReturn) {
             tempContainer = $("#tempContainer");
-            $("#recordVoice").bind("vmousedown", function () { recordVoice(true); })
-                             .bind("vmouseup", function () { recordVoice(false); });
+            $("#recordVoice").bind("touchstart", function () { recordVoice(true); })
+                             .bind("touchend", function () { recordVoice(false); });
             hasRf = false;
             getTempsList();
         }
