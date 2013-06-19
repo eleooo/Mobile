@@ -1,5 +1,5 @@
 ﻿<header>
-    <a href="javascript:app.closeDlg();" class="return"></a>
+    <a href="javascript:void(0);" tap="app.closeDlg" class="return"></a>
     送餐进度
 </header>
 <div class="title-header2">
@@ -12,10 +12,10 @@
     <ul class="temp" id="tempContainer">
     </ul>
     <ul class="temp_review" id="temp_review">
-        <li><a href="javascript:void(0)">
-            <input name="" type="radio" value="您好，已经送出去了，很快就到^_^" tap="quickSend" />您好，已经送出去了，很快就到^_^</a></li>
-        <li><a href="javascript:void(0)">
-            <input name="" type="radio" value="您好，现在是高峰期，请耐心等一下^_^" tap="quickSend" />您好，现在是高峰期，请耐心等一下^_^</a></li>
+        <li><a href="javascript:void(0)" tap="quickSend">
+            <input name="" type="radio" />您好，已经送出去了，很快就到^_^</a></li>
+        <li><a href="javascript:void(0)" tap="quickSend">
+            <input name="" type="radio" />您好，现在是高峰期，请耐心等一下^_^</a></li>
     </ul>
     <div class="rw_footer">
         <a href="javascript:void(0)" id="key">

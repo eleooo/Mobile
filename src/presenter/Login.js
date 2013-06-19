@@ -23,8 +23,8 @@
         }
         p.isDlgView = true;
         p.onLoad = function (isReturn) {
-            txtUserPhone = $("#txtLoginUserPhone");
-            txtUserPwd = $("#txtLoginUserPwd");
+            txtUserPhone = $("#txtLoginUserPhone").val("13800100712");
+            txtUserPwd = $("#txtLoginUserPwd").val("123456");
             cbAutoLogin = $("#cbAutoLogin");
             cbSavePwd = $("#cbSavePwd");
             if (DataStorage.IsSavePwd()) {

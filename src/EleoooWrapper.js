@@ -10,8 +10,8 @@
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
     var _EleoooWrapper = function () {
-        //var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
-        var servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
+        var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
+        //var servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
         var xhrs = {};
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
@@ -45,6 +45,7 @@
             if (api.isAuth) {
                 data["__t"] = DataStorage.WebAuthKey();
             }
+            data["__"] = (new Date()).valueOf();
             var url = getAPI(api);
             if (xhrs[url]) {
                 return;
@@ -56,7 +57,10 @@
                 success: fnCallback,
                 complete: function () {
                     delete xhrs[url];
-                    app.trace("complete calling...");
+                    app.spinner(false);
+                },
+                beforeSend: function () {
+                    app.spinner(true);
                 }
             });
             xhrs[url] = true;
@@ -83,7 +87,7 @@
                 execute(WebAPI.GetOrders, data, fnCallback);
             },
             OrderDetail: function (orderId, fnCallback) {
-                execute(WebAPI.OrderDetail, { id: orderId }, fnCallback);
+                execute(WebAPI.GetOrderDetail, { id: orderId }, fnCallback);
             },
             ConfirmOrder: function (data, fnCallback) {
                 execute(WebAPI.ConfirmOrder, data, fnCallback);

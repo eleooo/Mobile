@@ -2,7 +2,7 @@
 /// <reference path="../DataStorage.js" />
 /// <reference path="../EleoooWrapper.js" />
 
-(function ($) {
+(function () {
     var _Hall = function () {
         var myInfo = {};
         var txtphone, txtWorkingTime, txtOnSetSum, p1, p2
@@ -87,4 +87,4 @@
         }
     }
     window.$_Hall = _Hall;
-})(jQuery);
+})(window);

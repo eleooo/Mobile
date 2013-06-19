@@ -94,14 +94,13 @@
         a.splice(b, 1);
     };
 })(window);
-(function($, window, document, undefined) {
-    var $window = $(window);
+(function(window,document) {
     $.fn.lazyload = function(options) {
         var elements = this;
         var settings = {load : null};
         var isTap = false;
         $.extend(settings, options);
-        $(window).bind("scrollstop",function(){
+        $(window).bind("scroll",function(){
             if(!isTap && settings.load && $(window).scrollTop() == ($(document).height() - $(window).height())){
                 settings.load();
             }
@@ -109,7 +108,7 @@
         
         return this;
     };
-})(jQuery, window, document);
+})(window, document);
 /*!
  * numeral.js
  * version : 1.4.9

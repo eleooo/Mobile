@@ -45,6 +45,7 @@ footer {
 	border-top: 1px solid #202023;
 	padding-top: 3px;
 }
+.spinner { padding: 7px 10px 6px 10px; position: fixed; bottom: 100px; z-index: 1000; background-color: Black; filter: alpha(opacity=10); opacity: 0.1; right: 20px; display: none; }
 .rw_footer {
 	background:url("../images/u_sprite_0325.png") left -412px;
 	position: fixed;
@@ -555,7 +556,6 @@ span.time {
 	height: 40px;
 	text-align: center;
 	cursor: pointer;
-	z-index: -10;
 }
 .mall_cate em,.em_review em {
 	border-width: 5px;
@@ -579,7 +579,7 @@ span.time {
 	border-color: rgb(255, 255, 255) transparent transparent;
 }
 .deal_link {
-	margin-top: 85px;
+	margin-top: 65px;
 	position: fixed;
 	width: 30%;
 	background: #323232;

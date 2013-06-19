@@ -47,28 +47,55 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\mobiscroll-2.5.4.full.min.css" />
+    <Content Include="Content\mobiscroll.android-2.5.4.css" />
+    <Content Include="Content\mobiscroll.android-ics-2.5.4.css" />
+    <Content Include="Content\mobiscroll.animation-2.5.4.css" />
+    <Content Include="Content\mobiscroll.core-2.5.4.css" />
+    <Content Include="Content\mobiscroll.ios-2.5.4.css" />
+    <Content Include="Content\mobiscroll.jqm-2.5.4.css" />
+    <Content Include="Content\mobiscroll.sense-ui-2.5.4.css" />
+    <Content Include="Content\mobiscroll.wp-2.5.4.css" />
+    <Content Include="Content\wp_icons.png" />
+    <Content Include="Content\wp_icons_light.png" />
     <Content Include="css\style.css" />
     <Content Include="dbTest.htm" />
     <Content Include="default.htm" />
-    <Content Include="images\ajax-loader.gif" />
+    <Content Include="images\spinner.gif" />
     <Content Include="images\key.png" />
     <Content Include="images\wp_icons.png" />
     <Content Include="index.htm" />
     <Content Include="js\app.js" />
     <Content Include="js\templates.js" />
+    <Content Include="js\zepto.js" />
     <Content Include="MuSelect\css\multi-select.css" />
     <Content Include="MuSelect\img\switch.png" />
     <Content Include="MuSelect\js\jquery.multi-select.js" />
     <Content Include="spinner.htm" />
-    <Content Include="src\compiler\CompileCSS.js" />
-    <Content Include="src\compiler\CompileJS.js" />
-    <Content Include="src\compiler\CompileJSByAjaxmin.js" />
+    <Content Include="src\build\BuildCSS.js" />
+    <Content Include="src\build\BuildJS.js" />
+    <Content Include="src\build\BuildJSByAjaxmin.js" />
+    <Content Include="src\build\BuildZepto.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />
     <Content Include="src\lib\jquery\jquery.mobile.js" />
     <Content Include="src\lib\jquery\jquery.mobile.min.js" />
     <Content Include="MuSelect.htm" />
+    <Content Include="src\lib\zepto\ajax.js" />
+    <Content Include="src\lib\zepto\assets.js" />
+    <Content Include="src\lib\zepto\data.js" />
+    <Content Include="src\lib\zepto\detect.js" />
+    <Content Include="src\lib\zepto\event.js" />
+    <Content Include="src\lib\zepto\form.js" />
+    <Content Include="src\lib\zepto\fx.js" />
+    <Content Include="src\lib\zepto\fx_methods.js" />
+    <Content Include="src\lib\zepto\gesture.js" />
+    <Content Include="src\lib\zepto\polyfill.js" />
+    <Content Include="src\lib\zepto\selector.js" />
+    <Content Include="src\lib\zepto\stack.js" />
+    <Content Include="src\lib\zepto\touch.js" />
+    <Content Include="src\lib\zepto\zepto.js" />
     <Content Include="views\menuItem.html" />
     <Content Include="src\presenter\Hall.js" />
     <Content Include="src\presenter\Menu.js" />
@@ -206,7 +233,7 @@
     <Content Include="src\lib\mobiscroll-2.5.4\mobiscroll.custom-2.5.4.min.js" />
     <Content Include="src\presenter\Login.js" />
     <Content Include="src\presenter\Order.js" />
-    <Content Include="src\compiler\CompileView.js" />
+    <Content Include="src\build\BuildView.js" />
     <Content Include="views\balance.html" />
     <Content Include="css\eleoooMobile.css" />
     <Content Include="css\Global.css" />
@@ -250,6 +277,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="src\lib\dot-packer\.npmignore" />
     <None Include="src\lib\dot-packer\node_modules\.bin\dottojs" />
     <None Include="src\lib\dot-packer\node_modules\.bin\dottojs.cmd" />

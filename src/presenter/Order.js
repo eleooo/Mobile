@@ -41,9 +41,9 @@
                 item = $(VT["OrderListItem"](order));
                 for (var o in order) {
                     if (o && o != "ID" && o != "status")
-                        item.attr(o.toLowerCase(), order[o]);
+                        item.attr("data-"+o.toLowerCase(), order[o]);
                 }
-                oldItem = container.find("#" + order.ID);
+                oldItem = container.find("#_" + order.ID);
                 if (oldItem.length == 0)
                     container.append(item);
                 else
@@ -54,7 +54,7 @@
                 calcItemInfo(el, sumInfo);
             });
             items.remove().sort(function (a, b) {
-                return parseInt(b.id) - parseInt(a.id);
+                return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
             });
             container.append(items);
             setSummaryInfo(sumInfo);
@@ -81,25 +81,25 @@
         }
         function setSummaryInfo(data) {
             for (var c in data.counter) {
-                $("a[status='" + c + "']", s1).find("i").text(data.counter[c].format('0'));
+                $("a[data-status='" + c + "']", s1).find("i").text(data.counter[c].format('0'));
             }
             for (var s in data.summary) {
-                $("i[status='" + s + "']", s2).text(data.summary[s].format('0.00'));
+                $("i[data-status='" + s + "']", s2).text(data.summary[s].format('0.00'));
             }
         }
         function calcItemInfo(item, data) {
-            var status = item.getAttribute("status");
+            var status = item.getAttribute("data-status");
             if (data.counter[status] != undefined) {
                 data.counter[status].add(1);
             }
             data.counter.all.add(1);
-            data.summary.sum.add(item.getAttribute("ordersum"));
-            data.summary.sumok.add(item.getAttribute("ordersumok"));
-            data.summary.sumcash.add(item.getAttribute("orderpaycash"));
-            data.summary.sumpoint.add(item.getAttribute("orderpoint"));
+            data.summary.sum.add(item.getAttribute("data-ordersum"));
+            data.summary.sumok.add(item.getAttribute("data-ordersumok"));
+            data.summary.sumcash.add(item.getAttribute("data-orderpaycash"));
+            data.summary.sumpoint.add(item.getAttribute("data-orderpoint"));
         }
         function filterOrderList() {
-            var status = $(this).attr("status");
+            var status = $(this).attr("data-status");
             var sumInfo = getSumInfoObj();
             if (status == 'all') {
                 s1.hide();
@@ -109,7 +109,7 @@
                 });
             } else {
                 container.find("li").each(function (i, el) {
-                    if (el.getAttribute("status") == status) {
+                    if (el.getAttribute("data-status") == status) {
                         el.style.display = "list-item";
                         calcItemInfo(el, sumInfo);
                     }
@@ -203,11 +203,11 @@
         }
 
         p.showTempView = function (el) {
-            app.currentOrderId(el.attr("orderid"));
+            app.currentOrderId(el.attr("data-id"));
             app.showTempView();
         }
         p.showHandleView = function (el) {
-            app.currentOrderId(el.attr("orderid"));
+            app.currentOrderId(el.attr("data-id"));
             app.showOrderHandleView();
         }
         p.showOrderList = function (el) {
@@ -265,7 +265,7 @@
         function __refreshMsnMessage() {
             var log1 = __getChgPriceLog();
             var log2 = __getOutOfStockLog();
-            var cbMsnType = $('input:radio[value="1"]', reviewContainer).attr("data-message", "");
+            var cbMsnType = $('input[value="1"]', reviewContainer).attr("data-message", "");
             var content = "";
             if (log1.length > 0) {
                 var sum = numeral(_order.OrderSumOk).add(_order.ServiceSum);
@@ -303,7 +303,7 @@
                 //NewPrice = NewPrice < 0 ? 0 : NewPrice;
                 order["NewPrice"] = NewPrice;
                 __appendChgPriceLog(menuId, order);
-                $('input:radio[value="1"]', reviewContainer).eq(1).attr("checked", true);
+                $('input[value="1"]', reviewContainer).eq(1).attr("checked", true);
             }
         }
         p.outOfStock = function (el) {
@@ -311,16 +311,20 @@
             var isOutOfStock = el.hasClass("green");
             var order = orders[menuId];
             if (order) {
-                if (isOutOfStock)
+                if (isOutOfStock) {
                     order["IsOutOfStock"] = true;
-                else
+                    el.addClass("red").removeClass("green");
+                }
+                else {
                     order["IsOutOfStock"] = false;
+                    el.addClass("green").removeClass("red");
+                }
                 __appendOutOfStockLog(menuId, order);
-                $('input:radio[value="1"]', reviewContainer).eq(0).attr("checked", true);
+                $('input[value="1"]', reviewContainer).eq(0).attr("checked", true);
             }
         }
         p.selectMsn = function (el) {
-            $("input", el).attr("checked", true);
+            el.find("input").attr("checked", true);
         }
         p.onLoad = function (isReturn) {
             reviewContainer = $("#reviewContainer");
@@ -343,7 +347,7 @@
                 app.logInfo("正在发送,请稍等...");
                 return;
             }
-            var box = $('input:radio[name="msnType"]:checked', reviewContainer);
+            var box = $('input[name="msnType"]:checked', reviewContainer);
             var type = box.val();
             if (type == "1" && __getChgPriceLog().length == 0 && __getOutOfStockLog().length == 0) {
                 app.logInfo("你还没有调整价信息或缺货信息.");
@@ -394,6 +398,7 @@
                     var result = JSON.parse(r.responseText);
                     if (result.code > -1) {
                         renderTempItem(result.data);
+                        $("#txtMessage").val("");
                     }
                 }, function (error) {
                     app.logError(error.source);
@@ -413,15 +418,16 @@
                     else {
                         hasRf = false;
                         renderTempItem(result.data);
+                        $("#txtMessage").val("");
                     }
                 });
         }
         function renderTempItem(item) {
-            var el = tempContainer.find("#" + item.id);
+            var el = tempContainer.find("#_" + item.id);
             if (el.length > 0) {
                 el.replaceWith(VT["TempItem"](item));
             } else {
-                tempContainer.appned(VT["TempItem"](item));
+                tempContainer.append(VT["TempItem"](item));
             }
         }
         function renderTempList(data) {
@@ -450,8 +456,8 @@
             EleoooWrapper.callServices("GetOrderTemps", { id: app.currentOrderId() }, function (result) {
                 if (result.code == 0) {
                     renderTempList(result.data.temps);
-                    $("#phone").text(result.data.phone);
-                    $("#timespan").text(result.data.timespan);
+                    $("#phone").text(result.data.MemberPhoneNumber);
+                    $("#timespan").text(result.data.Timespan);
                 }
             });
         }
@@ -474,7 +480,7 @@
                 $("#temp_review").toggle();
         }
         p.quickSend = function (el) {
-            sendMessageCore(el.val());
+            sendMessageCore(el.text());
             $("#temp_review").toggle();
         }
     }

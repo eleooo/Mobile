@@ -30,7 +30,7 @@
             for (var i = 0; i < menus.length; i++) {
                 menu = menus[i];
                 dir = getDirItem(menu.DirID, menu.DirName);
-                item = dir.find("#m" + menu.ID);
+                item = dir.find("#_" + menu.ID);
                 if (item.length == 0)
                     dir.append(getMenuItem(menu));
                 else
@@ -99,7 +99,7 @@
             };
             EleoooWrapper.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#m" + args.id).replaceWith(getMenuItem(result.data));
+                    menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
             });
         }

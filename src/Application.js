@@ -8,7 +8,7 @@
     var Application = function () {
         var p = Application.prototype;
         var container;
-        var dlgContainer;
+        var dlgContainer, spinner;
         var _def;
         var presenter = {};
         var currentView = false;
@@ -51,13 +51,14 @@
                     }
                 }
             });
+            spinner = $("#spinner");
             if (DataStorage.IsAutoLogin())
-                footer.find("a[view='orderList']").tap();
+                footer.find("a[view='orderList']").trigger("tap");
             else
                 p.showLoginView();
         }
         function showView(view) {
-            $(window).unbind("scrollstop");
+            $(window).unbind("scroll");
             initPresenter(view);
             if ($.isFunction(VT[view])) {
                 if (presenter[view] && $.isFunction(presenter[view].renderView)) {
@@ -98,13 +99,18 @@
         function touchTap(event) {
             //app.trace("tapping...");
             var tar = $(event.target);
-            var fnName = tar.attr(event.type);
-            if (tar.attr("id") != container.attr("id") && fnName) {
-                var fn = getObject(fnName);
-                if ($.isFunction(fn)) {
-                    fn.call(tar, tar, event);
+            if (tar.attr("id") != getCurContainer().attr("id")) {
+                var fnName = tar.attr(event.type) || (tar = tar.parent("[tap]"), tar.attr(event.type));
+                if (fnName) {
+                    var fn = getObject(fnName);
+                    if ($.isFunction(fn)) {
+                        fn.call(tar, tar, event);
+                    }
                 }
             }
+        }
+        function getCurContainer() {
+            return isDlgView(currentView) ? dlgContainer : container;
         }
         function isDlgView(viewName) {
             var isDlg = presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
@@ -234,6 +240,9 @@
                 var networkState = navigator.connection.type;
                 return networkState != Connection.UNKNOWN && networkState != Connection.NONE;
             }
+        },
+        p.spinner = function (isShow) {
+            isShow ? spinner.show() : spinner.hide();
         }
     };
     window.app = new Application();

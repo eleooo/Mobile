@@ -89,7 +89,7 @@
                 }
             }
             el.attr("data-type", mall_cate.attr("data-type")).text(mall_cate.text());
-            mall_cate.attr("data-type", dtype).text(desc).tap();
+            mall_cate.attr("data-type", dtype).text(desc).trigger("tap");
         }
         p.showReplyBox = function (el) {
             $("#box" + el.attr("data-id"), reviewList).toggle();

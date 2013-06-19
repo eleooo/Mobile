@@ -1,18 +1,18 @@
 ﻿{{if(it.type==1){}}
-<li class="guest" id="{{=it.id}}">
+<li class="guest" id="_{{=it.id}}" data-id="{{=it.id}}">
     <time>{{=it.time}}</time>
     <span>{{=(it.voice && (it.isplay === 0))?'<i></i>':''}}<em></em>
     {{if(it.voice){}}
-        <img src="images/voice2.png" alt="" align="middle" tempid="{{=it.id}}" isplay="{{=it.isplay}}" voice="{{=it.voice}}" tap="playVoice" />
+        <img src="images/voice2.png" alt="" align="middle" data-id="{{=it.id}}" data-isplay="{{=it.isplay}}" data-voice="{{=it.voice}}" tap="playVoice" />
     {{}}}
     {{=it.desc}}</span>
 </li>
 {{}else{}}
-<li class="shop" id="{{=it.id}}">
+<li class="shop" id="_{{=it.id}}" data-id="{{=it.id}}">
     <time>{{=it.time}}</time>
     <span>{{=(it.voice && (it.isplay === 0))?'<i></i>':''}}<em></em>
     {{if(it.voice){}}
-        <img src="images/voice2.png" alt="" align="middle" tempid="{{=it.id}}" isplay="{{=it.isplay}}" voice="{{=it.voice}}" tap="playVoice" />
+        <img src="images/voice2.png" alt="" align="middle" data-id="{{=it.id}}" data-isplay="{{=it.isplay}}" data-voice="{{=it.voice}}" tap="playVoice" />
     {{}}}
     {{=it.desc}}</span>
 </li>
