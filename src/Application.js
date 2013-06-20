@@ -5,6 +5,22 @@
 /// <reference path="../EleoooWrapper.js" />
 
 (function () {
+    var Debugger = function (debug) {
+        var _debug = debug;
+        return {
+            trace: function (data) {
+                if (debug) {
+                    data = data || {};
+                    data["__"] = new Date().valueOf();
+                    $.ajax({
+                        url: debug,
+                        data: data,
+                        dataType: "jsonp"
+                    });
+                }
+            }
+        }
+    };
     var Application = function () {
         var p = Application.prototype;
         var container;
@@ -19,6 +35,7 @@
         //var oldViewHtml = false;
         var voice = false;
         var isCordova = false;
+        var _debugger = false;
         p.init = function (def) {
             _def = def;
             isCordova = !(typeof (cordova) == 'undefined');
@@ -34,6 +51,9 @@
             }
         }
         function ready() {
+            if (_def.debug) {
+                _debugger = Debugger(_def.debug);
+            }
             container = $("#mainContainer").tap(touchTap);
             dlgContainer = $("#dlgContainer").tap(touchTap);
             (footer = $("#footer")).find("a").tap(function () {
@@ -202,12 +222,18 @@
         }
         p.logInfo = function (message) {
             console.log(message);
+            if (_debugger)
+                _debugger.trace(message);
         }
         p.trace = function (message) {
             p.logInfo(message);
+            if (_debugger)
+                _debugger.trace(message);
         }
         p.logError = function (message) {
             console.log(message);
+            if (_debugger)
+                _debugger.trace(message);
         }
         p.bindDateSelector = function (txtBox) {
             $("#" + txtBox).scroller("destroy").scroller({
@@ -246,6 +272,6 @@
         }
     };
     window.app = new Application();
-    app.init({ appName: '乐多分管理系统' });
+    app.init({ appName: '乐多分管理系统', debug: "" });
 })(window);
 
