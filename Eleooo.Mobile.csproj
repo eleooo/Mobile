@@ -66,6 +66,7 @@
     <Content Include="src\build\BuildJQuery.js" />
     <Content Include="src\build\BuildJS.js" />
     <Content Include="src\build\BuildZepto.js" />
+    <Content Include="src\httpsvr.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />

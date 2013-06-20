@@ -24,7 +24,7 @@
     var Application = function () {
         var p = Application.prototype;
         var container;
-        var dlgContainer, spinner;
+        var dlgContainer, spinner, prompter;
         var _def;
         var presenter = {};
         var currentView = false;
@@ -72,6 +72,7 @@
                 }
             });
             spinner = $("#spinner");
+            prompter = $("#prompter");
             if (DataStorage.IsAutoLogin())
                 footer.find("a[view='orderList']").trigger("tap");
             else
@@ -269,6 +270,17 @@
         },
         p.spinner = function (isShow) {
             isShow ? spinner.show() : spinner.hide();
+        }
+        p.showtips = function (message, fn) {
+            prompter.unbind("tap");
+            if ($.isFunction(fn))
+                prompter.bind("tap", fn);
+            prompter.text(message).show().animate({ opacity: "100" }, 400, null, function () {
+                //$(this).animate({ opacity: "0" }, 3000);
+                setTimeout(function () {
+                    prompter.css({ opacity: "0" }).hide();
+                }, 2000);
+            })
         }
     };
     window.app = new Application();
