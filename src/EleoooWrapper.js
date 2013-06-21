@@ -10,8 +10,6 @@
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
     var _EleoooWrapper = function () {
-        var servicesUrl = "http://www.eleooo.com/public/RestHandler.ashx/";
-        //var servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
         var xhrs = {};
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
@@ -34,7 +32,7 @@
             return { name: name, isAuth: isAuth, action: action };
         }
         function getAPI(api) {
-            return servicesUrl + api.name + "/" + api.action;
+            return app.getServicesUrl() + api.name + "/" + api.action;
         }
         function execute(api, data, fnCallback) {
             if (!app.hasNetwork()) {

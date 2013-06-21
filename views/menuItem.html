@@ -4,8 +4,7 @@
     <div class="menu_down">
         <span>单价：{{=it.Price}}</span> 调价:<input name="" type="number" class="input zq" onchange="app.Menu.changePrice(this);"
             data-id="{{=it.ID}}" data-price="{{=it.Price}}" />
-        <input name="input" type="button" value="{{=it.IsOutOfStock?'缺货':'有货'}}" class="green"
-            tap="outOfStockItem" data-id="{{=it.ID}}" data-isout="{{=it.IsOutOfStock}}" />
+        <input name="input" type="button" value="{{=it.IsOutOfStock?'缺货':'有货'}}" class="{{=it.IsOutOfStock?'red':'green'}}" tap="outOfStockItem" data-id="{{=it.ID}}" data-isout="{{=it.IsOutOfStock}}" />
         <input name="" type="button" value="删除" class="red" tap="deleteItem" data-id="{{=it.ID}}" />
     </div>
 </div>

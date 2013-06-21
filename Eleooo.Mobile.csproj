@@ -50,6 +50,7 @@
     <Content Include="css\mobiscroll.custom-2.5.4.min.css" />
     <Content Include="css\style.css" />
     <Content Include="default.htm" />
+    <Content Include="images\camera.png" />
     <Content Include="images\spinner.gif" />
     <Content Include="images\key.png" />
     <Content Include="images\wp_icons.png" />
@@ -62,10 +63,6 @@
     <Content Include="MuSelect\css\multi-select.css" />
     <Content Include="MuSelect\img\switch.png" />
     <Content Include="MuSelect\js\jquery.multi-select.js" />
-    <Content Include="src\build\BuildCSS.js" />
-    <Content Include="src\build\BuildJQuery.js" />
-    <Content Include="src\build\BuildJS.js" />
-    <Content Include="src\build\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
@@ -77,6 +74,7 @@
     <Content Include="src\lib\zepto\selector.js" />
     <Content Include="src\lib\zepto\touch.js" />
     <Content Include="src\lib\zepto\zepto.js" />
+    <Content Include="src\WebSocket.js" />
     <Content Include="views\menuItem.html" />
     <Content Include="src\presenter\Hall.js" />
     <Content Include="src\presenter\Menu.js" />
@@ -214,7 +212,6 @@
     <Content Include="src\lib\mobiscroll-2.5.4\mobiscroll.custom-2.5.4.min.js" />
     <Content Include="src\presenter\Login.js" />
     <Content Include="src\presenter\Order.js" />
-    <Content Include="src\build\BuildView.js" />
     <Content Include="views\balance.html" />
     <Content Include="css\eleoooMobile.css" />
     <Content Include="css\Global.css" />

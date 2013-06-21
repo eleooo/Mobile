@@ -62,23 +62,28 @@
             }
         }
         function getOrderStatus(item) {
-            var status;
+            var status = '', cls = 'red';
             if (item.OrderStatus == 2) {
                 status = "notstarted";
             } else if (item.OrderStatus == 3) {
                 status = "modified";
+                cls = 'yellow';
             } else if (item.OrderStatus == 4) {
                 if (item.OrderDateUpload > item.OrderDate) {
                     status = "urge";
                 } else {
                     status = "inprogress";
+                    cls = 'green';
                 }
             } else if (item.OrderStatus == 5) {
                 status = "canceled";
+                status = 'dark';
             } else if (item.OrderStatus == 6) {
                 status = "completed";
+                status = 'dark';
             }
-            return { status: status, text: statusText[status] };
+
+            return { status: status, text: statusText[status], class: cls };
         }
         function calcItemsInfo(items) {
             var sumInfo = getSumInfoObj();
@@ -149,8 +154,9 @@
             isLoading = true;
             EleoooWrapper.GetOrders(args, function (result) {
                 if (result.code > -1) {
-                    if (pageIndex == 0) {
+                    if (pageIndex == 0 && !app.wsInited()) {
                         DataStorage.LatestUpdateOn(result.data.orders.length > 0 ? result.data.orders[0].OrderUpdateOn : args.d1);
+                        app.initWS();
                     }
                     processRender(result.data.orders, isSyn);
                     isLoading = false;
@@ -228,6 +234,19 @@
                 $(window).lazyload({ load: getOrders });
                 //getOrders(false, SynOrderList);
                 getOrders(false);
+            }
+        }
+        p.onPushOrder = function (result) {
+            if (result.data.length > 0) {
+                isLoading = true;
+                processRender(result.data, true);
+                DataStorage.LatestUpdateOn(result.data[0].OrderUpdateOn);
+                isLoading = false;
+                if (result.hasNew && p.visible == false) {
+                    app.notify("你有新的订单需要处理.");
+                    if (app.isCordovaApp())
+                        navigator.notification.beep(2);
+                }
             }
         }
         p.renderView = function (fnCallback) {

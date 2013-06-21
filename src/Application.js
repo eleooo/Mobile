@@ -3,24 +3,9 @@
 /// <reference path="../lib/Common.js" />
 /// <reference path="../DataStorage.js" />
 /// <reference path="../EleoooWrapper.js" />
+/// <reference path="WebSocket.js" />
 
 (function () {
-    var Debugger = function (debug) {
-        var _debug = debug;
-        return {
-            trace: function (data) {
-                if (debug) {
-                    data = data || {};
-                    data["__"] = new Date().valueOf();
-                    $.ajax({
-                        url: debug,
-                        data: data,
-                        dataType: "jsonp"
-                    });
-                }
-            }
-        }
-    };
     var Application = function () {
         var p = Application.prototype;
         var container;
@@ -35,12 +20,14 @@
         //var oldViewHtml = false;
         var voice = false;
         var isCordova = false;
-        var _debugger = false;
+        var _ws = false;
         p.init = function (def) {
             _def = def;
             isCordova = !(typeof (cordova) == 'undefined');
-            if (isCordova)
+            if (isCordova) {
                 document.addEventListener("deviceready", ready);
+                document.addEventListener("online", _online, false);
+            }
             else
                 $(document).ready(ready);
         }
@@ -51,9 +38,7 @@
             }
         }
         function ready() {
-            if (_def.debug) {
-                _debugger = Debugger(_def.debug);
-            }
+            _ws = new PushServices(_def.pusher);
             container = $("#mainContainer").tap(touchTap);
             dlgContainer = $("#dlgContainer").tap(touchTap);
             (footer = $("#footer")).find("a").tap(function () {
@@ -73,10 +58,22 @@
             });
             spinner = $("#spinner");
             prompter = $("#prompter");
-            if (DataStorage.IsAutoLogin())
+            if (DataStorage.IsAutoLogin() && DataStorage.WebAuthKey()) {
+
                 footer.find("a[view='orderList']").trigger("tap");
+            }
             else
                 p.showLoginView();
+        }
+        function _initWS(orderPusher) {
+            if (!app.hasNetwork()) {
+                app.logError("没有检测到网络连接.", true);
+                return;
+            }
+            _ws.connect();
+            _ws.regCommmand("Admin", app.notify);
+            if (orderPusher)
+                _ws.regCommmand("Order", orderPusher);
         }
         function showView(view) {
             $(window).unbind("scroll");
@@ -130,6 +127,9 @@
                 }
             }
         }
+        function _online() {
+            app.initWS();
+        }
         function getCurContainer() {
             return app.isDlgView(currentView) ? dlgContainer : container;
         }
@@ -143,7 +143,12 @@
             else
                 return _orderId = orderId;
         }
-
+        p.initWS = function () {
+            _initWS(presenter[orderListViewName].onPushOrder);
+        },
+        p.wsInited = function () {
+            return _ws.Inited();
+        },
         p.closeDlg = function () {
             if (oldViewName) {
                 presenter[oldViewName]["visible"] = true;
@@ -221,20 +226,19 @@
         p.logout = function () {
             p.showLoginView();
         }
-        p.logInfo = function (message) {
+        p.notify = function (message) {
             console.log(message);
-            if (_debugger)
-                _debugger.trace(message);
         }
-        p.trace = function (message) {
-            p.logInfo(message);
-            if (_debugger)
-                _debugger.trace(message);
+        p.logInfo = function (message, isPusher) {
+            console.log(message);
+            if (!isPusher)
+                _ws.log(message);
+        }
+        p.trace = function (message, isPusher) {
+            p.logInfo(message, isPusher);
         }
         p.logError = function (message) {
             console.log(message);
-            if (_debugger)
-                _debugger.trace(message);
         }
         p.bindDateSelector = function (txtBox) {
             $("#" + txtBox).scroller("destroy").scroller({
@@ -282,9 +286,16 @@
                     prompter.css({ opacity: "0" }).hide();
                 }, 2000);
             })
+        },
+        p.getServicesUrl = function () {
+            return _def.servicesUrl;
         }
     };
     window.app = new Application();
-    app.init({ appName: '乐多分管理系统', debug: "" });
+    app.init({ appName: '乐多分管理系统',
+        pusher: "ws://192.168.0.104:8080/",
+        servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
+    });
+    //servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
 })(window);
 
