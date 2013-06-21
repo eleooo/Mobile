@@ -88,7 +88,7 @@
                             if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
                             presenter[currentView]["visible"] = false;
                         }
-                        (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](viewData)).show();
+                        (app.isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](viewData)).show();
                         presenter[view]["visible"] = true;
                         oldViewName = currentView;
                         currentView = view;
@@ -101,7 +101,7 @@
                         if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
                         presenter[currentView]["visible"] = false;
                     }
-                    (isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](undefined)).show();
+                    (app.isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](undefined)).show();
                     oldViewName = currentView;
                     currentView = view;
                     presenter[view]["visible"] = true;
@@ -131,10 +131,10 @@
             }
         }
         function getCurContainer() {
-            return isDlgView(currentView) ? dlgContainer : container;
+            return app.isDlgView(currentView) ? dlgContainer : container;
         }
-        function isDlgView(viewName) {
-            var isDlg = presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
+        p.isDlgView = function (viewName) {
+            var isDlg = viewName && presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
             return isDlg;
         }
         p.currentOrderId = function (orderId) {
@@ -252,8 +252,9 @@
                 voice.stop();
                 voice.release();
                 voice = false;
-            } else if (url) {
-                voice = new Media(el.attr('voice'));
+            }
+            if (url) {
+                voice = new Media(url);
                 voice.play();
             }
         }

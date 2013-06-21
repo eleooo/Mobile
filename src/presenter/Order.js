@@ -1,9 +1,10 @@
 ﻿/// <reference path="../Application.js" />
 /// <reference path="../lib/Common.js" />
+/// <reference path="../DataStorage.js" />
 
 (function () {
     var _OrderList = function () {
-        var container = false, txtUserPhone;
+        var container, tempContainer, txtUserPhone;
         var s1, s2;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false;
@@ -31,9 +32,11 @@
             //            };
             //            container.html(VT["OrderListContainer"](viewData));
             //            setSummaryInfo(viewData);
-            if (!isSyn && pageIndex == 0) {
+            //var tempContainer = container
+            if (!isSyn && pageIndex == 0 && container) {
                 container.html("");
             }
+            var _container = container || tempContainer;
             var item, oldItem, order, status;
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
@@ -41,24 +44,22 @@
                 item = $(VT["OrderListItem"](order));
                 for (var o in order) {
                     if (o && o != "ID" && o != "status")
-                        item.attr("data-"+o.toLowerCase(), order[o]);
+                        item.attr("data-" + o.toLowerCase(), order[o]);
                 }
-                oldItem = container.find("#_" + order.ID);
+                oldItem = _container.find("#_" + order.ID);
                 if (oldItem.length == 0)
-                    container.append(item);
+                    _container.append(item);
                 else
                     oldItem.replaceWith(item);
             }
-            var sumInfo = getSumInfoObj();
-            var items = container.find("li").each(function (i, el) {
-                calcItemInfo(el, sumInfo);
-            });
+            var items = _container.find("li");
             items.remove().sort(function (a, b) {
                 return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
             });
-            container.append(items);
-            setSummaryInfo(sumInfo);
-            delete sumInfo;
+            _container.append(items);
+            if (container) {
+                calcItemsInfo(items);
+            }
         }
         function getOrderStatus(item) {
             var status;
@@ -78,6 +79,14 @@
                 status = "completed";
             }
             return { status: status, text: statusText[status] };
+        }
+        function calcItemsInfo(items) {
+            var sumInfo = getSumInfoObj();
+            items.each(function (i, el) {
+                calcItemInfo(el, sumInfo);
+            });
+            setSummaryInfo(sumInfo);
+            delete sumInfo;
         }
         function setSummaryInfo(data) {
             for (var c in data.counter) {
@@ -167,6 +176,19 @@
             else
                 return val;
         }
+        p.visible = false;
+        p.onClose = function (closeBy) {
+            if (!app.isDlgView(closeBy)) {
+                var data = {
+                    pageIndex: pageIndex,
+                    pageCount: pageCount,
+                    html: container.html()
+                };
+                DataStorage.ViewCache("OrderList", data);
+                container = false;
+                tempContainer.html(data.html).attr("data-pageIndex", data.pageIndex).attr("data-pageCount", data.pageCount);
+            }
+        }
         p.onLoad = function (isReturn) {
             if (!isReturn) {
                 app.bindDateSelector("txtOrderListBeginDate");
@@ -189,6 +211,20 @@
                         txtUserPhone.val(txtUserPhone.attr("defVal"));
                 });
                 txtUserPhone.val(txtUserPhone.attr("defVal"));
+                if (!tempContainer) {
+                    tempContainer = $("<ul></ul>");
+                    var data = JSON.parse(DataStorage.ViewCache("OrderList"));
+                    if (data) {
+                        container.html(data.html);
+                        calcItemsInfo(container.find("li"));
+                    }
+                }
+                else {
+                    container.html(tempContainer.html());
+                    pageIndex = parseInt(tempContainer.attr("data-pageIndex"));
+                    pageCount = parseInt(tempContainer.attr("data-pageCount"));
+                    calcItemsInfo(container.find("li"));
+                }
                 $(window).lazyload({ load: getOrders });
                 //getOrders(false, SynOrderList);
                 getOrders(false);
