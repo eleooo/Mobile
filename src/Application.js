@@ -176,6 +176,7 @@
             return false;
         }
         p.showLoginView = function () {
+            currentView = false;
             showView("Login");
         }
         p.showBalanceView = function () {
@@ -294,8 +295,8 @@
     window.app = new Application();
     app.init({ appName: '乐多分管理系统',
         pusher: "ws://192.168.0.104:8080/",
-        servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
+        //servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
+        servicesUrl: "http://192.168.0.104:80/public/RestHandler.ashx/"
     });
-    //servicesUrl = "http://localhost:4726/public/RestHandler.ashx/";
 })(window);
 

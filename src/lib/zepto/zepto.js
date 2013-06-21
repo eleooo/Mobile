@@ -145,7 +145,8 @@ var Zepto = (function() {
     if (!(name in containers)) name = '*'
 
     var nodes, dom, container = containers[name]
-    container.innerHTML = '' + html
+    //container.innerHTML = '' + html
+    container.innerHTML = html
     dom = $.each(slice.call(container.childNodes), function(){
       container.removeChild(this)
     })

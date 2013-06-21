@@ -14,15 +14,22 @@
         var commands = {};
         function _connect() {
             var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
-            if (!type) {
+            if (type) {
                 ws = new window[type](_pusher);
                 ws.onopen = onopen;
                 ws.onmessage = onmessage;
                 ws.onclose = onclose;
+                commands["Login"] = app.logError;
             }
         }
         function loginWS() {
-            sendMessage("Login-" + DataStorage.WebAuthKey(), { date: DataStorage.LatestUpdateOn() });
+            var data = { Date: DataStorage.LatestUpdateOn(),
+                UserId: DataStorage.UserID(),
+                CompanyId: DataStorage.CompanyID(),
+                SubSys: 2,
+                LoginSys: 2
+            };
+            sendMessage("Login-" + DataStorage.WebAuthKey(), data);
         }
         function onopen() {
             setTimeout(loginWS, 100);

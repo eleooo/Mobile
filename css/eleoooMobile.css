@@ -368,6 +368,7 @@ footer a.nav_on .finance {
 	border-bottom: 1px solid #cbcbcb;
 	color: #242424;
 }
+.m_order li h2{ color:#333;}
 .m_order h4 {
 	font-weight: normal;
 	font-size: 14px;
@@ -588,7 +589,7 @@ span.time {
 	border-color: rgb(255, 255, 255) transparent transparent;
 }
 .deal_link {
-	margin-top: 38px;
+	top: 80px;
 	position: fixed;
 	width: 25%;
 	background: #323232;
@@ -903,8 +904,7 @@ span.price {
 /*2013-6-20增加*/
 .menu_show span.cu{ background:#14a4e1; color:#fff; font-family:Arial; font-size:12px; padding:3px 5px;border-radius: 3px;}
 .qry_btn {
-	position: absolute;
-	left: 200px;
+	margin-left:5px;
 	background: #57b309;
 	border: 1px solid #2c8e00;
 	overflow: hidden;
@@ -913,7 +913,6 @@ span.price {
 	padding: 0 10px 4px 10px;
 	line-height: 20px;
 	height: 20px;
-	top: 5px;
 }
 .qry_btn a {
 	color: #fff;

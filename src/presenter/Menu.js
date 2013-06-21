@@ -10,12 +10,12 @@
         var curDir = false;
         var p = _Menu.prototype;
         function getDirItem(dirId, dirName) {
-            if (curDir && curDir.attr('id') == dirId)
+            if (curDir && curDir.attr('data-id') == dirId)
                 return curDir;
             else {
-                curDir = $("#" + dirId, menuContainer);
+                curDir = $("#__" + dirId, menuContainer);
                 if (curDir.length == 0) {
-                    curDir = $("<li id='" + dirId + "'><h2>" + dirName + "</h2></li>");
+                    curDir = $("<li id='__" + dirId + "' data-id='" + dirId + "'><h2>" + dirName + "</h2></li>");
                     menuContainer.append(curDir);
                 }
                 return curDir;
@@ -29,17 +29,18 @@
             curDir = false;
             for (var i = 0; i < menus.length; i++) {
                 menu = menus[i];
-                dir = getDirItem(menu.DirID, menu.DirName);
-                item = dir.find("#_" + menu.ID);
+                dir = getDirItem(menu.dirid, menu.dirname);
+                item = dir.find("#_" + menu.id);
+                var m = getMenuItem(menu);
                 if (item.length == 0)
-                    dir.append(getMenuItem(menu));
+                    dir.append(m);
                 else
-                    item.replaceWith(getMenuItem(menu));
+                    item.replaceWith(m);
             }
         }
         function getMenuList() {
             var args = { q: getInputQueryVal(),
-                p: pageIndex++
+                p: pageIndex + 1
             };
             EleoooWrapper.GetMenus(args, function (result) {
                 if (pageIndex == 0)
@@ -84,10 +85,10 @@
             DataStorage.ViewCache("Menu", menus);
             delete menus;
         }
-        p.changePrice = function () {
-            var item = $(this);
-            var val = Number.round(parseFloat(item.val()) || 0, 2);
-            var price = Number.round(parseFloat(item.attr("data-price")) || 0, 2);
+        p.changePrice = function (el) {
+            var item = $(el);
+            var val = numeral(item.val()).round(2);
+            var price = numeral(item.attr("data-price")).round(2);
             if (val == price) {
                 app.logInfo("新价与原价相同.");
                 return;
@@ -112,7 +113,7 @@
             };
             EleoooWrapper.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#m" + args.id).replaceWith(getMenuItem(result.data));
+                    menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
             });
         }
@@ -124,7 +125,7 @@
             };
             EleoooWrapper.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#m" + args.id).remove();
+                    menuContainer.find("#_" + args.id).remove();
                 }
             });
         }

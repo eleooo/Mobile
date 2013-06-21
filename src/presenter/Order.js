@@ -77,10 +77,10 @@
                 }
             } else if (item.OrderStatus == 5) {
                 status = "canceled";
-                status = 'dark';
+                cls = 'dark';
             } else if (item.OrderStatus == 6) {
                 status = "completed";
-                status = 'dark';
+                cls = 'dark';
             }
 
             return { status: status, text: statusText[status], class: cls };
@@ -190,7 +190,7 @@
                     pageCount: pageCount,
                     html: container.html()
                 };
-                DataStorage.ViewCache("OrderList", data);
+                //DataStorage.ViewCache("OrderList", data);
                 container = false;
                 tempContainer.html(data.html).attr("data-pageIndex", data.pageIndex).attr("data-pageCount", data.pageCount);
             }
@@ -219,11 +219,6 @@
                 txtUserPhone.val(txtUserPhone.attr("defVal"));
                 if (!tempContainer) {
                     tempContainer = $("<ul></ul>");
-                    var data = JSON.parse(DataStorage.ViewCache("OrderList"));
-                    if (data) {
-                        container.html(data.html);
-                        calcItemsInfo(container.find("li"));
-                    }
                 }
                 else {
                     container.html(tempContainer.html());
@@ -268,6 +263,7 @@
         p.showOrderList = function (el) {
             pageCount = 1;
             pageIndex = 0;
+            isLoading = false;
             getOrders(false);
         }
     };

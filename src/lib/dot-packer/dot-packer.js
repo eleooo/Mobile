@@ -12,7 +12,7 @@ function dotpacker(viewDir, outputFileName, ns, def) {
         for (i in files) {
             if (files[i].match(/^[^\.]*\.html/g)) {
                 console.log("Processing:" + files[i]);
-                code += convert(files[i], ns) + "\r\n";
+                code += convert(files[i], ns); ;
             }
         }
 
@@ -27,10 +27,10 @@ function dotpacker(viewDir, outputFileName, ns, def) {
     catch (err) {
         dumpError(err);
     }
-
+    
     function convert(fileName, namespace) {
         var path = viewDir + fileName;
-        var data = fs.readFileSync(path, 'utf8');
+        var data = fs.readFileSync(path, 'utf8').replace(/^\s+|\s+$/g, "");
         var code = dot.template(data,undefined,def).toString();
         var header = namespace + "['" + ucfirst(fileName.replace('.html', '')) + "'] = function(it)";
         code = code.replace('function anonymous(it)', header) + ";";
