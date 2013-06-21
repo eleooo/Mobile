@@ -63,6 +63,11 @@
     <Content Include="MuSelect\css\multi-select.css" />
     <Content Include="MuSelect\img\switch.png" />
     <Content Include="MuSelect\js\jquery.multi-select.js" />
+    <Content Include="src\complier\BuildCSS.js" />
+    <Content Include="src\complier\BuildJQuery.js" />
+    <Content Include="src\complier\BuildJS.js" />
+    <Content Include="src\complier\BuildView.js" />
+    <Content Include="src\complier\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
