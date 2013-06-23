@@ -2,7 +2,7 @@
 
 (function () {
     var _Review = function () {
-        var reviewList = false, mall_cate = false, rw_num = false, deal_link = false;
+        var reviewList = false, mall_cate = false, rw_num = false, deal_link = false, _box;
         var pageIndex = 0;
         var p = _Review.prototype;
 
@@ -11,8 +11,8 @@
                 t: 4,
                 b: DataStorage.CompanyID(),
                 i: pageIndex + 1,
-                d1: $("#txtBeginDate").val(),
-                d2: $("#txtEndDate").val()
+                d1: $("#txtBeginReviewDate", _box).val(),
+                d2: $("#txtEndReviewDate", _box).val()
             };
             EleoooWrapper.FacebookQuery(args, function (result) {
                 if (result.code > -1) {
@@ -47,22 +47,25 @@
                 }
             });
         }
+        
+        p.box = function (el) {
+            if (el) _box = el;
+            return _box;
+        }
+        p.onShow = function () {
+            showReviewList();
+            reviewList.lazyload({ load: showReviewList });
+        }
         p.onLoad = function (isReturn) {
-            reviewList = $("#reviewList");
-            mall_cate = $("#mall_cate");
-            deal_link = $(".deal_link");
-            rw_num = $("#rw_number > i");
-            app.bindDateSelector("txtBeginDate");
-            app.bindDateSelector("txtEndDate");
+            reviewList = $("#reviewList", _box);
+            mall_cate = $("#mall_cate", _box);
+            deal_link = $(".deal_link", _box);
+            rw_num = $("#rw_number > i", _box);
+            app.bindDateSelector("txtBeginDate", _box);
+            app.bindDateSelector("txtEndDate", _box);
             mall_cate.parent().tap(function () {
                 $(this).toggleClass("mall_on");
                 deal_link.toggle();
-            });
-            showReviewList();
-            reviewList.lazyload({ load: function () {
-                app.logInfo("lazyload....");
-                showReviewList();
-            }
             });
         }
         p.renderView = function (fnCallback) {

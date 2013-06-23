@@ -6,7 +6,7 @@
 (function () {
     var _Menu = function () {
         var pageIndex = 0, pageCount = 1;
-        var txtMenuName, menuContainer;
+        var txtMenuName, menuContainer,_box;
         var curDir = false;
         var p = _Menu.prototype;
         function getDirItem(dirId, dirName) {
@@ -56,15 +56,12 @@
             var v = txtMenuName.val();
             return (v == txtMenuName.attr('defVal')) ? "" : v;
         }
-        p.onLoad = function () {
-            txtMenuName = $("#txtMenuName").focusin(function () {
-                if ($(this).val() == $(this).attr('defVal'))
-                    $(this).val('');
-            }).focusout(function () {
-                if ($(this).val() == '')
-                    $(this).val($(this).attr('defVal'));
-            });
-            menuContainer = $("#menuContainer");
+        
+        p.box = function (el) {
+            if (el) _box = el;
+            return _box;
+        }
+        p.onShow = function () {
             if (!app.hasNetwork()) {
                 var menus = JSON.parse(DataStorage.ViewCache("Menu") || "{}");
                 if (menus.menus) {
@@ -75,6 +72,16 @@
             } else
                 getMenuList();
             menuContainer.lazyload({ load: getMenuList });
+        }
+        p.onLoad = function () {
+            txtMenuName = $("#txtMenuName", _box).focusin(function () {
+                if ($(this).val() == $(this).attr('defVal'))
+                    $(this).val('');
+            }).focusout(function () {
+                if ($(this).val() == '')
+                    $(this).val($(this).attr('defVal'));
+            });
+            menuContainer = $("#menuContainer", _box);
         }
         p.onClose = function () {
             var menus = {

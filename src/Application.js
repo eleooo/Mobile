@@ -8,40 +8,54 @@
 (function () {
     var Application = function () {
         var p = Application.prototype;
-        var container;
-        var dlgContainer, spinner, prompter;
+        var _body, spinner, prompter;
         var _def;
-        var presenter = {};
+        var presenters = {};
         var currentView = false;
         var footer = false;
         var orderListViewName = "OrderList";
-        var _orderId;
-        var oldViewName = false;
-        //var oldViewHtml = false;
+        var oldViewName = [];
         var voice = false;
         var isCordova = false;
+        var isbackground = false;
         var _ws = false;
         p.init = function (def) {
             _def = def;
             isCordova = !(typeof (cordova) == 'undefined');
             if (isCordova) {
                 document.addEventListener("deviceready", ready);
-                document.addEventListener("online", _online, false);
             }
             else
                 $(document).ready(ready);
         }
-        function initPresenter(view) {
-            if (!$.isPlainObject(presenter[view])) {
-                presenter[view] = eval("new $_" + view + "()");
-                p[view] = presenter[view];
+        function getPresenter(view) {
+            var presenter = presenters[view];
+            if (presenter == undefined) {
+                presenter = eval("new $_" + view + "()");
+                presenters[view] = presenter;
+                p[view] = presenter;
             }
+            return presenter;
         }
         function ready() {
             _ws = new PushServices(_def.pusher);
-            container = $("#mainContainer").tap(touchTap);
-            dlgContainer = $("#dlgContainer").tap(touchTap);
-            (footer = $("#footer")).find("a").tap(function () {
+            document.addEventListener("online", _online, false);
+            document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
+            document.addEventListener("pause", function () { isbackground = true; }, false);
+            document.addEventListener("backbutton", function () {
+                if (oldViewName.length > 0) {
+                    app.closeDlg();
+                } else {
+                    app.confirm(
+                                '你确定要退出程序吗?',
+                                undefined,
+                                '确定,取消',
+                                function (btn) { btn == '1' ? navigator.app.exitApp() : void (0); }
+                                );
+                }
+            }, true);
+            _body = $("body");
+            (footer = $("#footer", _body)).find("a").tap(function () {
                 var nav = $(this);
                 if (nav.hasClass("nav_on"))
                     return;
@@ -56,10 +70,10 @@
                     }
                 }
             });
-            spinner = $("#spinner");
-            prompter = $("#prompter");
+            spinner = $("#spinner", _body);
+            prompter = $("#prompter", _body);
+            prompter.find("a").bind("tap", app.hideTips);
             if (DataStorage.IsAutoLogin() && DataStorage.WebAuthKey()) {
-
                 footer.find("a[view='orderList']").trigger("tap");
             }
             else
@@ -70,46 +84,67 @@
                 app.logError("没有检测到网络连接.", true);
                 return;
             }
-            _ws.connect();
-            _ws.regCommmand("Admin", app.notify);
-            if (orderPusher)
-                _ws.regCommmand("Order", orderPusher);
+            if (!_ws.Connected()) {
+                _ws.connect();
+                _ws.regCommmand("Notify", function (evt) {
+                    app.showtips(evt.data, undefined, false);
+                });
+                if (orderPusher)
+                    _ws.regCommmand("Order", orderPusher);
+            }
         }
-        function showView(view) {
+        function initView(presenter, view, arg) {
+            if (presenter.box() !== false && presenter.box() !== undefined)
+                return false;
+            presenter.box($("<div></div>").hide().bind("tap", touchTap).appendTo(_body));
+            if (!$.isFunction(VT[view])) {
+                if ($.isFunction(presenter.onLoad))
+                    presenter.onLoad();
+                return false;
+            }
+            if ($.isFunction(presenter.renderView)) {
+                presenter.renderView(function (viewData) {
+                    presenter.box().html(VT[view](viewData));
+                    if ($.isFunction(presenter.onLoad))
+                        presenter.onLoad();
+                    _showView(presenter, view, arg);
+                });
+                return true;
+            } else {
+                presenter.box().html(VT[view](undefined));
+                if ($.isFunction(presenter.onLoad))
+                    presenter.onLoad();
+                return false;
+            }
+        }
+        function _showView(presenter, view, arg) {
+            if (currentView) {
+                var curPresenter = getPresenter(currentView);
+                $.isFunction(curPresenter.onClose) ? curPresenter.onClose() : void (0);
+                curPresenter.box().hide();
+                oldViewName.push(currentView);
+                if (voice) {
+                    voice.stop();
+                    voice.release();
+                    voice = null;
+                }
+            }
+            presenter.isDlgView ? footer.hide() : footer.show();
+            if ($.isFunction(presenter.onShow))
+                presenter.onShow(arg);
+            presenter.box().show();
+            currentView = view;
+        }
+        function showView(view, arg) {
             $(window).unbind("scroll");
-            initPresenter(view);
-            if ($.isFunction(VT[view])) {
-                if (presenter[view] && $.isFunction(presenter[view].renderView)) {
-                    presenter[view].renderView(function (viewData) {
-                        if (currentView) {
-                            if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
-                            presenter[currentView]["visible"] = false;
-                        }
-                        (app.isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](viewData)).show();
-                        presenter[view]["visible"] = true;
-                        oldViewName = currentView;
-                        currentView = view;
-                        if (presenter[view] && $.isFunction(presenter[view].onLoad))
-                            presenter[view].onLoad(false);
-                    });
-                }
-                else {
-                    if (currentView) {
-                        if ($.isFunction(presenter[currentView].onClose)) { presenter[currentView].onClose(view); }
-                        presenter[currentView]["visible"] = false;
-                    }
-                    (app.isDlgView(view) ? (container.hide(), footer.hide(), dlgContainer) : (dlgContainer.hide(), footer.show(), container)).html(VT[view](undefined)).show();
-                    oldViewName = currentView;
-                    currentView = view;
-                    presenter[view]["visible"] = true;
-                    if (presenter[view] && $.isFunction(presenter[view].onLoad))
-                        presenter[view].onLoad(false);
-                }
+            var presenter = getPresenter(view);
+            if (!initView(presenter, view, arg)) {
+                _showView(presenter, view, arg);
             }
         }
         function getObject(type) {
             if (type.indexOf('.') == -1) {
-                return presenter[currentView][type];
+                return presenters[currentView][type];
             } else {
                 return eval(type);
             }
@@ -117,111 +152,74 @@
         function touchTap(event) {
             //app.trace("tapping...");
             var tar = $(event.target);
-            if (tar.attr("id") != getCurContainer().attr("id")) {
-                var fnName = tar.attr(event.type) || (tar = tar.parent("[tap]"), tar.attr(event.type));
-                if (fnName) {
-                    var fn = getObject(fnName);
-                    if ($.isFunction(fn)) {
-                        fn.call(tar, tar, event);
-                    }
+            var fnName = tar.attr(event.type) || (tar = tar.parent("[tap]"), tar.attr(event.type));
+            if (fnName) {
+                var fn = getObject(fnName);
+                if ($.isFunction(fn)) {
+                    fn.call(tar, tar, event);
                 }
             }
         }
         function _online() {
             app.initWS();
         }
-        function getCurContainer() {
-            return app.isDlgView(currentView) ? dlgContainer : container;
-        }
-        p.isDlgView = function (viewName) {
-            var isDlg = viewName && presenter[viewName].isDlgView != undefined && presenter[viewName].isDlgView == true;
-            return isDlg;
-        }
-        p.currentOrderId = function (orderId) {
-            if (orderId === undefined)
-                return _orderId;
-            else
-                return _orderId = orderId;
-        }
         p.initWS = function () {
-            _initWS(presenter[orderListViewName].onPushOrder);
+            _initWS(presenters[orderListViewName].onPushOrder);
         },
         p.wsInited = function () {
             return _ws.Inited();
         },
         p.closeDlg = function () {
-            if (oldViewName) {
-                presenter[oldViewName]["visible"] = true;
-                if ($.isFunction(presenter[currentView].onClose))
-                    presenter[currentView].onClose(oldViewName);
-                presenter[currentView]["visible"] = false;
-                if ($.isFunction(presenter[oldViewName].onLoad))
-                    presenter[oldViewName].onLoad(true);
-                var v = currentView;
-                currentView = oldViewName;
-                oldViewName = v;
-            } else {
-                oldViewName = currentView;
-                presenter[oldViewName]["visible"] = false;
-            }
-            container.show();
-            footer.show();
-            if (voice) {
-                voice.stop();
-                voice.release();
-                voice = null;
-            }
-            dlgContainer.hide();
-            dlgContainer.html("");
+            var view = oldViewName.pop() || orderListViewName;
+            showView(view);
+        }
+        p.showLoginView = function (arg) {
+            showView("Login", arg);
+        }
+        p.showBalanceView = function (arg) {
+            showView("Balance", arg);
+        }
+        p.showOrderHandleView = function (arg) {
+            showView("OrderHandle", arg);
+        }
+        p.showOrderListView = function (arg) {
+            //showView(orderListViewName, arg);
+            footer.find("a[view='orderList']").trigger("tap");
+        }
+        p.showDetailView = function (arg) {
+            showView("Detail", arg);
             return false;
         }
-        p.showLoginView = function () {
-            currentView = false;
-            showView("Login");
-        }
-        p.showBalanceView = function () {
-            showView("Balance");
-        }
-        p.showOrderHandleView = function () {
-            showView("OrderHandle");
-        }
-        p.showOrderListView = function () {
-            showView(orderListViewName);
-        }
-        p.showDetailView = function () {
-            showView("Detail");
+        p.showMenuView = function (arg) {
+            showView("Menu", arg);
             return false;
         }
-        p.showMenuView = function () {
-            showView("Menu");
+        p.showHallView = function (arg) {
+            showView("Hall", arg);
             return false;
         }
-        p.showHallView = function () {
-            showView("Hall");
+        p.showReviewView = function (arg) {
+            showView("Review", arg);
             return false;
         }
-        p.showReviewView = function () {
-            showView("Review");
+        p.showRushView = function (arg) {
+            showView("Rush", arg);
             return false;
         }
-        p.showRushView = function () {
-            showView("Rush");
+        p.showRushRecordView = function (arg) {
+            showView("RushRecord", arg);
             return false;
         }
-        p.showRushRecordView = function () {
-            showView("RushRecord");
+        p.showSaleView = function (arg) {
+            showView("Sale", arg);
             return false;
         }
-        p.showSaleView = function () {
-            showView("Sale");
+        p.showSaleListView = function (arg) {
+            showView("SaleList", arg);
             return false;
         }
-        p.showSaleListView = function () {
-            showView("SaleList");
-            return false;
-        }
-        p.showTempView = function () {
-            showView("Temp");
+        p.showTempView = function (arg) {
+            showView("Temp", arg);
             return false;
         }
         p.logout = function () {
@@ -241,8 +239,8 @@
         p.logError = function (message) {
             console.log(message);
         }
-        p.bindDateSelector = function (txtBox) {
-            $("#" + txtBox).scroller("destroy").scroller({
+        p.bindDateSelector = function (txtBox, box) {
+            $("#" + txtBox, box).scroller("destroy").scroller({
                 preset: "date",
                 theme: 'android',
                 mode: 'scroller',
@@ -251,7 +249,9 @@
                 dateFormat: 'yy-mm-dd'
             });
         }
-
+        p.inbackground = function () {
+            return isbackground;
+        }
         p.play = function (url) {
             if (voice) {
                 voice.stop();
@@ -277,26 +277,43 @@
         p.spinner = function (isShow) {
             isShow ? spinner.show() : spinner.hide();
         }
-        p.showtips = function (message, fn) {
+        p.hideTips = function () {
+            prompter.css({ opacity: "0" }).hide();
+        }
+        p.showtips = function (message, fn, isAnimate) {
             prompter.unbind("tap");
             if ($.isFunction(fn))
                 prompter.bind("tap", fn);
-            prompter.text(message).show().animate({ opacity: "100" }, 400, null, function () {
-                //$(this).animate({ opacity: "0" }, 3000);
-                setTimeout(function () {
-                    prompter.css({ opacity: "0" }).hide();
-                }, 2000);
-            })
+            if (isAnimate) {
+                prompter.show().animate({ opacity: "100" }, 400, null, function () {
+                    setTimeout(function () {
+                        prompter.css({ opacity: "0" }).hide();
+                    }, 2000)
+                }).find("span").text(message);
+            } else
+                prompter.show().css("opacity", "100").find("span").text(message);
         },
         p.getServicesUrl = function () {
             return _def.servicesUrl;
+        },
+        p.confirm = function (message, title, btnText, fn) {
+            if (isCordova) {
+                navigator.notification.confirm(
+                                message,
+                                fn,
+                                title || _def.appName,
+                                btnText);
+            } else {
+                var ret = confirm(title);
+                fn(ret);
+            }
         }
     };
     window.app = new Application();
     app.init({ appName: '乐多分管理系统',
         pusher: "ws://192.168.0.104:8080/",
-        //servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
-        servicesUrl: "http://192.168.0.104:80/public/RestHandler.ashx/"
+        servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
+        //servicesUrl: "http://192.168.0.104:80/public/RestHandler.ashx/"
     });
 })(window);
 

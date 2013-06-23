@@ -15,10 +15,12 @@
         function _connect() {
             var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
             if (type) {
-                ws = new window[type](_pusher);
-                ws.onopen = onopen;
-                ws.onmessage = onmessage;
-                ws.onclose = onclose;
+                ws = false;
+                var _ws = new window[type](_pusher);
+                _ws.onopen = onopen;
+                _ws.onmessage = onmessage;
+                _ws.onclose = onclose;
+                _ws.onerror = onerror;
                 commands["Login"] = app.logError;
             }
         }
@@ -31,10 +33,12 @@
             };
             sendMessage("Login-" + DataStorage.WebAuthKey(), data);
         }
-        function onopen() {
-            setTimeout(loginWS, 100);
+        function onopen(event) {
+            ws = event.target;
+            loginWS();
         }
-        function onerror() {
+        function onerror(event) {
+            console.log(event);
         }
         function onmessage(event) {
             var data = event.data;
@@ -51,8 +55,12 @@
                 ws.send(cmd + " " + message);
             }
         }
-        function onclose() {
-            ws = false;
+        function onclose(event) {
+            if (ws == false) {
+                app.showtips("无法连接到推送服务器.", undefined, true);
+            }
+            else
+                ws = false;
         }
         function isConnected() {
             return ws && ws.readyState == state.OPEN;
@@ -77,6 +85,10 @@
                         mesage = JSON.stringify(mesage);
                     sendMessage("Log", mesage);
                 }
+            },
+            close: function () {
+                if (ws)
+                    ws.close();
             }
         };
     }

@@ -1,39 +1,21 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <meta name="HandheldFriendly" content="true" />
-    <title>抢购条件</title>
-    <link href="css/Global.css" rel="stylesheet" />
-    <link href="css/eleoooMobile.css" rel="stylesheet" />
-</head>
-<body>
-    <header>
-    <a href="#" class="return"></a>
+﻿<header>
+    <a href="javascript:void(0)" class="return" tap="app.closeDlg"></a>
     抢购条件
     </header>
-    <div class="wrap">
-        <ul class="detail rush">
-            <li>积分兑换：<input class="input" type="text"></li>
-            <li>现金支付：<input class="input" type="text"></li>
-            <li>投放数量：<input type="text" class="input" value="/天" /></li>
-            <li>消费频率：<input type="text" class="input" value="上两周订餐次数"></li>
-            <li>单次金额：<input type="text" class="input" value="平均订餐金额" /></li>
-            <li>投放周期：<input type="text" class="input" value="2013-03-18至2013-03-18"></li>
-            <li>促销时段：<input class="input" type="text"></li>
-            <li class="link">抢购次数：<input name="" type="checkbox" value="">每天限一次<input name="" type="checkbox" value="">本期限一次</li>
-            <li>上传图片：<a href="#"><img src="images/camera.png" alt=""></a></li>
-            <li>
-                <input type="button" class="btn green" value="提交" /></li>
-        </ul>
-    </div>
-    <footer>
-    	<a href="#"><span class="order">订单</span></a>
-    	<a href="#"><span class="menu">菜单</span></a>
-    	<a href="#" class="nav_on"><span class="sale">促销</span> </a>
-    	<a href="#"><span class="service">客服 </span></a>
-    	<a href="#"><span class="finance">财务</span></a>
-    </footer>
-</body>
-</html>
+<div class="wrap">
+    <ul class="detail rush">
+        <li>积分兑换：<input class="input" type="number" id="ItemPoint" t="dec" /></li>
+        <li>现金支付：<input class="input" type="number" id="ItemNeedPay" t="dec" /></li>
+        <li>投放数量：<input type="number" class="input" value="" id="ItemAmount" t="int" /></li>
+        <li>消费频率：<input type="number" class="input" value="" id="OrderFreqLimit" t="int" /></li>
+        <li>单次金额：<input type="number" class="input" value="" id="OrderSumLimit" t="dec" /></li>
+        <li>投放周期：<input type="text" class="input" value="" id="ItemDate" />至<input type="text" class="input" value="" id="ItemEndDate" /></li>
+        <li>促销时段：<input class="input" type="text"></li>
+        <li class="link">抢购次数：<input name="ItemLimit" type="checkbox" value="3" />每天限一次<input name="ItemLimit" type="checkbox" value="2" />本期限一次</li>
+        <li>上传图片：<a href="javascript:void(0)" tap="takeaPic"><img src="images/camera.png" alt="" /></a>
+            <img src="" alt="" id="ItemPic" />
+        </li>
+        <li>
+            <input type="button" class="btn green" value="提交" tap="saveItem" /></li>
+    </ul>
+</div>

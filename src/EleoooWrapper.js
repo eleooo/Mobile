@@ -25,7 +25,9 @@
             GetMyInfo: iniAPI('User', true, 'Get'),
             SaveMyInfo: iniAPI('User', true, 'Edit'),
             GetMenus: iniAPI('MealMenu', true, 'Get'),
-            SaveMenus: iniAPI('MealMenu', true, 'Edit')
+            SaveMenus: iniAPI('MealMenu', true, 'Edit'),
+            GetItem: iniAPI('OrderMeal', true, 'GetItem'),
+            SaveItem: iniAPI('OrderMeal', true, 'SaveItem')
         };
         function iniAPI(name, isAuth, action) {
             action = action || "Get";
@@ -59,6 +61,11 @@
                 },
                 beforeSend: function () {
                     app.spinner(true);
+                },
+                error: function (xhr, type) {
+                    delete xhrs[url];
+                    app.spinner(false);
+                    app.showtips("services call errors.");
                 }
             });
             xhrs[url] = true;
@@ -107,6 +114,12 @@
             },
             SaveMenus: function (data, fnCallback) {
                 execute(WebAPI.SaveMenus, data, fnCallback);
+            },
+            GetItem: function (id, fnCallback) {
+                execute(WebAPI.GetItem, { id: id }, fnCallback);
+            },
+            SaveItem: function (data, fnCallback) {
+                execute(WebAPI.SaveItem, data, fnCallback);
             },
             getUrl: function (name) {
                 var api = WebAPI[name];

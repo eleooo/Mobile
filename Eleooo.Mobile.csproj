@@ -79,6 +79,7 @@
     <Content Include="src\lib\zepto\selector.js" />
     <Content Include="src\lib\zepto\touch.js" />
     <Content Include="src\lib\zepto\zepto.js" />
+    <Content Include="src\presenter\Sale.js" />
     <Content Include="src\WebSocket.js" />
     <Content Include="views\menuItem.html" />
     <Content Include="src\presenter\Hall.js" />
@@ -221,7 +222,7 @@
     <Content Include="css\eleoooMobile.css" />
     <Content Include="css\Global.css" />
     <Content Include="views\detail.html" />
-    <Content Include="views\hall.html" />
+    <Content Include="views\hallView.html" />
     <Content Include="images\add.png" />
     <Content Include="images\clock.png" />
     <Content Include="images\face.png" />
@@ -234,13 +235,14 @@
     <Content Include="images\voice2.png" />
     <Content Include="views\login.html" />
     <Content Include="views\menu.html" />
-    <Content Include="views\orderHandle.html" />
+    <Content Include="views\orderHandleView.html" />
     <Content Include="views\orderList.html" />
     <Content Include="views\orderListItem.html" />
     <Content Include="views\review.html" />
     <Content Include="views\rush.html" />
     <Content Include="views\rushRecord.html" />
     <Content Include="views\sale.html" />
+    <Content Include="views\saleItem.html" />
     <Content Include="views\saleList.html" />
     <Content Include="views\temp.html" />
     <Content Include="views\tempItem.html" />

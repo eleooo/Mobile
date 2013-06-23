@@ -9,7 +9,7 @@
         var btnSendPwdDispTxt = "秒后可重发";
         var btnSendPwd = false;
         var counter = 0;
-        var p = _Login.prototype;
+        var p = _Login.prototype, _box = false;
         function refreshTimerDisp() {
             if (counter <= 0) {
                 btnSendPwd.val("短信获取密码");
@@ -22,10 +22,15 @@
             }
         }
         p.isDlgView = true;
+        p.box = function (el) {
+            if (el) _box = el;
+            return _box;
+        }
+        
         p.onLoad = function (isReturn) {
-            txtUserPhone = $("#txtLoginUserPhone").val("13800100712");
-            txtUserPwd = $("#txtLoginUserPwd").val("123456");
-            cbAutoLogin = $("#cbAutoLogin");
+            txtUserPhone = $("#txtLoginUserPhone",_box).val("13800100712");
+            txtUserPwd = $("#txtLoginUserPwd",_box).val("123456");
+            cbAutoLogin = $("#cbAutoLogin",_box);
             cbSavePwd = $("#cbSavePwd");
             if (DataStorage.IsSavePwd()) {
                 txtUserPhone.val(DataStorage.UserPhone());
@@ -81,7 +86,7 @@
             });
         }
         p.showSendMsn = function () {
-            $('#sendPwd').toggle();
+            $('#sendPwd',_box).toggle();
         }
     }
     window.$_Login = _Login;
