@@ -27,7 +27,10 @@
             GetMenus: iniAPI('MealMenu', true, 'Get'),
             SaveMenus: iniAPI('MealMenu', true, 'Edit'),
             GetItem: iniAPI('OrderMeal', true, 'GetItem'),
-            SaveItem: iniAPI('OrderMeal', true, 'SaveItem')
+            SaveItem: iniAPI('OrderMeal', true, 'SaveItem'),
+            GetItems: iniAPI('OrderMeal', true, 'GetItems'),
+            GetRushItems: iniAPI('OrderMeal', true, 'GetRushItems'),
+            DelItem: iniAPI('OrderMeal', true, 'DelItem')
         };
         function iniAPI(name, isAuth, action) {
             action = action || "Get";
@@ -118,8 +121,17 @@
             GetItem: function (id, fnCallback) {
                 execute(WebAPI.GetItem, { id: id }, fnCallback);
             },
+            GetItems: function (data, fnCallback) {
+                execute(WebAPI.GetItems, data, fnCallback);
+            },
+            GetRushItems: function (data, fnCallback) {
+                execute(WebAPI.GetRushItems, data, fnCallback);
+            },
             SaveItem: function (data, fnCallback) {
                 execute(WebAPI.SaveItem, data, fnCallback);
+            },
+            delItem: function (data, fnCallback) {
+                execute(WebAPI.DelItem, data, fnCallback);
             },
             getUrl: function (name) {
                 var api = WebAPI[name];

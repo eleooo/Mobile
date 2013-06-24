@@ -93,7 +93,7 @@
                     _ws.regCommmand("Order", orderPusher);
             }
         }
-        function initView(presenter, view, arg) {
+        function initView(presenter, view, arg, isReturn) {
             if (presenter.box() !== false && presenter.box() !== undefined)
                 return false;
             presenter.box($("<div></div>").hide().bind("tap", touchTap).appendTo(_body));
@@ -107,7 +107,7 @@
                     presenter.box().html(VT[view](viewData));
                     if ($.isFunction(presenter.onLoad))
                         presenter.onLoad();
-                    _showView(presenter, view, arg);
+                    _showView(presenter, view, arg, isReturn);
                 });
                 return true;
             } else {
@@ -117,12 +117,13 @@
                 return false;
             }
         }
-        function _showView(presenter, view, arg) {
+        function _showView(presenter, view, arg, isReturn) {
             if (currentView) {
                 var curPresenter = getPresenter(currentView);
                 $.isFunction(curPresenter.onClose) ? curPresenter.onClose() : void (0);
                 curPresenter.box().hide();
-                oldViewName.push(currentView);
+                if (!isReturn)
+                    oldViewName.push(currentView);
                 if (voice) {
                     voice.stop();
                     voice.release();
@@ -135,11 +136,11 @@
             presenter.box().show();
             currentView = view;
         }
-        function showView(view, arg) {
+        function showView(view, arg, isReturn) {
             $(window).unbind("scroll");
             var presenter = getPresenter(view);
-            if (!initView(presenter, view, arg)) {
-                _showView(presenter, view, arg);
+            if (!initView(presenter, view, arg, isReturn)) {
+                _showView(presenter, view, arg, isReturn);
             }
         }
         function getObject(type) {
@@ -171,7 +172,7 @@
         },
         p.closeDlg = function () {
             var view = oldViewName.pop() || orderListViewName;
-            showView(view);
+            showView(view, undefined, true);
         }
         p.showLoginView = function (arg) {
             showView("Login", arg);
@@ -285,13 +286,13 @@
             if ($.isFunction(fn))
                 prompter.bind("tap", fn);
             if (isAnimate) {
-                prompter.show().animate({ opacity: "100" }, 400, null, function () {
+                prompter.css("z-index", "10000").show().animate({ opacity: "100" }, 400, null, function () {
                     setTimeout(function () {
-                        prompter.css({ opacity: "0" }).hide();
+                        prompter.css({ "opacity": "0", "z-index": "0" }).hide();
                     }, 2000)
                 }).find("span").text(message);
             } else
-                prompter.show().css("opacity", "100").find("span").text(message);
+                prompter.show().css({ "opacity": "100", "z-index": "10000" }).find("span").text(message);
         },
         p.getServicesUrl = function () {
             return _def.servicesUrl;
@@ -307,6 +308,9 @@
                 var ret = confirm(title);
                 fn(ret);
             }
+        },
+        p.getViewStack = function () {
+            return oldViewName;
         }
     };
     window.app = new Application();

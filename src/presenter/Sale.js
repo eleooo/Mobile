@@ -61,6 +61,8 @@
             }
         }
         function getMenuList() {
+            if (pageIndex >= pageCount)
+                return;
             var args = { p: pageIndex + 1 };
             EleoooWrapper.GetMenus(args, function (result) {
                 if (pageIndex == 0)
@@ -85,6 +87,7 @@
             }
             if (pageIndex == 0)
                 getMenuList();
+            menuContainer.lazyload({ load: getMenuList });
         }
         p.onLoad = function () {
             menuContainer = $("#saleContainer");
@@ -146,6 +149,7 @@
             return true;
         }
         var p = _Rush.prototype;
+        p.isDlgView = true;
         p.box = function (el) {
             if (el) _box = el;
             return _box;
@@ -191,11 +195,142 @@
                     img: imgData || ''
                 };
                 EleoooWrapper.SaveItem(arg, function (result) {
-                    app.showtips(result.message,undefined,true);
+                    app.showtips(result.message, undefined, true);
                 });
             }
         }
     }
+    var _SaleList = function () {
+        var pageIndex = 0, pageCount = 1;
+        var saleList, _box = false;
+        var p = _SaleList.prototype;
+        function renderSaleList(items) {
+            var item, i;
+            for (i = 0; i < items.length; i++) {
+                item = saleList.find("#_" + items[i].ItemID);
+                if (item.length == 0)
+                    saleList.append(VT['SaleListItem'](items[i]));
+                else
+                    saleList.replaceWith(VT['SaleListItem'](items[i]));
+            }
+        }
+        function getSaleList() {
+            if (pageIndex >= pageCount)
+                return;
+            var arg = { d1: $("#txtSaleListBeginDate", _box).val(), d2: $("#txtSaleListEndDate", _box).val(), p: pageIndex + 1 };
+            EleoooWrapper.GetItems(arg, function (result) {
+                if (result.code > -1) {
+                    renderSaleList(result.data.items);
+                    pageIndex = pageIndex + 1;
+                    pageCount = result.data.pageCount;
+                }
+            });
+        }
+        p.box = function (el) {
+            if (el) _box = el;
+            return _box;
+        }
+        p.renderView = function (fnCallback) {
+            var d = new Date();
+            var d1 = d.DateAdd('d', -d.getDay()).format("yyyy-MM-dd");
+            var d2 = d.DateAdd('m', 1).format("yyyy-MM-dd");
+            fnCallback({ beginDate: d1, endDate: d2 });
+        }
+        p.onLoad = function () {
+            saleList = $("#saleList", _box);
+            app.bindDateSelector("txtSaleListBeginDate", _box);
+            app.bindDateSelector("txtSaleListEndDate", _box);
+        }
+        p.onShow = function () {
+            pageCount = 1;
+            pageIndex = 0;
+            getSaleList();
+            saleList.lazyload({ load: getSaleList });
+        }
+        p.showSaleList = function () {
+            pageCount = 1;
+            pageIndex = 0;
+            getSaleList();
+        }
+        p.showRush = function (el) {
+            EleoooWrapper.GetItem(el.attr('data-id'), function (result) {
+                if (result.code > -1) {
+                    app.showRushView(result.data);
+                } else
+                    app.showtips(result.message, undefined, true);
+            });
+        }
+        p.delItem = function (el) {
+            EleoooWrapper.delItem({ id: el.attr('data-id') }, function (result) {
+                if (result.code > -1)
+                    saleList.find("#_" + el.attr('data-id')).remove();
+                app.showtips(result.message, undefined, true);
+            });
+        }
+    }
+    var _RushRecord = function () {
+        var pageIndex = 0, pageCount = 1;
+        var rushList, ctAmount, ctPoint, _box = false;
+        var cSum = numeral(0), pSum = numeral(0);
+        var p = _RushRecord.prototype;
+        function renderRush(items) {
+            var item, itemEl, i;
+            for (i = 0; i < items.length; i++) {
+                item = items[i];
+                itemEl = rushList.find("#_" + item.ItemID);
+                if (itemEl.length > 0) {
+                    cSum.subtract(itemEl.attr('data-qty')).add(item.ItemQty);
+                    pSum.subtract(itemEl.attr('data-point')).add(item.PointSum);
+                    itemEl.replaceWith(VT["RushRecordItem"](item));
+                } else {
+                    cSum.add(item.ItemQty);
+                    pSum.add(item.PointSum);
+                    rushList.append(VT["RushRecordItem"](item));
+                }
+            }
+            ctAmount.text(cSum.format('0'));
+            ctPoint.text(pSum.format('0.00'));
+        }
+        function getRushList() {
+            if (pageIndex >= pageCount)
+                return;
+            var arg = { d1: $("#txtRushRecordBeginDate", _box).val(), d2: $("#txtRushRecordEndDate", _box).val(), p: pageIndex + 1 };
+            EleoooWrapper.GetRushItems(arg, function (result) {
+                if (result.code > -1) {
+                    renderRush(result.data.items);
+                    pageIndex = pageIndex + 1;
+                    pageCount = result.data.pageCount;
+                }
+            });
+        }
+        p.box = function (el) {
+            if (el) _box = el;
+            return _box;
+        }
+        p.renderView = function (fnCallback) {
+            var d = new Date();
+            var d1 = d.DateAdd('d', -d.getDay()).format("yyyy-MM-dd");
+            fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
+        }
+        p.onLoad = function () {
+            rushList = $("#rushList", _box);
+            app.bindDateSelector("txtRushRecordBeginDate", _box);
+            app.bindDateSelector("txtRushRecordEndDate", _box);
+            ctAmount = $("#amountSum");
+            ctPoint = $("#pointSum");
+        }
+        p.onShow = function () {
+            pageCount = 1;
+            pageIndex = 0;
+            getRushList();
+            rushList.lazyload({ load: getRushList });
+        }
+        p.showRushList = function () {
+            getRushList();
+        }
+    }
     window.$_Sale = _Sale;
     window.$_Rush = _Rush;
+    window.$_SaleList = _SaleList;
+    window.$_RushRecord = _RushRecord;
 })(window);

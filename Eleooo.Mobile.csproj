@@ -241,9 +241,11 @@
     <Content Include="views\review.html" />
     <Content Include="views\rush.html" />
     <Content Include="views\rushRecord.html" />
+    <Content Include="views\rushRecordItem.html" />
     <Content Include="views\sale.html" />
     <Content Include="views\saleItem.html" />
     <Content Include="views\saleList.html" />
+    <Content Include="views\saleListItem.html" />
     <Content Include="views\temp.html" />
     <Content Include="views\tempItem.html" />
     <Content Include="Web.config" />
