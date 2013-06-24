@@ -1,10 +1,10 @@
 ﻿/// <reference path="../Application.js" />
 /// <reference path="../lib/Common.js" />
-/// <reference path="../DataStorage.js" />
+/// <reference path="../DS.js" />
 
 (function () {
     var _OrderList = function () {
-        var container, txtUserPhone, _box = false;
+        var container, tempContainer, txtUserPhone, _box = false;
         var s1, s2;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false;
@@ -23,6 +23,14 @@
                 summary: { sum: numeral(0), sumok: numeral(0), sumcash: numeral(0), sumpoint: numeral(0) }
             };
             return sumInfo;
+        }
+        function getMaxDate(orderData, date) {
+            var i;
+            for (i = 0; i < orderData.length; i++) {
+                if (orderData[i].OrderUpdateOn > date)
+                    date = orderData[i].OrderUpdateOn;
+            }
+            return date;
         }
         function processRender(orderData, isSyn) {
             //            var viewData = {
@@ -43,19 +51,24 @@
                         item.attr("data-" + o.toLowerCase(), order[o]);
                 }
                 oldItem = container.find("#_" + order.ID);
-                if (oldItem.length == 0)
-                    container.append(item);
+                if (oldItem.length == 0) {
+                    if (isSyn) {
+                        container.fist().before(item);
+                    } else
+                        container.append(item);
+                }
                 else
                     oldItem.replaceWith(item);
             }
             var items = container.find("li");
-            items.remove().sort(function (a, b) {
-                return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
-            });
-            container.append(items);
-            if (container) {
-                calcItemsInfo(items);
+            if (isSyn) {
+                items.remove().sort(function (a, b) {
+                    return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
+                });
+                container.append(items);
             }
+            //container.html(tempContainer.html());
+            calcItemsInfo(items);
         }
         function getOrderStatus(item) {
             var status = '', cls = 'red';
@@ -114,6 +127,7 @@
             if (status == 'all') {
                 s1.hide();
                 s2.show();
+                //$("li", container).show();
                 $("li", container).show().each(function (i, el) {
                     calcItemInfo(el, sumInfo);
                 });
@@ -140,25 +154,28 @@
             var args = {
                 d1: $("#txtOrderListBeginDate", _box).val(),
                 d2: $("#txtOrderListEndDate", _box).val(),
-                c: DataStorage.CompanyID(),
+                c: DS.CompanyID(),
                 p: pageIndex + 1,
                 q: getInputPhone()
             };
             if (isSyn) {
-                args["t"] = DataStorage.LatestUpdateOn();
+                args["t"] = DS.LatestUpdateOn();
             }
             isLoading = true;
-            EleoooWrapper.GetOrders(args, function (result) {
+            WS.GetOrders(args, function (result) {
                 if (result.code > -1) {
                     if (pageIndex == 0 && !app.wsInited()) {
-                        DataStorage.LatestUpdateOn(result.data.orders.length > 0 ? result.data.orders[0].OrderUpdateOn : args.d1);
+                        DS.LatestUpdateOn(getMaxDate(result.data.orders, args.d1));
                         app.initWS();
+
                     }
-                    processRender(result.data.orders, isSyn);
-                    isLoading = false;
-                    if (!isSyn) {
-                        pageIndex++;
-                        pageCount = result.data.pageCount;
+                    if (result.data.orders.length > 0) {
+                        processRender(result.data.orders, isSyn);
+                        isLoading = false;
+                        if (!isSyn) {
+                            pageIndex++;
+                            pageCount = result.data.pageCount;
+                        }
                     }
                     if (fn) { fn(); }
                 }
@@ -194,6 +211,8 @@
             app.bindDateSelector("txtOrderListBeginDate", _box);
             app.bindDateSelector("txtOrderListEndDate", _box);
             container = $("#orderContainer", _box);
+            //tempContainer = container.clone();
+            tempContainer = $("<ul></ul>");
             s1 = $("#s1");
             s2 = $("#s2");
             $("a", s1).tap(filterOrderList);
@@ -215,8 +234,8 @@
         p.onPushOrder = function (result) {
             if (result.data.length > 0) {
                 isLoading = true;
+                DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
                 processRender(result.data, true);
-                DataStorage.LatestUpdateOn(result.data[0].OrderUpdateOn);
                 isLoading = false;
                 if (result.hasNew && _box.css('display') == 'none') {
                     app.notify("你有新的订单需要处理.");
@@ -229,10 +248,6 @@
             var d = (new Date()).format("yyyy-MM-dd");
             fnCallback({ beginDate: d, endDate: d });
         }
-        p.refreshOrderList = function () {
-            processRender(_dataCache);
-        }
-
         p.showTempView = function (el) {
             app.showTempView(el.attr("data-id"));
         }
@@ -367,7 +382,7 @@
         }
         p.onShow = function (arg) {
             _box.html('');
-            EleoooWrapper.OrderDetail(arg, function (result) {
+            WS.OrderDetail(arg, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
                     _box.html(VT["OrderHandleView"](_order));
@@ -404,7 +419,7 @@
                 orders: JSON.stringify(orders)
             };
             isProcess = true;
-            EleoooWrapper.ConfirmOrder(args, function (result) {
+            WS.ConfirmOrder(args, function (result) {
                 app.logInfo(result.message);
                 if (result.code == 0) {
                     _order.orderSessionVal = result.data.orderSessionVal;
@@ -433,7 +448,7 @@
                 options.mimeType = "media/mp3";
                 options.params = { id: id, m: message };
                 var ft = new FileTransfer();
-                ft.upload(fPath + rfUrl, encodeURI(EleoooWrapper.getUrl("SendOrderTemps")), function (r) {
+                ft.upload(fPath + rfUrl, encodeURI(WS.getUrl("SendOrderTemps")), function (r) {
                     hasRf = false;
                     var result = JSON.parse(r.responseText);
                     if (result.code > -1) {
@@ -449,7 +464,7 @@
             if (hasRf)
                 sendVoiceMessageCore(message);
             else
-                EleoooWrapper.callServices("SendOrderTemps", { m: message, id: id }, function (result) {
+                WS.callServices("SendOrderTemps", { m: message, id: id }, function (result) {
                     if (result.code < 0)
                         app.logError(result.message);
                     else {
@@ -499,7 +514,7 @@
         }
         function getTempsList(orderid) {
             id = orderid;
-            EleoooWrapper.callServices("GetOrderTemps", { id: orderid }, function (result) {
+            WS.callServices("GetOrderTemps", { id: orderid }, function (result) {
                 if (result.code == 0) {
                     renderTempList(result.data.temps);
                     $("#phone", _box).text(result.data.MemberPhoneNumber);

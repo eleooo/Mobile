@@ -1,6 +1,6 @@
 ﻿/// <reference path="../lib/jquery/jquery-1.7.js" />
-/// <reference path="../DataStorage.js" />
-/// <reference path="../EleoooWrapper.js" />
+/// <reference path="../DS.js" />
+/// <reference path="../WS.js" />
 
 (function () {
     var _Hall = function () {
@@ -24,9 +24,9 @@
         
         p.onShow = function () {
             //_box.html('');
-            EleoooWrapper.GetMyInfo(function (result) {
+            WS.GetMyInfo(function (result) {
                 myInfo = result.data || myInfo;
-                myInfo["p"] = DataStorage.UserPhone();
+                myInfo["p"] = DS.UserPhone();
                 myInfo["CompanyWorkTime"] = myInfo["CompanyWorkTime"] || "";
                 myInfo["OnSetSum"] = myInfo["OnSetSum"] || "";
                 _box.html(VT["HallView"](myInfo));
@@ -43,7 +43,7 @@
             //            getInputData();
             //            delete myInfo["p1"];
             //            delete myInfo["p2"];
-            //            DataStorage.ViewCache("Hall", myInfo);
+            //            DS.ViewCache("Hall", myInfo);
         }
         p.addWorkingtime = function (el) {
             var val = prompt("请输入新营业时间,格式如:10:00-11:00");
@@ -78,9 +78,9 @@
                 return;
             }
             getInputData();
-            EleoooWrapper.SaveMyInfo(myInfo, function (result) {
+            WS.SaveMyInfo(myInfo, function (result) {
                 if (result.code > -1) {
-                    DataStorage.UserPhone(phone);
+                    DS.UserPhone(phone);
                 }
                 app.logInfo(result.message);
             });

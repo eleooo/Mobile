@@ -9,7 +9,7 @@
 //GetOrderTemps post data: {orderId:0} , result data:{code:0,message:'',data:{memberphonenumber:'',timespan:'',temps:[]}}
 //SendOrderTemps post data:{orderId:0,message:'',voice:''}
 (function () {
-    var _EleoooWrapper = function () {
+    var _WS = function () {
         var xhrs = {};
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
@@ -37,7 +37,7 @@
             return { name: name, isAuth: isAuth, action: action };
         }
         function getAPI(api) {
-            return app.getServicesUrl() + api.name + "/" + api.action;
+            return app.getUrl() + '/public/RestHandler.ashx/' + api.name + "/" + api.action;
         }
         function execute(api, data, fnCallback) {
             if (!app.hasNetwork()) {
@@ -46,7 +46,7 @@
             }
             data = data || {};
             if (api.isAuth) {
-                data["__t"] = DataStorage.WebAuthKey();
+                data["__t"] = DS.WebAuthKey();
             }
             data["__"] = (new Date()).valueOf();
             var url = getAPI(api);
@@ -57,7 +57,7 @@
                 url: url,
                 data: data,
                 dataType: "jsonp",
-                success: fnCallback,
+                success: function (result) { fnCallback(result); delete data; delete result; },
                 complete: function () {
                     delete xhrs[url];
                     app.spinner(false);
@@ -77,10 +77,10 @@
             Login: function (phoneNum, pwd, fnCallback) {
                 execute(WebAPI.Login, { u: phoneNum, p: pwd, s: 2 }, function (result) {
                     if (result.code == 0) {
-                        DataStorage.CompanyID(result.data.c);
-                        DataStorage.UserID(result.data.id);
-                        DataStorage.UserPhone(result.data.p);
-                        DataStorage.WebAuthKey(result.data.t);
+                        DS.CompanyID(result.data.c);
+                        DS.UserID(result.data.id);
+                        DS.UserPhone(result.data.p);
+                        DS.WebAuthKey(result.data.t);
                     }
                     fnCallback(result);
                 });
@@ -148,5 +148,5 @@
             }
         };
     }
-    window.EleoooWrapper = new _EleoooWrapper();
+    window.WS = new _WS();
 })();

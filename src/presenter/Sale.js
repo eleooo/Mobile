@@ -1,6 +1,6 @@
 ﻿/// <reference path="../Common.js" />
 /// <reference path="../Application.js" />
-/// <reference path="../EleoooWrapper.js" />
+/// <reference path="../WS.js" />
 
 (function () {
     var _Sale = function () {
@@ -64,7 +64,7 @@
             if (pageIndex >= pageCount)
                 return;
             var args = { p: pageIndex + 1 };
-            EleoooWrapper.GetMenus(args, function (result) {
+            WS.GetMenus(args, function (result) {
                 if (pageIndex == 0)
                     menuContainer.find("li").remove();
                 if (result.code > -1) {
@@ -194,7 +194,7 @@
                     item: JSON.stringifty(_itemInfo),
                     img: imgData || ''
                 };
-                EleoooWrapper.SaveItem(arg, function (result) {
+                WS.SaveItem(arg, function (result) {
                     app.showtips(result.message, undefined, true);
                 });
             }
@@ -218,7 +218,7 @@
             if (pageIndex >= pageCount)
                 return;
             var arg = { d1: $("#txtSaleListBeginDate", _box).val(), d2: $("#txtSaleListEndDate", _box).val(), p: pageIndex + 1 };
-            EleoooWrapper.GetItems(arg, function (result) {
+            WS.GetItems(arg, function (result) {
                 if (result.code > -1) {
                     renderSaleList(result.data.items);
                     pageIndex = pageIndex + 1;
@@ -253,7 +253,7 @@
             getSaleList();
         }
         p.showRush = function (el) {
-            EleoooWrapper.GetItem(el.attr('data-id'), function (result) {
+            WS.GetItem(el.attr('data-id'), function (result) {
                 if (result.code > -1) {
                     app.showRushView(result.data);
                 } else
@@ -261,7 +261,7 @@
             });
         }
         p.delItem = function (el) {
-            EleoooWrapper.delItem({ id: el.attr('data-id') }, function (result) {
+            WS.delItem({ id: el.attr('data-id') }, function (result) {
                 if (result.code > -1)
                     saleList.find("#_" + el.attr('data-id')).remove();
                 app.showtips(result.message, undefined, true);
@@ -295,7 +295,7 @@
             if (pageIndex >= pageCount)
                 return;
             var arg = { d1: $("#txtRushRecordBeginDate", _box).val(), d2: $("#txtRushRecordEndDate", _box).val(), p: pageIndex + 1 };
-            EleoooWrapper.GetRushItems(arg, function (result) {
+            WS.GetRushItems(arg, function (result) {
                 if (result.code > -1) {
                     renderRush(result.data.items);
                     pageIndex = pageIndex + 1;

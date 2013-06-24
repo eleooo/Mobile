@@ -1,8 +1,8 @@
 ﻿/// <reference path="../lib/jquery/jquery-1.7.js" />
 /// <reference path="../lib/jquery/jquery.mobile.js" />
 /// <reference path="../lib/Common.js" />
-/// <reference path="../DataStorage.js" />
-/// <reference path="../EleoooWrapper.js" />
+/// <reference path="../DS.js" />
+/// <reference path="EleoooWrapper.js" />
 /// <reference path="WebSocket.js" />
 
 (function () {
@@ -21,12 +21,14 @@
         var _ws = false;
         p.init = function (def) {
             _def = def;
-            isCordova = !(typeof (cordova) == 'undefined');
-            if (isCordova) {
-                document.addEventListener("deviceready", ready);
-            }
-            else
-                $(document).ready(ready);
+            $(document).ready(function () {
+                isCordova = !(typeof (cordova) == 'undefined');
+                if (isCordova) {
+                    document.addEventListener("deviceready", ready);
+                }
+                else
+                    ready();
+            });
         }
         function getPresenter(view) {
             var presenter = presenters[view];
@@ -44,10 +46,9 @@
             document.addEventListener("pause", function () { isbackground = true; }, false);
             document.addEventListener("backbutton", function () {
                 if (oldViewName.length > 0) {
-                    app.closeDlg();
+                    app.goback();
                 } else {
-                    app.confirm(
-                                '你确定要退出程序吗?',
+                    app.confirm('你确定要退出程序吗?',
                                 undefined,
                                 '确定,取消',
                                 function (btn) { btn == '1' ? navigator.app.exitApp() : void (0); }
@@ -73,7 +74,7 @@
             spinner = $("#spinner", _body);
             prompter = $("#prompter", _body);
             prompter.find("a").bind("tap", app.hideTips);
-            if (DataStorage.IsAutoLogin() && DataStorage.WebAuthKey()) {
+            if (DS.IsAutoLogin() && DS.WebAuthKey()) {
                 footer.find("a[view='orderList']").trigger("tap");
             }
             else
@@ -170,7 +171,7 @@
         p.wsInited = function () {
             return _ws.Inited();
         },
-        p.closeDlg = function () {
+        p.goback = function () {
             var view = oldViewName.pop() || orderListViewName;
             showView(view, undefined, true);
         }
@@ -294,8 +295,8 @@
             } else
                 prompter.show().css({ "opacity": "100", "z-index": "10000" }).find("span").text(message);
         },
-        p.getServicesUrl = function () {
-            return _def.servicesUrl;
+        p.getUrl = function () {
+            return _def.url;
         },
         p.confirm = function (message, title, btnText, fn) {
             if (isCordova) {
@@ -316,8 +317,8 @@
     window.app = new Application();
     app.init({ appName: '乐多分管理系统',
         pusher: "ws://192.168.0.104:8080/",
-        servicesUrl: "http://www.eleooo.com/public/RestHandler.ashx/"
-        //servicesUrl: "http://192.168.0.104:80/public/RestHandler.ashx/"
+        url: "http://www.eleooo.com"
+        //servicesUrl: "http://192.168.0.104:80"
     });
 })(window);
 

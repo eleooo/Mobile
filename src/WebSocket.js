@@ -1,5 +1,5 @@
 ﻿/// <reference path="Application.js" />
-/// <reference path="DataStorage.js" />
+/// <reference path="DS.js" />
 
 (function () {
     var _PushServices = function (pusher) {
@@ -25,13 +25,13 @@
             }
         }
         function loginWS() {
-            var data = { Date: DataStorage.LatestUpdateOn(),
-                UserId: DataStorage.UserID(),
-                CompanyId: DataStorage.CompanyID(),
+            var data = { Date: DS.LatestUpdateOn(),
+                UserId: DS.UserID(),
+                CompanyId: DS.CompanyID(),
                 SubSys: 2,
                 LoginSys: 2
             };
-            sendMessage("Login-" + DataStorage.WebAuthKey(), data);
+            sendMessage("Login-" + DS.WebAuthKey(), data);
         }
         function onopen(event) {
             ws = event.target;
@@ -46,6 +46,7 @@
                 data = JSON.parse(data);
             if (data.cmd && commands[data.cmd])
                 commands[data.cmd](data);
+            delete data;
         }
         function sendMessage(cmd, message) {
             message = message || "";

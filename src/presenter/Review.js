@@ -9,12 +9,12 @@
         function showReviewList() {
             var args = {
                 t: 4,
-                b: DataStorage.CompanyID(),
+                b: DS.CompanyID(),
                 i: pageIndex + 1,
                 d1: $("#txtBeginReviewDate", _box).val(),
                 d2: $("#txtEndReviewDate", _box).val()
             };
-            EleoooWrapper.FacebookQuery(args, function (result) {
+            WS.FacebookQuery(args, function (result) {
                 if (result.code > -1) {
                     rw_num.eq(0).text(result.data.good);
                     rw_num.eq(1).text(result.data.normal);
@@ -104,7 +104,7 @@
                 return;
             }
             var args = { fbID: el.attr("data-id"), content: encodeURIComponent(val) };
-            EleoooWrapper.ReplyFacebook(args, function (result) {
+            WS.ReplyFacebook(args, function (result) {
                 if (result.code >= 0) {
                     var html = result.data.replace('[0]', val);
                     $("#item" + args.fbID, reviewList).append(html).find(".rw4,.rw5").remove();

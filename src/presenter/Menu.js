@@ -1,6 +1,6 @@
 ﻿/// <reference path="../lib/jquery/jquery-1.7.js" />
-/// <reference path="../DataStorage.js" />
-/// <reference path="../EleoooWrapper.js" />
+/// <reference path="../DS.js" />
+/// <reference path="../WS.js" />
 
 
 (function () {
@@ -44,7 +44,7 @@
             var args = { q: getInputQueryVal(),
                 p: pageIndex + 1
             };
-            EleoooWrapper.GetMenus(args, function (result) {
+            WS.GetMenus(args, function (result) {
                 if (pageIndex == 0)
                     menuContainer.find("li").remove();
                 if (result.code > -1) {
@@ -90,7 +90,7 @@
                 v: val,
                 id: item.attr("data-id")
             };
-            EleoooWrapper.SaveMenus(args, function (result) {
+            WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
@@ -103,7 +103,7 @@
                 v: !(item.attr("data-isout") == "true"),
                 id: item.attr("data-id")
             };
-            EleoooWrapper.SaveMenus(args, function (result) {
+            WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
@@ -115,7 +115,7 @@
                 cmd: 'del',
                 id: item.attr("data-id")
             };
-            EleoooWrapper.SaveMenus(args, function (result) {
+            WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).remove();
                 }

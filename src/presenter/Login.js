@@ -32,12 +32,12 @@
             txtUserPwd = $("#txtLoginUserPwd",_box).val("123456");
             cbAutoLogin = $("#cbAutoLogin",_box);
             cbSavePwd = $("#cbSavePwd");
-            if (DataStorage.IsSavePwd()) {
-                txtUserPhone.val(DataStorage.UserPhone());
-                txtUserPwd.val(DataStorage.UserPwd());
+            if (DS.IsSavePwd()) {
+                txtUserPhone.val(DS.UserPhone());
+                txtUserPwd.val(DS.UserPwd());
                 cbSavePwd.attr("checked", "checked");
             }
-            if (DataStorage.IsAutoLogin()) {
+            if (DS.IsAutoLogin()) {
                 cbAutoLogin.attr("checked", "checked");
             }
         }
@@ -52,13 +52,13 @@
                 app.logError("请输入你的登录密码.");
                 return;
             }
-            EleoooWrapper.Login(phone, pwd, function (result) {
+            WS.Login(phone, pwd, function (result) {
                 if (result.code == 0) {
                     if (cbSavePwd.attr("checked"))
-                        DataStorage.IsSavePwd(true);
+                        DS.IsSavePwd(true);
                     if (cbAutoLogin.attr("checked"))
-                        DataStorage.IsAutoLogin(true);
-                    app.closeDlg();
+                        DS.IsAutoLogin(true);
+                    app.goback();
                     app.showOrderListView();
                 } else {
                     app.logError(result.message);
@@ -74,7 +74,7 @@
                 app.logError("请输入你的登录账号.");
                 return;
             }
-            EleoooWrapper.SendPassword(phone, function (result) {
+            WS.SendPassword(phone, function (result) {
                 if (result.code == 0) {
                     btnSendPwd.removeClass("green");
                     btnSendPwd.addClass("gray");

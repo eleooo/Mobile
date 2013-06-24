@@ -1,5 +1,5 @@
 ﻿(function () {
-    var _DataStorage = function () {
+    var _DS = function () {
         function getData(key, val) {
             if (val === undefined)
                 return localStorage[key];
@@ -40,5 +40,5 @@
             }
         };
     };
-    window.DataStorage = _DataStorage();
+    window.DS = _DS();
 })(window);
