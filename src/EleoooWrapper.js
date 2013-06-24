@@ -30,7 +30,8 @@
             SaveItem: iniAPI('OrderMeal', true, 'SaveItem'),
             GetItems: iniAPI('OrderMeal', true, 'GetItems'),
             GetRushItems: iniAPI('OrderMeal', true, 'GetRushItems'),
-            DelItem: iniAPI('OrderMeal', true, 'DelItem')
+            DelItem: iniAPI('OrderMeal', true, 'DelItem'),
+            GetFinance: iniAPI('App', true, 'GetFinance'),
         };
         function iniAPI(name, isAuth, action) {
             action = action || "Get";
@@ -132,6 +133,9 @@
             },
             delItem: function (data, fnCallback) {
                 execute(WebAPI.DelItem, data, fnCallback);
+            },
+            GetFinance:function(data,fnCallback){
+                execute(WebAPI.GetFinance,data,fnCallback);
             },
             getUrl: function (name) {
                 var api = WebAPI[name];

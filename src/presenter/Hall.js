@@ -22,7 +22,7 @@
             return _box;
         }
         
-        p.onShow = function () {
+        p.show = function () {
             //_box.html('');
             WS.GetMyInfo(function (result) {
                 myInfo = result.data || myInfo;
@@ -32,7 +32,7 @@
                 _box.html(VT["HallView"](myInfo));
             });
         }
-        p.onLoad = function () {
+        p.init = function () {
             txtphone = $("#txtPhone", _box);
             txtWorkingTime = $("#txtWorkingTime", _box);
             txtOnSetSum = $("#txtOnSetSum", _box);

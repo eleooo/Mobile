@@ -1,12 +1,12 @@
 ﻿<header>
     <a href="javascript:void();" tap="app.goback" class="return"></a>
     促销列表
-    <div class="deal_btn"><a href="javascript:void(0);" tap="app.showRushRecordView">抢购记录</a></div>
+    <div class="deal_btn"><a href="javascript:void(0);" tap="app.showRushRecord">抢购记录</a></div>
     </header>
 <div class="title-header">
-    <input type="text" value="{{=it.beginDate}}" id="txtSaleListBeginDate" />
+    <input type="text" class="date" value="{{=it.beginDate}}" id="txtSaleListBeginDate" />
     至
-    <input type="text" value="{{=it.endDate}}" id="txtSaleListEndDate" />
+    <input type="text" class="date" value="{{=it.endDate}}" id="txtSaleListEndDate" />
     <span class="qry_btn"><a href="javascript:void(0);" tap="showSaleList">查询</a></span>
 </div>
 <div class="content">

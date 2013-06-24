@@ -200,14 +200,14 @@
             if (el) _box = el;
             return _box;
         }
-        p.onShow = function () {
+        p.show = function () {
             $(window).lazyload({ load: getOrders });
             //getOrders(false, SynOrderList);
             getOrders(false);
         }
         p.onClose = function () {
         }
-        p.onLoad = function () {
+        p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
             app.bindDateSelector("txtOrderListEndDate", _box);
             container = $("#orderContainer", _box);
@@ -249,10 +249,10 @@
             fnCallback({ beginDate: d, endDate: d });
         }
         p.showTempView = function (el) {
-            app.showTempView(el.attr("data-id"));
+            app.showTemp(el.attr("data-id"));
         }
         p.showHandleView = function (el) {
-            app.showOrderHandleView(el.attr("data-id"));
+            app.showOrderHandle(el.attr("data-id"));
         }
         p.showOrderList = function (el) {
             pageCount = 1;
@@ -377,7 +377,7 @@
         p.selectMsn = function (el) {
             el.find("input").attr("checked", true);
         }
-        p.onLoad = function () {
+        p.init = function () {
 
         }
         p.onShow = function (arg) {
@@ -532,7 +532,7 @@
             hasRf = false;
             getTempsList(arg);
         }
-        p.onLoad = function () {
+        p.init = function () {
             tempContainer = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });

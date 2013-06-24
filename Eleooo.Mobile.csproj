@@ -79,6 +79,7 @@
     <Content Include="src\lib\zepto\selector.js" />
     <Content Include="src\lib\zepto\touch.js" />
     <Content Include="src\lib\zepto\zepto.js" />
+    <Content Include="src\presenter\Finance.js" />
     <Content Include="src\presenter\Sale.js" />
     <Content Include="src\WebSocket.js" />
     <Content Include="views\menuItem.html" />

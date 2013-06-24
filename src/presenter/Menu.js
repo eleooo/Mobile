@@ -63,11 +63,11 @@
             if (el) _box = el;
             return _box;
         }
-        p.onShow = function () {
+        p.show = function () {
             getMenuList();
             menuContainer.lazyload({ load: getMenuList });
         }
-        p.onLoad = function () {
+        p.init = function () {
             txtMenuName = $("#txtMenuName", _box).focusin(function () {
                 if ($(this).val() == $(this).attr('defVal'))
                     $(this).val('');

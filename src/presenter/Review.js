@@ -47,16 +47,16 @@
                 }
             });
         }
-        
+
         p.box = function (el) {
             if (el) _box = el;
             return _box;
         }
-        p.onShow = function () {
+        p.show = function () {
             showReviewList();
             reviewList.lazyload({ load: showReviewList });
         }
-        p.onLoad = function (isReturn) {
+        p.init = function (isReturn) {
             reviewList = $("#reviewList", _box);
             mall_cate = $("#mall_cate", _box);
             deal_link = $(".deal_link", _box);
@@ -69,8 +69,9 @@
             });
         }
         p.renderView = function (fnCallback) {
-            var d = (new Date()).format("yyyy-MM-dd");
-            fnCallback({ beginDate: d, endDate: d });
+            var d = new Date();
+            var d1 = d.DateAdd('d', 1-d.getDate()).format("yyyy-MM-dd");
+            fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.showReview = function () {
             showReviewList();

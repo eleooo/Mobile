@@ -1,7 +1,7 @@
-﻿<li id="_{{=it.ItemID}}" data-point="{{=it.PointSum}}" data-qty="{{=it.ItemQty}}">
+﻿<li id="_{{=it.ItemID}}" data-point="{{=it.ItemPoint}}" data-qty="1">
     <img src="images/user.png" alt="" align="absmiddle" />
     <div>
         <span class="user">{{=it.MemberPhoneNumber}}</span><span class="time"> {{=it.OrderDate}}</span></div>
     <div class="deal_div">
-        <span>原价：<b>{{=numeral(it.ItemSum).format('0.00')}}</b></span><span>积分：<b>{{=numeral(it.PointSum).format('0.00')}}</b></span><span>数量：<b>{{=it.ItemQty}}</b></span></div>
+        <span>原价：<b>{{=numeral(it.OrderPrice).format('0.00')}}</b></span><span>积分：<b>{{=numeral(it.ItemPoint).format('0.00')}}</b></span><span>数量：<b>1</b></span></div>
 </li>

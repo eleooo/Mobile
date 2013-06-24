@@ -12,7 +12,7 @@
         var _def;
         var presenters = {};
         var currentView = false;
-        var footer = false;
+        var footernav = false, footer = false;
         var orderListViewName = "OrderList";
         var oldViewName = [];
         var voice = false;
@@ -56,26 +56,15 @@
                 }
             }, true);
             _body = $("body");
-            (footer = $("#footer", _body)).find("a").tap(function () {
-                var nav = $(this);
-                if (nav.hasClass("nav_on"))
-                    return;
-                else {
-                    $(".nav_on", footer).removeClass("nav_on");
-                    nav.addClass("nav_on");
-                    var view = nav.attr("view");
-                    if (view) {
-                        var s = view.charAt(0);
-                        view = view.replace(s, s.toUpperCase());
-                        showView(view);
-                    }
-                }
+            footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
+                var v = evt.currentTarget.getAttribute('t');
+                eval(v + '();');
             });
             spinner = $("#spinner", _body);
             prompter = $("#prompter", _body);
             prompter.find("a").bind("tap", app.hideTips);
             if (DS.IsAutoLogin() && DS.WebAuthKey()) {
-                footer.find("a[view='orderList']").trigger("tap");
+                p.showOrderList();
             }
             else
                 p.showLoginView();
@@ -99,22 +88,22 @@
                 return false;
             presenter.box($("<div></div>").hide().bind("tap", touchTap).appendTo(_body));
             if (!$.isFunction(VT[view])) {
-                if ($.isFunction(presenter.onLoad))
-                    presenter.onLoad();
+                if ($.isFunction(presenter.init))
+                    presenter.init();
                 return false;
             }
             if ($.isFunction(presenter.renderView)) {
                 presenter.renderView(function (viewData) {
                     presenter.box().html(VT[view](viewData));
-                    if ($.isFunction(presenter.onLoad))
-                        presenter.onLoad();
+                    if ($.isFunction(presenter.init))
+                        presenter.init();
                     _showView(presenter, view, arg, isReturn);
                 });
                 return true;
             } else {
                 presenter.box().html(VT[view](undefined));
-                if ($.isFunction(presenter.onLoad))
-                    presenter.onLoad();
+                if ($.isFunction(presenter.init))
+                    presenter.init();
                 return false;
             }
         }
@@ -132,17 +121,28 @@
                 }
             }
             presenter.isDlgView ? footer.hide() : footer.show();
-            if ($.isFunction(presenter.onShow))
-                presenter.onShow(arg);
+            if ($.isFunction(presenter.show))
+                presenter.show(arg);
             presenter.box().show();
             currentView = view;
         }
         function showView(view, arg, isReturn) {
+            if (view === currentView)
+                return;
             $(window).unbind("scroll");
             var presenter = getPresenter(view);
             if (!initView(presenter, view, arg, isReturn)) {
                 _showView(presenter, view, arg, isReturn);
             }
+            var att;
+            footernav.each(function (i, el) {
+                att = el.getAttribute('v');
+                if (att.indexOf(',' + view + ',') > -1)
+                    el.className = 'nav_on';
+                else
+                    el.className = '';
+            });
+
         }
         function getObject(type) {
             if (type.indexOf('.') == -1) {
@@ -175,52 +175,51 @@
             var view = oldViewName.pop() || orderListViewName;
             showView(view, undefined, true);
         }
-        p.showLoginView = function (arg) {
+        p.showLogin = function (arg) {
             showView("Login", arg);
         }
-        p.showBalanceView = function (arg) {
+        p.showBalance = function (arg) {
             showView("Balance", arg);
         }
-        p.showOrderHandleView = function (arg) {
+        p.showOrderHandle = function (arg) {
             showView("OrderHandle", arg);
         }
-        p.showOrderListView = function (arg) {
-            //showView(orderListViewName, arg);
-            footer.find("a[view='orderList']").trigger("tap");
+        p.showOrderList = function (arg) {
+            showView(orderListViewName, arg);
         }
-        p.showDetailView = function (arg) {
+        p.showDetail = function (arg) {
             showView("Detail", arg);
             return false;
         }
-        p.showMenuView = function (arg) {
+        p.showMenu = function (arg) {
             showView("Menu", arg);
             return false;
         }
-        p.showHallView = function (arg) {
+        p.showHall = function (arg) {
             showView("Hall", arg);
             return false;
         }
-        p.showReviewView = function (arg) {
+        p.showReview = function (arg) {
             showView("Review", arg);
             return false;
         }
-        p.showRushView = function (arg) {
+        p.showRush = function (arg) {
             showView("Rush", arg);
             return false;
         }
-        p.showRushRecordView = function (arg) {
+        p.showRushRecord = function (arg) {
             showView("RushRecord", arg);
             return false;
         }
-        p.showSaleView = function (arg) {
+        p.showSale = function (arg) {
             showView("Sale", arg);
             return false;
         }
-        p.showSaleListView = function (arg) {
+        p.showSaleList = function (arg) {
             showView("SaleList", arg);
             return false;
         }
-        p.showTempView = function (arg) {
+        p.showTemp = function (arg) {
             showView("Temp", arg);
             return false;
         }

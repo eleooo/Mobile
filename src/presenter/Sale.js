@@ -7,13 +7,18 @@
         var pageIndex = 0, pageCount = 1;
         var menuContainer, _box = false;
         var curDir = false;
-        var itemInfo = false;
-        var sumPrice = numeral(0);
         var p = _Sale.prototype;
         function getItemObj() {
             var d = new Date().format("yyyy-MM-dd");
             var d1 = new Date(d).DateAdd('d', 7).format("yyyy-MM-dd");
+            var names = [], sumPrice = numeral(0), items = [];
+            menuContainer.find("input .red").each(function (i, el) {
+                names.push(el.getAttribute('data-name'));
+                items.push(parseInt(el.getAttribute('data-id')));
+                sumPrice.add(el.getAttribute('data-price'));
+            });
             var obj = {
+                ItemTitle: names.join('+'),
                 ItemPoint: null, //积分兑换
                 ItemNeedPay: null, //现金支付
                 ItemAmount: 1, //投放数量
@@ -26,9 +31,13 @@
                 ItemPic: null,
                 ItemSum: sumPrice.value(), //总额
                 CompanyID: null,
-                ItemInfo: JSON.stringify(itemInfo),
+                ItemInfo: JSON.stringify(items),
+                ItemStatus: 1,
                 ItemID: 0
             };
+            delete names;
+            delete sumPrice;
+            delete items;
             return obj;
         }
         function getDirItem(dirId, dirName) {
@@ -79,37 +88,31 @@
                 _box = el;
             return _box;
         }
-        p.onShow = function (arg) {
+        p.show = function (arg) {
             if (arg) {
                 pageIndex = 0;
                 pageCount = 1;
-                itemInfo = [];
             }
             if (pageIndex == 0)
                 getMenuList();
             menuContainer.lazyload({ load: getMenuList });
         }
-        p.onLoad = function () {
+        p.init = function () {
             menuContainer = $("#saleContainer");
-            itemInfo = [];
         }
         p.toggleSale = function (el) {
             if (el.hasClass('red')) {
                 app.confirm("还需要继续选择菜单吗?", "促销方案", "继续选择,下一步", function (ret) {
                     if (ret == '1') {
-                        Array.remove(itemInfo, parseInt(el.attr('data-id')));
-                        sumPrice.subtract(el.attr('data-price'));
                         el.removeClass('red').addClass('green');
                     } else
-                        app.showRushView(getItemObj());
+                        app.showRush(getItemObj());
                 });
             } else {
-                itemInfo.push(parseInt(el.attr('data-id')));
-                sumPrice.add(el.attr('data-price'));
                 el.removeClass('green').addClass('red');
                 app.confirm("还需要继续选择菜单吗?", "促销方案", "继续选择,下一步", function (ret) {
                     if (ret != '1')
-                        app.showRushView(getItemObj());
+                        app.showRush(getItemObj());
                 });
             }
         }
@@ -154,14 +157,14 @@
             if (el) _box = el;
             return _box;
         }
-        p.onLoad = function () {
+        p.init = function () {
             imgItem = $("#ItemPic", _box);
             inputs = $("input .input", _box);
             itemLimits = $("input[name='ItemLimit']", _box);
             app.bindDateSelector("ItemDate", _box);
             app.bindDateSelector("ItemEndDate", _box);
         }
-        p.onShow = function (arg) {
+        p.show = function (arg) {
             _itemInfo = arg;
             var v, att;
             inputs.each(function (i, el) {
@@ -232,16 +235,16 @@
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
-            var d1 = d.DateAdd('d', -d.getDay()).format("yyyy-MM-dd");
+            var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
             var d2 = d.DateAdd('m', 1).format("yyyy-MM-dd");
             fnCallback({ beginDate: d1, endDate: d2 });
         }
-        p.onLoad = function () {
+        p.init = function () {
             saleList = $("#saleList", _box);
             app.bindDateSelector("txtSaleListBeginDate", _box);
             app.bindDateSelector("txtSaleListEndDate", _box);
         }
-        p.onShow = function () {
+        p.show = function () {
             pageCount = 1;
             pageIndex = 0;
             getSaleList();
@@ -255,7 +258,7 @@
         p.showRush = function (el) {
             WS.GetItem(el.attr('data-id'), function (result) {
                 if (result.code > -1) {
-                    app.showRushView(result.data);
+                    app.showRush(result.data);
                 } else
                     app.showtips(result.message, undefined, true);
             });
@@ -279,8 +282,8 @@
                 item = items[i];
                 itemEl = rushList.find("#_" + item.ItemID);
                 if (itemEl.length > 0) {
-                    cSum.subtract(itemEl.attr('data-qty')).add(item.ItemQty);
-                    pSum.subtract(itemEl.attr('data-point')).add(item.PointSum);
+                    cSum.subtract(itemEl.attr('data-qty')).add(1);
+                    pSum.subtract(itemEl.attr('data-point')).add(item.ItemPoint);
                     itemEl.replaceWith(VT["RushRecordItem"](item));
                 } else {
                     cSum.add(item.ItemQty);
@@ -309,17 +312,17 @@
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
-            var d1 = d.DateAdd('d', -d.getDay()).format("yyyy-MM-dd");
+            var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
-        p.onLoad = function () {
+        p.init = function () {
             rushList = $("#rushList", _box);
             app.bindDateSelector("txtRushRecordBeginDate", _box);
             app.bindDateSelector("txtRushRecordEndDate", _box);
-            ctAmount = $("#amountSum");
-            ctPoint = $("#pointSum");
+            ctAmount = $("#amountSum", _box);
+            ctPoint = $("#pointSum", _box);
         }
-        p.onShow = function () {
+        p.show = function () {
             pageCount = 1;
             pageIndex = 0;
             getRushList();

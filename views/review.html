@@ -1,5 +1,5 @@
 ﻿<header>
-    <div class="deal_btn"><a href="javascript:void(0);" tap="app.showHallView">餐厅信息</a></div>
+    <div class="deal_btn"><a href="javascript:void(0);" tap="app.showHall">餐厅信息</a></div>
     会员点评
     </header>
 <div class="deal_link">
@@ -11,9 +11,9 @@
         <label data-type="All" id="mall_cate">
             默认</label><em></em></div>
     <div class="th-int">
-        <input type="text" value="{{=it.beginDate}}" id="txtBeginReviewDate" />
+        <input type="text" class="date" value="{{=it.beginDate}}" id="txtBeginReviewDate" />
         至
-        <input type="text" value="{{=it.endDate}}" id="txtEndReviewDate" />
+        <input type="text" class="date" value="{{=it.endDate}}" id="txtEndReviewDate" />
         <span class="qry_btn">
             <a href="javascript:void(0);" tap="showReview">查询</a></span>
     </div>

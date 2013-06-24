@@ -1,40 +1,16 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <meta name="HandheldFriendly" content="true" />
-    <title>收支明细</title>
-    <link href="css/Global.css" rel="stylesheet" />
-    <link href="css/eleoooMobile.css" rel="stylesheet" />
-</head>
-<body>
-    <header>
-    <div class="deal_btn"><a href="#">结算记录</a></div>
+﻿<header>
+    <div class="deal_btn"><a href="javascript:void(0)" tap="app.showBalance">结算记录</a></div>
     收支明细
     </header>
-    <div class="title-header">
-        <div class="qry_btn">
-            <a href="#">查询</a></div>
-        <div class="th-int">
-            2013-03-18 至 2013-03-18</div>
+<div class="title-header">
+    <div class="th-int">
+        <input type="text" class="date" value="{{=it.beginDate}}" id="txtDetailBeginDate" />
+        至
+        <input type="text" class="date" value="{{=it.endDate}}" id="txtDetailEndDate" />
+        <span class="qry_btn"><a href="javascript:void(0);" tap="show">查询</a></span>
     </div>
-    <div class="content">
-        <ul class="detail">
-            <li><span>现金收入：</span>4738.00 </li>
-            <li><span>储值收入：</span>00.00 </li>
-            <li><span>积分收入：</span>92.00 </li>
-            <li><span>收入总计：</span>4830.00 </li>
-            <li><span>分成比例：</span>10% </li>
-            <li><span>应付佣金：</span>382.00 </li>
-        </ul>
-    </div>
-    <footer>
-    	<a href="#"><span class="order">订单</span></a>
-    	<a href="#"><span class="menu">菜单</span></a>
-    	<a href="#"><span class="sale">促销</span> </a>
-    	<a href="#"><span class="service">客服 </span></a>
-    	<a href="#" class="nav_on"><span class="finance">财务</span></a>
-    </footer>
-</body>
-</html>
+</div>
+<div class="content">
+    <ul class="detail" id="fList">
+    </ul>
+</div>
