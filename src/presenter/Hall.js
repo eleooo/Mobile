@@ -20,9 +20,10 @@
             if (el) _box = el;
             return _box;
         }
-
+        p.reset = function () {
+            _box.html('');
+        }
         p.show = function () {
-            //_box.html('');
             WS.GetMyInfo(function (result) {
                 myInfo = result.data || myInfo;
                 myInfo["p"] = DS.UserPhone();

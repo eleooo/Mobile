@@ -12,8 +12,8 @@
         };
         var ws = false;
         var commands = {};
+        var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
         function _connect() {
-            var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
             if (type) {
                 ws = false;
                 var _ws = new window[type](_pusher);
@@ -76,6 +76,9 @@
             connect: function () {
                 if (!isConnected())
                     _connect();
+            },
+            support: function () {
+                return type != undefined;
             },
             regCommmand: function (cmd, fnCallback) {
                 commands[cmd] = fnCallback;

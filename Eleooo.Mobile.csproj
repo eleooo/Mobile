@@ -48,14 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\mobiscroll.custom-2.5.4.min.css" />
-    <Content Include="css\style.css" />
+    <Content Include="css\css.css" />
     <Content Include="default.htm" />
     <Content Include="images\camera.png" />
     <Content Include="images\spinner.gif" />
     <Content Include="images\key.png" />
     <Content Include="images\wp_icons.png" />
-    <Content Include="index.htm" />
+    <Content Include="index.html" />
     <Content Include="js\application.js" />
+    <Content Include="js\lib\cordova.js" />
     <Content Include="js\lib\jquery-1.7.js" />
     <Content Include="js\lib\mobiscroll.custom-2.5.4.min.js" />
     <Content Include="js\templates.js" />
@@ -63,12 +64,14 @@
     <Content Include="MuSelect\css\multi-select.css" />
     <Content Include="MuSelect\img\switch.png" />
     <Content Include="MuSelect\js\jquery.multi-select.js" />
+    <Content Include="src\complier\BuildCordova.js" />
     <Content Include="src\complier\BuildCSS.js" />
     <Content Include="src\complier\BuildJQuery.js" />
     <Content Include="src\complier\BuildJS.js" />
     <Content Include="src\complier\BuildView.js" />
     <Content Include="src\complier\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
+    <Content Include="src\lib\android\cordova.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />
@@ -89,7 +92,6 @@
     <Content Include="test.html" />
     <Content Include="src\Application.js" />
     <Content Include="src\DataStorage.js" />
-    <Content Include="src\lib\android\cordova-2.6.0.js" />
     <Content Include="src\EleoooWrapper.js" />
     <Content Include="src\Common.js" />
     <Content Include="src\lib\dot-packer\dot-packer.js" />
@@ -220,8 +222,8 @@
     <Content Include="src\presenter\Login.js" />
     <Content Include="src\presenter\Order.js" />
     <Content Include="views\balance.html" />
-    <Content Include="css\eleoooMobile.css" />
-    <Content Include="css\Global.css" />
+    <Content Include="style\eleoooMobile.css" />
+    <Content Include="style\Global.css" />
     <Content Include="views\detail.html" />
     <Content Include="views\hallView.html" />
     <Content Include="images\add.png" />

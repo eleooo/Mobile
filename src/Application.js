@@ -224,8 +224,15 @@
         p.logout = function () {
             DS.IsAutoLogin(false);
             DS.WebAuthKey(null);
+            var v, presenter;
+            for (v in presenters) {
+                presenter = presenters[v];
+                if ($.isFunction(presenter.reset))
+                    presenter.reset();
+            }
             _ws.close();
-            p.showLoginView();
+            oldViewName.clear();
+            p.showLogin();
         }
         p.notify = function (message) {
             console.log(message);
@@ -310,8 +317,8 @@
                 fn(ret);
             }
         },
-        p.getViewStack = function () {
-            return oldViewName;
+        p.isSocket = function () {
+            return _ws.support();
         }
     };
     window.app = new Application();

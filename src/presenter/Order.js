@@ -7,7 +7,7 @@
         var container, state, txtUserPhone, _box = false;
         var s1, s2;
         var pageIndex = 0, pageCount = 1;
-        var isLoading = false;
+        var isLoading = false, flag = 0;
         var statusText = {
             notstarted: "待处理",
             inprogress: "处理中",
@@ -93,7 +93,7 @@
                 cls = 'dark';
             }
 
-            return { status: status, text: statusText[status], class: cls };
+            return { status: status, text: statusText[status], cls: cls };
         }
         function calcItemsInfo(items) {
             var sumInfo = getSumInfoObj();
@@ -167,8 +167,12 @@
                 if (result.code > -1) {
                     if (pageIndex == 0 && !app.wsInited()) {
                         DS.LatestUpdateOn(getMaxDate(result.data.orders, args.d1));
-                        app.initWS();
-
+                        if (app.isSocket())
+                            app.initWS();
+                        else if (flag == 0) {
+                            flag = 1;
+                            SynOrderList();
+                        }
                     }
                     if (result.data.orders.length > 0) {
                         processRender(result.data.orders, isSyn);
@@ -185,9 +189,11 @@
             });
         }
         function SynOrderList() {
-            setTimeout(function () {
-                getOrders(true, SynOrderList);
-            }, 5000);
+            if (flag == 1) {
+                setTimeout(function () {
+                    getOrders(true, SynOrderList);
+                }, 5000);
+            }
         }
         function getInputPhone() {
             val = txtUserPhone.val();
@@ -201,12 +207,17 @@
             if (el) _box = el;
             return _box;
         }
+        p.reset = function () {
+            pageCount = 1;
+            pageIndex = 0;
+            isLoading = false;
+            flag = 0;
+            container.html("");
+        }
         p.show = function () {
             $(window).lazyload({ load: getOrders });
             //getOrders(false, SynOrderList);
             getOrders(false);
-        }
-        p.onClose = function () {
         }
         p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
@@ -255,10 +266,7 @@
             app.showOrderHandle(el.attr("data-id"));
         }
         p.showOrderList = function (el) {
-            pageCount = 1;
-            pageIndex = 0;
-            isLoading = false;
-            container.html("");
+            p.reset();
             getOrders(false);
         }
     };
@@ -378,8 +386,11 @@
         p.init = function () {
 
         }
-        p.onShow = function (arg) {
+        p.reset = function () {
             _box.html('');
+        }
+        p.onShow = function (arg) {
+            p.reset();
             WS.OrderDetail(arg, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
@@ -527,6 +538,10 @@
         p.onShow = function (arg) {
             hasRf = false;
             getTempsList(arg);
+        }
+        p.reset = function () {
+            hasRf = false;
+            tempContainer.html('');
         }
         p.init = function () {
             tempContainer = $("#tempContainer", _box);

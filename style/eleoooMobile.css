@@ -54,6 +54,7 @@ footer {
 	width: 100%;
 	border-top: 1px solid #202023;
 	padding-top: 3px;
+    display:none;
 }
 .spinner { padding: 7px 10px 6px 10px; position: fixed; bottom: 100px; z-index: 1000; background-color: Black; filter: alpha(opacity=10); opacity: 0.1; right: 20px; display: none; }
 .prompter { top:5px; filter:alpha(opacity=0); opacity: 0; width:98%; margin-left:2px; padding: 7px 10px 6px 10px; position: fixed; color: #FFFFFF; background-color: #0099FF; }
@@ -942,4 +943,4 @@ span.price {
 	color: #fff;
 	font-size: 14px;
 }
-.date{ width:100px;}
+.date{ width:75px;}

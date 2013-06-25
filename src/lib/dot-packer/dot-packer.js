@@ -6,13 +6,13 @@ var pro = require("uglify-js").uglify;
 function dotpacker(viewDir, outputFileName, ns, def) {
     try {
 
-        var code = "var " + ns + " = function(){ return new Function();};";
+        var code = "var " + ns + " = {};";
         var file = null;
         var files = fs.readdirSync(viewDir);
         for (i in files) {
             if (files[i].match(/^[^\.]*\.html/g)) {
                 console.log("Processing:" + files[i]);
-                code += convert(files[i], ns); ;
+                code += convert(files[i], ns) + '\r\n'; 
             }
         }
 
@@ -32,7 +32,7 @@ function dotpacker(viewDir, outputFileName, ns, def) {
         var path = viewDir + fileName;
         var data = fs.readFileSync(path, 'utf8').replace(/^\s+|\s+$/g, "");
         var code = dot.template(data,undefined,def).toString();
-        var header = namespace + "['" + ucfirst(fileName.replace('.html', '')) + "'] = function(it)";
+        var header = namespace + "." + ucfirst(fileName.replace('.html', '')) + " = function(it)";
         code = code.replace('function anonymous(it)', header) + ";";
         return code;
     }

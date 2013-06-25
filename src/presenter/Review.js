@@ -54,6 +54,10 @@
             if (el) _box = el;
             return _box;
         }
+        p.reset = function () {
+            pageIndex = 0;
+            reviewList.html('');
+        }
         p.show = function () {
             showReviewList();
             reviewList.lazyload({ load: showReviewList });
@@ -67,8 +71,9 @@
             app.bindDateSelector("txtBeginDate", _box);
             app.bindDateSelector("txtEndDate", _box);
             mall_cate.parent().tap(function () {
-                $(this).toggleClass("mall_on");
+                var el = $(this).toggleClass("mall_on");
                 deal_link.toggle();
+                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
             });
         }
         p.renderView = function (fnCallback) {

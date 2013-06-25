@@ -19,6 +19,9 @@
             app.bindDateSelector("txtDetailBeginDate", _box);
             app.bindDateSelector("txtDetailEndDate", _box);
         }
+        p.reset = function () {
+            ctList.html('');
+        }
         p.show = function () {
             var arg = { t: 0,
                 d1: $("#txtDetailBeginDate", _box).val(),
@@ -49,6 +52,9 @@
             ctList = $("#dList", _box).hide();
             app.bindDateSelector("txtBalanceBeginDate", _box);
             app.bindDateSelector("txtBalanceEndDate", _box);
+        }
+        p.reset = function () {
+            ctList.html('');
         }
         p.show = function () {
             var arg = { t: 1,

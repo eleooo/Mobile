@@ -1,8 +1,12 @@
-﻿﻿var outName = "../../css/css.css";
+﻿﻿var outName = "../../js/lib/cordova.js";
 var fileArray = [
-"../../style/Global.css",
-"../../style/eleoooMobile.css"];
-//read all view presenter
+"../lib/android/cordova.js"
+];
+//read all view presenter 
+
+///////////////////////////////////////////////////////////////////////////////
+//begin compile
+///////////////////////////////////////////////////////////////////////////////
 
 var fs = require("fs");
 var exec = require("child_process").exec;
@@ -27,4 +31,4 @@ exec(outName, { encoding: 'utf8', timeout: 1000000 }, function (error, stdout, s
         console.log('stderr: -------------------------------------');
         console.log(stderr);
     }
-});
+}); 

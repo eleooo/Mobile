@@ -90,6 +90,11 @@
                 _box = el;
             return _box;
         }
+        p.reset = function () {
+            pageIndex = 0;
+            pageCount = 1;
+            menuContainer.html('');
+        }
         p.show = function (arg) {
             if (arg) {
                 pageIndex = 0;
@@ -243,6 +248,11 @@
             if (el) _box = el;
             return _box;
         }
+        p.reset = function () {
+            pageIndex = 0;
+            pageCount = 0;
+            saleList.html('');
+        }
         p.renderView = function (fnCallback) {
             var d = new Date();
             var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
@@ -256,8 +266,7 @@
             app.bindDateSelector("txtSaleListEndDate", _box);
         }
         p.show = function () {
-            pageCount = 1;
-            pageIndex = 0;
+            p.reset();
             getSaleList();
             saleList.lazyload({ load: getSaleList });
         }
@@ -325,6 +334,11 @@
             if (el) _box = el;
             return _box;
         }
+        p.reset = function () {
+            rushList.html('');
+            pageCount = 1;
+            pageIndex = 0;
+        }
         p.renderView = function (fnCallback) {
             var d = new Date();
             var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
@@ -339,8 +353,7 @@
             ctPoint = $("#pointSum", _box);
         }
         p.show = function () {
-            pageCount = 1;
-            pageIndex = 0;
+            p.reset();
             getRushList();
             rushList.lazyload({ load: getRushList });
         }

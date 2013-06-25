@@ -69,6 +69,11 @@
             getMenuList();
             menuContainer.lazyload({ load: getMenuList });
         }
+        p.reset = function () {
+            pageIndex = 0;
+            pageCount = 1;
+            menuContainer.html('');
+        }
         p.init = function () {
             txtMenuName = $("#txtMenuName", _box).focusin(function () {
                 if ($(this).val() == $(this).attr('defVal'))
