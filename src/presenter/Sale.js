@@ -14,7 +14,7 @@
             var names = [], sumPrice = numeral(0), item;
             $.each(itemInfo, function (i, id) {
                 item = menuContainer.find("#_" + id);
-                names.push(item.attr('data-name'));
+                names.push(unescape(item.attr('data-name')));
                 sumPrice.add(item.attr('data-price'));
             });
             var obj = {

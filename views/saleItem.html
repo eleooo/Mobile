@@ -5,6 +5,6 @@
     </h4>
     <div class="menu_down" style="position: relative; line-height: 26px;">
         <span>单价：{{=price}} </span>
-        <input type="button" value="加入促销" class="green" style="position: absolute; right: 0px;" data-name="{{=it.Name}}" data-id="{{=it.ID}}" data-price="{{=price}}" tap="toggleSale" />
+        <input type="button" value="加入促销" class="green" style="position: absolute; right: 0px;" data-name="{{=escape(it.Name)}}" data-id="{{=it.ID}}" data-price="{{=price}}" tap="toggleSale" />
     </div>
 </div>
