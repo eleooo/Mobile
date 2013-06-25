@@ -1,7 +1,7 @@
 ﻿/// <reference path="../lib/jquery/jquery-1.7.js" />
 /// <reference path="../lib/jquery/jquery.mobile.js" />
 /// <reference path="../lib/Common.js" />
-/// <reference path="../DS.js" />
+/// <reference path="../DataStorage.js" />
 /// <reference path="EleoooWrapper.js" />
 /// <reference path="WebSocket.js" />
 
@@ -19,21 +19,10 @@
         var isCordova = false;
         var isbackground = false;
         var _ws = false;
-        p.init = function (def) {
-            _def = def;
-            $(document).ready(function () {
-                isCordova = !(typeof (cordova) == 'undefined');
-                if (isCordova) {
-                    document.addEventListener("deviceready", ready);
-                }
-                else
-                    ready();
-            });
-        }
         function getPresenter(view) {
             var presenter = presenters[view];
-            if (presenter == undefined) {
-                presenter = eval("new $_" + view + "()");
+            if (presenter === undefined) {
+                presenter = new window['$_' + view]();
                 presenters[view] = presenter;
                 p[view] = presenter;
             }
@@ -58,16 +47,24 @@
             _body = $("body");
             footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
                 var v = evt.currentTarget.getAttribute('t');
-                eval(v + '();');
+                p[v].call(this, evt);
             });
             spinner = $("#spinner", _body);
             prompter = $("#prompter", _body);
             prompter.find("a").bind("tap", app.hideTips);
             if (DS.IsAutoLogin() && DS.WebAuthKey()) {
                 p.showOrderList();
-            }
-            else
-                p.showLoginView();
+            } else p.showLogin();
+        }
+        p.init = function (def) {
+            _def = def;
+            $(document).ready(function () {
+                isCordova = typeof (cordova) !== 'undefined';
+                if (isCordova) {
+                    document.addEventListener("deviceready", ready);
+                }
+                else ready();
+            });
         }
         function _initWS(orderPusher) {
             if (!app.hasNetwork()) {
@@ -77,7 +74,8 @@
             if (!_ws.Connected()) {
                 _ws.connect();
                 _ws.regCommmand("Notify", function (evt) {
-                    app.showtips(evt.data, undefined, false);
+                    var msg = evt.data.title + ':' + evt.data.message;
+                    app.showtips(msg, undefined, false);
                 });
                 if (orderPusher)
                     _ws.regCommmand("Order", orderPusher);
@@ -120,7 +118,16 @@
                     voice = null;
                 }
             }
-            presenter.isDlgView ? footer.hide() : footer.show();
+            var isFound = false;
+            var att;
+            footernav.each(function (i, el) {
+                att = el.getAttribute('v');
+                if (att.indexOf(',' + view + ',') > -1)
+                    el.className = 'nav_on', isFound = true;
+                else
+                    el.className = '';
+            });
+            isFound ? footer.show() : footer.hide();
             if ($.isFunction(presenter.show))
                 presenter.show(arg);
             presenter.box().show();
@@ -134,21 +141,12 @@
             if (!initView(presenter, view, arg, isReturn)) {
                 _showView(presenter, view, arg, isReturn);
             }
-            var att;
-            footernav.each(function (i, el) {
-                att = el.getAttribute('v');
-                if (att.indexOf(',' + view + ',') > -1)
-                    el.className = 'nav_on';
-                else
-                    el.className = '';
-            });
-
         }
         function getObject(type) {
             if (type.indexOf('.') == -1) {
                 return presenters[currentView][type];
             } else {
-                return eval(type);
+                return p[type.replace('app.', '')];
             }
         }
         function touchTap(event) {
@@ -224,6 +222,9 @@
             return false;
         }
         p.logout = function () {
+            DS.IsAutoLogin(false);
+            DS.WebAuthKey(null);
+            _ws.close();
             p.showLoginView();
         }
         p.notify = function (message) {

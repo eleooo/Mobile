@@ -1,5 +1,6 @@
 ﻿/// <reference path="jquery/jquery-1.7.js" />
 (function () {
+    'use strict';
     Date.prototype.format = function (formatStr) {
         var str = formatStr;
         if (!formatStr) {

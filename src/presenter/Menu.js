@@ -6,7 +6,7 @@
 (function () {
     var _Menu = function () {
         var pageIndex = 0, pageCount = 1;
-        var txtMenuName, menuContainer, _box;
+        var txtMenuName, menuContainer, wrap, _box;
         var curDir = false;
         var p = _Menu.prototype;
         function getDirItem(dirId, dirName) {
@@ -26,6 +26,7 @@
         }
         function renderMenu(menus) {
             var dir, menu, item;
+            menuContainer.remove();
             curDir = false;
             for (var i = 0; i < menus.length; i++) {
                 menu = menus[i];
@@ -37,6 +38,7 @@
                 else
                     item.replaceWith(m);
             }
+            wrap.append(menuContainer);
         }
         function getMenuList() {
             if (pageIndex >= pageCount)
@@ -46,7 +48,7 @@
             };
             WS.GetMenus(args, function (result) {
                 if (pageIndex == 0)
-                    menuContainer.find("li").remove();
+                    menuContainer.html('');
                 if (result.code > -1) {
                     renderMenu(result.data.menus);
                     pageIndex++;
@@ -76,6 +78,7 @@
                     $(this).val($(this).attr('defVal'));
             });
             menuContainer = $("#menuContainer", _box);
+            wrap = menuContainer.parent();
         }
         p.changePrice = function (el) {
             var item = $(el);

@@ -21,16 +21,15 @@
                 setTimeout(refreshTimerDisp, 1000);
             }
         }
-        p.isDlgView = true;
         p.box = function (el) {
             if (el) _box = el;
             return _box;
         }
-        
+
         p.init = function (isReturn) {
-            txtUserPhone = $("#txtLoginUserPhone",_box).val("13800100712");
-            txtUserPwd = $("#txtLoginUserPwd",_box).val("123456");
-            cbAutoLogin = $("#cbAutoLogin",_box);
+            txtUserPhone = $("#txtLoginUserPhone", _box).val("13800100712");
+            txtUserPwd = $("#txtLoginUserPwd", _box).val("123456");
+            cbAutoLogin = $("#cbAutoLogin", _box);
             cbSavePwd = $("#cbSavePwd");
             if (DS.IsSavePwd()) {
                 txtUserPhone.val(DS.UserPhone());
@@ -86,7 +85,7 @@
             });
         }
         p.showSendMsn = function () {
-            $('#sendPwd',_box).toggle();
+            $('#sendPwd', _box).toggle();
         }
     }
     window.$_Login = _Login;

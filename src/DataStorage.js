@@ -1,10 +1,11 @@
 ﻿(function () {
+    'use strict';
     var _DS = function () {
         function getData(key, val) {
             if (val === undefined)
                 return localStorage[key];
             else {
-                return localStorage[key] = typeof (val) != "string" ? JSON.stringify(val) : val;
+                return localStorage[key] = (val && typeof (val) != "string") ? JSON.stringify(val) : val;
             }
         }
         return {
@@ -12,31 +13,31 @@
                 return getData(view, data);
             },
             WebAuthKey: function (key) {
-                return getData("EleoooWebAuthKey", key);
+                return getData("WebAuthKey", key);
             },
             UserPhone: function (phoneNum) {
-                return getData("EleoooUserPhone", phoneNum);
+                return getData("UserPhone", phoneNum);
             },
             UserPwd: function (pwd) {
-                return getData("EleoooUserPwd", pwd);
+                return getData("UserPwd", pwd);
             },
             UserID: function (id) {
-                return getData("EleoooUserID", id);
+                return getData("UserID", id);
             },
             CompanyID: function (id) {
-                return getData("EleoooCompanyID", id);
+                return getData("CompanyID", id);
             },
             LatestUpdateOn: function (date) {
-                return getData("EleoooLatestUpdateOn", date);
+                return getData("LatestUpdateOn", date);
             },
             Version: function (ver) {
-                return getData("EleoooVersion", ver);
+                return getData("Version", ver);
             },
             IsSavePwd: function (state) {
-                return getData("EleoooIsSavePwd", state);
+                return getData("IsSavePwd", state);
             },
             IsAutoLogin: function (state) {
-                return getData("EleoooIsAutoLogin", state);
+                return getData("IsAutoLogin", state);
             }
         };
     };

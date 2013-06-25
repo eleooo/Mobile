@@ -2,7 +2,7 @@
 
 (function () {
     var _Review = function () {
-        var reviewList = false, mall_cate = false, rw_num = false, deal_link = false, _box;
+        var reviewList = false, pList, mall_cate = false, rw_num = false, deal_link = false, _box;
         var pageIndex = 0;
         var p = _Review.prototype;
 
@@ -20,13 +20,14 @@
                     rw_num.eq(1).text(result.data.normal);
                     rw_num.eq(2).text(result.data.bad);
                     if (result.data.html.length == 0 && pageIndex == 0) {
-                        reviewList.find("li").remove();
+                        reviewList.html('');
                     } else {
                         var len = result.data.html.length / 2;
                         var index = 0;
                         var id = 0, html = '';
                         var item;
                         var filter = mall_cate.attr("data-type");
+                        reviewList.remove();
                         for (var i = 0; i < len; i++) {
                             id = result.data.html[index];
                             html = result.data.html[index + 1];
@@ -42,6 +43,7 @@
                             }
                             index = index + 2;
                         }
+                        pList.append(reviewList);
                     }
                     pageIndex++;
                 }
@@ -58,6 +60,7 @@
         }
         p.init = function (isReturn) {
             reviewList = $("#reviewList", _box);
+            pList = reviewList.parent();
             mall_cate = $("#mall_cate", _box);
             deal_link = $(".deal_link", _box);
             rw_num = $("#rw_number > i", _box);
@@ -70,7 +73,7 @@
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
-            var d1 = d.DateAdd('d', 1-d.getDate()).format("yyyy-MM-dd");
+            var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.showReview = function () {

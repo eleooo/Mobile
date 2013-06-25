@@ -16,12 +16,11 @@
             if (p2.val())
                 myInfo["p2"] = p2.val();
         }
-        p.isDlgView = true;
         p.box = function (el) {
             if (el) _box = el;
             return _box;
         }
-        
+
         p.show = function () {
             //_box.html('');
             WS.GetMyInfo(function (result) {

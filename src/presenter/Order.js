@@ -4,7 +4,7 @@
 
 (function () {
     var _OrderList = function () {
-        var container, tempContainer, txtUserPhone, _box = false;
+        var container, state, txtUserPhone, _box = false;
         var s1, s2;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false;
@@ -42,6 +42,7 @@
             //            setSummaryInfo(viewData);
 
             var item, oldItem, order, status;
+            container.remove();
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
                 order["status"] = getOrderStatus(order);
@@ -67,7 +68,7 @@
                 });
                 container.append(items);
             }
-            //container.html(tempContainer.html());
+            state.before(container);
             calcItemsInfo(items);
         }
         function getOrderStatus(item) {
@@ -211,8 +212,7 @@
             app.bindDateSelector("txtOrderListBeginDate", _box);
             app.bindDateSelector("txtOrderListEndDate", _box);
             container = $("#orderContainer", _box);
-            //tempContainer = container.clone();
-            tempContainer = $("<ul></ul>");
+            state = $("#state", _box);
             s1 = $("#s1");
             s2 = $("#s2");
             $("a", s1).tap(filterOrderList);
@@ -339,8 +339,6 @@
             }
             return log2;
         };
-        p.isDlgView = true;
-
         p.box = function (el) {
             if (el) _box = el;
             return _box;
@@ -522,8 +520,6 @@
                 }
             });
         }
-        p.isDlgView = true;
-
         p.box = function (el) {
             if (el) _box = el;
             return _box;
