@@ -29,7 +29,9 @@
                 UserId: DS.UserID(),
                 CompanyId: DS.CompanyID(),
                 SubSys: 2,
-                LoginSys: 2
+                LoginSys: 2,
+                Platform: app.platform(),
+                Version: app.appVer()
             };
             sendMessage("Login-" + DS.WebAuthKey(), data);
         }

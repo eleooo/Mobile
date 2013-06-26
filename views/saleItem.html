@@ -1,11 +1,10 @@
 ﻿{{var price =numeral(it.price).format("0.00");}}
-<div class="main_menu" id="_{{=it.id}}">
+<div class="main_menu" id="_{{=it.id}}" data-name="{{=escape(it.name)}}" data-price="{{=price}}">
     <h4 style="padding-bottom: 5px;">
         {{=it.name}}
     </h4>
     <div class="menu_down" style="line-height: 26px;">
         <span>单价：{{=price}} </span>
-        <input type="button" value="加入促销" class="green" style=" float:right;" data-name="{{=escape(it.name)}}" data-id="{{=it.id}}" data-price="{{=price}}"
-            tap="toggleSale" />
+        <input type="button" value="加入促销" class="green" style=" float:right;" data-id="{{=it.id}}" tap="toggleSale" />
     </div>
 </div>

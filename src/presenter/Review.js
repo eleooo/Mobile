@@ -26,7 +26,7 @@
                         var index = 0;
                         var id = 0, html = '';
                         var item;
-                        var filter = mall_cate.attr("data-type");
+                        //var filter = mall_cate.attr("data-type");
                         reviewList.remove();
                         for (var i = 0; i < len; i++) {
                             id = result.data.html[index];
@@ -36,9 +36,9 @@
                                 item.replaceWith(html);
                             else {
                                 item = $(html);
-                                if (filter != 'All' && filter != item.attr("data-reply")) {
-                                    item.hide();
-                                }
+                                //                                if (filter != 'All' && filter != item.attr("data-reply")) {
+                                //                                    item.hide();
+                                //                                }
                                 reviewList.append(item);
                             }
                             index = index + 2;
@@ -65,16 +65,16 @@
         p.init = function (isReturn) {
             reviewList = $("#reviewList", _box);
             pList = reviewList.parent();
-            mall_cate = $("#mall_cate", _box);
-            deal_link = $(".deal_link", _box);
+            //mall_cate = $("#mall_cate", _box);
+            //deal_link = $(".deal_link", _box);
             rw_num = $("#rw_number > i", _box);
-            app.bindDateSelector("txtBeginDate", _box);
-            app.bindDateSelector("txtEndDate", _box);
-            mall_cate.parent().tap(function () {
-                var el = $(this).toggleClass("mall_on");
-                deal_link.toggle();
-                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
-            });
+            app.bindDateSelector("txtBeginReviewDate", _box);
+            app.bindDateSelector("txtEndReviewDate", _box);
+            //            mall_cate.parent().tap(function () {
+            //                var el = $(this).toggleClass("mall_on");
+            //                deal_link.toggle();
+            //                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
+            //            });
         }
         p.renderView = function (fnCallback) {
             var d = new Date();

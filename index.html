@@ -5,17 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
     <meta name="HandheldFriendly" content="true" />
     <title>乐多分商家管理系统</title>
-    <link href="css/css.css" rel="stylesheet" type="text/css" />
     <link href="css/mobiscroll.custom-2.5.4.min.css" rel="stylesheet" type="text/css" />
-    <script src="js/lib/cordova.js" type="text/javascript"></script>
-    <script src="js/lib/zepto.js" type="text/javascript"></script>
-    <script src="js/lib/mobiscroll.custom-2.5.4.min.js" type="text/javascript"></script>
-    <script src="js/application.js" type="text/javascript"></script>
-    <script src="js/templates.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="spinner" class="spinner">
-        <img src="images/spinner.gif" alt="loading..." /></div>
+        <img src="images/spinner.gif" alt="" /></div>
     <div id="prompter" class="prompter">
         <span></span><a href="javascript:void(0);">X</a>
     </div>
@@ -26,5 +20,28 @@
     	<a href="javascript:void(0);" v=",Review," t="showReview"><span class="service">客服 </span></a>
     	<a href="javascript:void(0);" v=",Detail,Balance," t="showDetail"><span class="finance">财务</span></a>
     </footer>
+    <script type="text/javascript">
+        var def = { appName: '乐多分管理系统',
+            pusher: "ws://192.168.0.104:8080/",
+            url: '.'
+            //url: "http://www.eleooo.com"
+            //url: "http://192.168.0.104:80"
+        };
+        (function (app, platform, _def) {
+            var ie = app.indexOf('MSIE') > -1;
+            var desktop = platform.indexOf('Win32') > -1 || platform.indexOf('Win64') > -1;
+            var v = localStorage ? (localStorage['Version'] || '1.0') : '1.0';
+            document.writeln('<link href="' + _def.url + '/Mobile/css/css.css?v=' + v + '" rel="stylesheet" type="text/css" />');
+            if (!desktop)
+                document.writeln('<script src="js/lib/cordova.js" type="text/javascript"><\/script>');
+            if (ie || desktop)
+                document.writeln('<script src="js/lib/jquery-1.7.js" type="text/javascript"><\/script>');
+            else
+                document.writeln('<script src="js/lib/zepto.js" type="text/javascript"><\/script>');
+            document.writeln('<script src="js/lib/mobiscroll.custom-2.5.4.min.js" type="text/javascript"><\/script>');
+            document.writeln('<script src="' + _def.url + '/Mobile/js/templates.js?v=' + v + '" type="text/javascript"><\/script>');
+            document.writeln('<script src="' + _def.url + '/Mobile/js/application.js?v=' + v + '" type="text/javascript"><\/script>');
+        })(navigator.userAgent, navigator.platform, def);
+    </script>
 </body>
 </html>

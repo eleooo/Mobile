@@ -9,26 +9,26 @@ var outputFileName = "../../js/templates.js";
 
 var dp = require("../lib/dot-packer/dot-packer.js");
 dp.dotpacker(viewDir, outputFileName, ns, def);
-return;
-var fs = require('fs');
-outputFileName = fs.realpathSync(outputFileName);
-var exec = require("child_process").exec;
-var commands = ["ajaxmin"];
-commands.push("-comments:none");
-commands.push(outputFileName);
-commands.push("-out");
-commands.push(outputFileName);
+//return;
+//var fs = require('fs');
+//outputFileName = fs.realpathSync(outputFileName);
+//var exec = require("child_process").exec;
+//var commands = ["ajaxmin"];
+//commands.push("-comments:none");
+//commands.push(outputFileName);
+//commands.push("-out");
+//commands.push(outputFileName);
 
-var outName = commands.join(" ");
-console.log(outName);
-exec(outName, { encoding: 'utf8', timeout: 1000000 }, function (error, stdout, stderr) {
-    if (stdout){
-            console.log('stdout: --------------------------------');
-            console.log(stdout);
-        }
+//var outName = commands.join(" ");
+//console.log(outName);
+//exec(outName, { encoding: 'utf8', timeout: 1000000 }, function (error, stdout, stderr) {
+//    if (stdout){
+//            console.log('stdout: --------------------------------');
+//            console.log(stdout);
+//        }
 
-    if (stderr){
-        console.log('stderr: -------------------------------------');
-        console.log(stderr);
-    }
-}); 
+//    if (stderr){
+//        console.log('stderr: -------------------------------------');
+//        console.log(stderr);
+//    }
+//}); 

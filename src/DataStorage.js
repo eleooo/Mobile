@@ -1,11 +1,11 @@
 ﻿(function () {
-    'use strict';
     var _DS = function () {
+        var _ds = {};
         function getData(key, val) {
             if (val === undefined)
-                return localStorage[key];
+                return (localStorage || _ds)[key];
             else {
-                return localStorage[key] = (val && typeof (val) != "string") ? JSON.stringify(val) : val;
+                return (localStorage || _ds)[key] = (val && typeof (val) != "string") ? JSON.stringify(val) : val;
             }
         }
         return {

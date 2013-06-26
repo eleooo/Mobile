@@ -14,7 +14,7 @@
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
             SendPassword: iniAPI('App', false, 'SendPassword'),
-            Version: iniAPI('App', false, 'Version'),
+            Ver: iniAPI('App', false, 'GetVer'),
             GetOrders: iniAPI('OrderMeal', true, 'GetOrders'),
             GetOrderDetail: iniAPI('OrderMeal', true, 'GetDetail'),
             GetOrderTemps: iniAPI('OrderMeal', true, 'GetTemps'),
@@ -86,11 +86,13 @@
                     fnCallback(result);
                 });
             },
-            Version: function (fnCallback) {
-                execute(WebAPI.Version, {}, fnCallback);
-            },
             SendPassword: function (phoneNum, fnCallback) {
                 execute(WebAPI.SendPassword, { userPhone: phoneNum }, fnCallback);
+            },
+            Ver:function(){
+                execute(WebAPI.Ver,undefined,function(result){
+                    DS.Version(result.data);
+                });
             },
             GetOrders: function (data, fnCallback) {
                 execute(WebAPI.GetOrders, data, fnCallback);

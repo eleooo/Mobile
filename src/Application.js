@@ -5,7 +5,7 @@
 /// <reference path="EleoooWrapper.js" />
 /// <reference path="WebSocket.js" />
 
-(function () {
+(function (win, def) {
     var Application = function () {
         var p = Application.prototype;
         var _body, spinner, prompter;
@@ -45,6 +45,7 @@
                 }
             }, true);
             _body = $("body");
+
             footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
                 var v = evt.currentTarget.getAttribute('t');
                 p[v].call(this, evt);
@@ -55,6 +56,7 @@
             if (DS.IsAutoLogin() && DS.WebAuthKey()) {
                 p.showOrderList();
             } else p.showLogin();
+            WS.Ver();
         }
         p.init = function (def) {
             _def = def;
@@ -231,7 +233,7 @@
                     presenter.reset();
             }
             _ws.close();
-            oldViewName.clear();
+            Array.clear(oldViewName);
             p.showLogin();
         }
         p.notify = function (message) {
@@ -319,13 +321,15 @@
         },
         p.isSocket = function () {
             return _ws.support();
+        },
+        p.platform = function () {
+            return isCordova ? device.platform : navigator.platform
+        },
+        p.appVer = function () {
+            return isCordova ? device.version : navigator.appVersion;
         }
     };
     window.app = new Application();
-    app.init({ appName: '乐多分管理系统',
-        pusher: "ws://192.168.0.104:8080/",
-        url: "http://www.eleooo.com"
-        //servicesUrl: "http://192.168.0.104:80"
-    });
-})(window);
+    app.init(def);
+})(window, def);
 

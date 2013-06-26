@@ -101,7 +101,7 @@
                 pageCount = 1;
             }
             itemInfo = [];
-            menuContainer.find("input .red").removeClass('red').addClass('green');
+            menuContainer.find("input.red").removeClass('red').addClass('green');
             if (pageIndex == 0)
                 getMenuList();
             menuContainer.lazyload({ load: getMenuList });
@@ -200,7 +200,7 @@
                 app.showtips("暂不支持此功能.", undefined, true);
                 return;
             }
-            navigator.camera.getPicture(_takePicData, function (ex) { }, { quality: 30, destinationType: destinationType.DATA_URL });
+            navigator.camera.getPicture(_takePicData, function (ex) { }, { quality: 30, destinationType: Camera.DestinationType.DATA_URL });
         }
         p.saveItem = function (el) {
             if (getInputdata()) {

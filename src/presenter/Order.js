@@ -510,7 +510,11 @@
                     });
                 } else {
                     if (!rv) {
-                        rv = new Media(fPath + rfUrl);
+                        rv = new Media(fPath + rfUrl, function () {
+                            console.log("recordAudio():Audio Success");
+                        }, function (err) {
+                            console.log("recordAudio():Audio Error: " + err.code);
+                        });
                         rv.startRecord();
                     }
                 }
