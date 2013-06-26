@@ -389,7 +389,7 @@
         p.reset = function () {
             _box.html('');
         }
-        p.onShow = function (arg) {
+        p.show = function (arg) {
             p.reset();
             WS.OrderDetail(arg, function (result) {
                 if (result.code == 0) {
@@ -539,7 +539,7 @@
             if (el) _box = el;
             return _box;
         }
-        p.onShow = function (arg) {
+        p.show = function (arg) {
             hasRf = false;
             getTempsList(arg);
         }

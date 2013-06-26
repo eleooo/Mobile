@@ -14,13 +14,21 @@
         var commands = {};
         var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
         function _connect() {
+            app.logInfo("Socket type:" + type);
             if (type) {
                 ws = false;
                 var _ws = new window[type](_pusher);
-                _ws.onopen = onopen;
-                _ws.onmessage = onmessage;
-                _ws.onclose = onclose;
-                _ws.onerror = onerror;
+                if ($D.IE) {
+                    _ws.onopen = onopen;
+                    _ws.onmessage = onmessage;
+                    _ws.onclose = onclose;
+                    _ws.onerror = onerror;
+                } else {
+                    _ws.addEventListener('open', onopen);
+                    _ws.addEventListener('message', onmessage);
+                    _ws.addEventListener('close', onclose);
+                    _ws.addEventListener('error', onerror);
+                }
                 commands["Login"] = app.logError;
             }
         }
@@ -36,7 +44,9 @@
             sendMessage("Login-" + DS.WebAuthKey(), data);
         }
         function onopen(event) {
-            ws = event.target;
+            ws = event.target || event;
+            console.log("web socket onopen calling...");
+            console.log(JSON.stringify(event));
             loginWS();
         }
         function onerror(event) {
@@ -60,7 +70,7 @@
         }
         function onclose(event) {
             if (ws == false) {
-                app.showtips("无法连接到推送服务器.", undefined, true);
+                app.showtips("无法连接到推送服务器.", false, true);
             }
             else
                 ws = false;

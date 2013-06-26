@@ -5,18 +5,16 @@
 /// <reference path="EleoooWrapper.js" />
 /// <reference path="WebSocket.js" />
 
-(function (win, def) {
+(function () {
     var Application = function () {
         var p = Application.prototype;
         var _body, spinner, prompter;
-        var _def;
         var presenters = {};
         var currentView = false;
         var footernav = false, footer = false;
         var orderListViewName = "OrderList";
         var oldViewName = [];
         var voice = false;
-        var isCordova = false;
         var isbackground = false;
         var _ws = false;
         function getPresenter(view) {
@@ -29,7 +27,7 @@
             return presenter;
         }
         function ready() {
-            _ws = new PushServices(_def.pusher);
+            _ws = new PushServices($D.pusher);
             document.addEventListener("online", _online, false);
             document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
             document.addEventListener("pause", function () { isbackground = true; }, false);
@@ -57,12 +55,21 @@
                 p.showOrderList();
             } else p.showLogin();
             WS.Ver();
+
+            document.addEventListener("touchend", function (event) {
+                //this function is used to prevent duplicate "tap" events
+                var tag = event.target.nodeName.toUpperCase();
+                if (!(tag in ["INPUT", "TEXTAREA"])) {
+                    console.log('touchend : ' + tag);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                }
+            });
         }
-        p.init = function (def) {
-            _def = def;
+        p.init = function () {
             $(document).ready(function () {
-                isCordova = typeof (cordova) !== 'undefined';
-                if (isCordova) {
+                if (!$D.WIN) {
                     document.addEventListener("deviceready", ready);
                 }
                 else ready();
@@ -159,8 +166,10 @@
                 var fn = getObject(fnName);
                 if ($.isFunction(fn)) {
                     fn.call(tar, tar, event);
+                    //event.stopImmediatePropagation();
                 }
             }
+            //event.preventDefault();
         }
         function _online() {
             app.initWS();
@@ -233,13 +242,15 @@
                     presenter.reset();
             }
             _ws.close();
-            Array.clear(oldViewName);
+            oldViewName = [];
+            //Array.clear(oldViewName);
             p.showLogin();
         }
         p.notify = function (message) {
-            console.log(message);
+            p.showtips(message, false, false);
         }
         p.logInfo = function (message, isPusher) {
+            p.showtips(message, false, false);
             console.log(message);
             if (!isPusher)
                 _ws.log(message);
@@ -275,10 +286,10 @@
             }
         }
         p.isCordovaApp = function () {
-            return isCordova;
+            return !$D.WIN;
         }
         p.hasNetwork = function () {
-            if (!isCordova)
+            if ($D.WIN)
                 return true;
             else {
                 var networkState = navigator.connection.type;
@@ -292,6 +303,7 @@
             prompter.css({ opacity: "0" }).hide();
         }
         p.showtips = function (message, fn, isAnimate) {
+            console.log(message);
             prompter.unbind("tap");
             if ($.isFunction(fn))
                 prompter.bind("tap", fn);
@@ -305,17 +317,17 @@
                 prompter.show().css({ "opacity": "100", "z-index": "10000" }).find("span").text(message);
         },
         p.getUrl = function () {
-            return _def.url;
+            return $D.url;
         },
         p.confirm = function (message, title, btnText, fn) {
-            if (isCordova) {
+            if (!$D.WIN) {
                 navigator.notification.confirm(
                                 message,
                                 fn,
-                                title || _def.appName,
+                                title || $D.appName,
                                 btnText);
             } else {
-                var ret = confirm(title);
+                var ret = confirm((title || '') + message);
                 fn(ret);
             }
         },
@@ -323,13 +335,13 @@
             return _ws.support();
         },
         p.platform = function () {
-            return isCordova ? device.platform : navigator.platform
+            return $D.WIN ? navigator.platform : device.platform;
         },
         p.appVer = function () {
-            return isCordova ? device.version : navigator.appVersion;
+            return $D.WIN ? navigator.appVersion : device.version;
         }
     };
     window.app = new Application();
-    app.init(def);
-})(window, def);
+    app.init();
+})();
 

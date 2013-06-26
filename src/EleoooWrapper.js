@@ -91,6 +91,7 @@
             },
             Ver:function(){
                 execute(WebAPI.Ver,undefined,function(result){
+                    app.logInfo("current version :"+result.data);
                     DS.Version(result.data);
                 });
             },

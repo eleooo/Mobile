@@ -1,6 +1,7 @@
 ﻿﻿var outName = "../../js/lib/cordova.js";
 var fileArray = [
-"../lib/android/cordova.js"
+"../lib/android/cordova.js",
+"../lib/android/phonegap-websocket.js"
 ];
 //read all view presenter 
 

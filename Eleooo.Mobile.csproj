@@ -72,6 +72,7 @@
     <Content Include="src\complier\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
     <Content Include="src\lib\android\cordova.js" />
+    <Content Include="src\lib\android\phonegap-websocket.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />
