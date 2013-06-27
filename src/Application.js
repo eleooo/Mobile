@@ -8,7 +8,7 @@
 (function () {
     var Application = function () {
         var p = Application.prototype;
-        var _body, spinner, prompter;
+        var _body, spinner, prompter, prompterCallback = false;
         var presenters = {};
         var currentView = false;
         var footernav = false, footer = false;
@@ -28,43 +28,48 @@
         }
         function ready() {
             _ws = new PushServices($D.pusher);
-            document.addEventListener("online", _online, false);
-            document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
-            document.addEventListener("pause", function () { isbackground = true; }, false);
-            document.addEventListener("backbutton", function () {
-                if (oldViewName.length > 0) {
-                    app.goback();
-                } else {
-                    app.confirm('你确定要退出程序吗?',
+            if (!$D.WIN) {
+                document.addEventListener("online", _online, false);
+                document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
+                document.addEventListener("pause", function () { isbackground = true; }, false);
+                document.addEventListener("backbutton", function () {
+                    if (oldViewName.length > 0) {
+                        app.goback();
+                    } else {
+                        app.confirm('你确定要退出程序吗?',
                                 undefined,
                                 '确定,取消',
                                 function (btn) { btn == '1' ? navigator.app.exitApp() : void (0); }
                                 );
-                }
-            }, true);
+                    }
+                }, true);
+                document.addEventListener("touchend", function (event) {
+                    //this function is used to prevent duplicate "tap" events
+                    var tag = event.target.nodeName.toUpperCase();
+                    if (!(tag in ["INPUT", "TEXTAREA"])) {
+                        console.log('touchend : ' + tag);
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    }
+                });
+            }
             _body = $("body");
-
             footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
                 var v = evt.currentTarget.getAttribute('t');
                 p[v].call(this, evt);
             });
             spinner = $("#spinner", _body);
-            prompter = $("#prompter", _body);
-            prompter.find("a").bind("tap", app.hideTips);
+            prompter = $("#prompter", _body).bind("tap", app.hideTips);
             if (DS.IsAutoLogin() && DS.WebAuthKey()) {
                 p.showOrderList();
             } else p.showLogin();
-            WS.Ver();
-
-            document.addEventListener("touchend", function (event) {
-                //this function is used to prevent duplicate "tap" events
-                var tag = event.target.nodeName.toUpperCase();
-                if (!(tag in ["INPUT", "TEXTAREA"])) {
-                    console.log('touchend : ' + tag);
-                    event.preventDefault();
-                    event.stopPropagation();
-                    return false;
-                }
+            $(window.applicationCache).bind("downloading", function () {
+                app.showtips("正在更新程序...");
+            }).bind("updateready", function () {
+                app.alert("请重启应用程序.", "更新完成", "退出程序", function () {
+                    !$D.WIN ? navigator.app.exitApp() : document.location.reload();
+                });
             });
         }
         p.init = function () {
@@ -300,21 +305,17 @@
             isShow ? spinner.show() : spinner.hide();
         }
         p.hideTips = function () {
-            prompter.css({ opacity: "0" }).hide();
+            prompter.addClass("hide").removeClass('top');
+            if ($.isFunction(prompterCallback)) {
+                prompterCallback();
+                prompterCallback = false;
+            }
         }
-        p.showtips = function (message, fn, isAnimate) {
+        p.showtips = function (message, fn) {
             console.log(message);
-            prompter.unbind("tap");
             if ($.isFunction(fn))
-                prompter.bind("tap", fn);
-            if (isAnimate) {
-                prompter.css("z-index", "10000").show().animate({ opacity: "100" }, 400, null, function () {
-                    setTimeout(function () {
-                        prompter.css({ "opacity": "0", "z-index": "0" }).hide();
-                    }, 2000)
-                }).find("span").text(message);
-            } else
-                prompter.show().css({ "opacity": "100", "z-index": "10000" }).find("span").text(message);
+                prompterCallback = fn;
+            prompter.removeClass('hide').addClass('top').text(message);
         },
         p.getUrl = function () {
             return $D.url;
@@ -328,6 +329,18 @@
                                 btnText);
             } else {
                 var ret = confirm((title || '') + message);
+                fn(ret);
+            }
+        },
+        p.alert = function (message, title, btnText, fn) {
+            if (!$D.WIN) {
+                navigator.notification.alert(
+                                message,
+                                fn,
+                                title || $D.appName,
+                                btnText);
+            } else {
+                var ret = alert((title || '') + message);
                 fn(ret);
             }
         },
@@ -345,3 +358,10 @@
     app.init();
 })();
 
+
+//String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+//this.appView.getSettings().setAppCachePath(appCachePath);
+//this.appView.getSettings().setDomStorageEnabled(true);
+//this.appView.getSettings().setAppCacheMaxSize(1024 * 1024 * 15);
+//this.appView.getSettings().setAllowFileAccess(true);
+//this.appView.getSettings().setAppCacheEnabled(true); 

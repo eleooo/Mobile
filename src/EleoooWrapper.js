@@ -11,6 +11,7 @@
 (function () {
     var _WS = function () {
         var xhrs = {};
+        var jq = typeof(Zepto) == undefined;
         var WebAPI = {
             Login: iniAPI('App', false, 'Login'),
             SendPassword: iniAPI('App', false, 'SendPassword'),
@@ -49,7 +50,8 @@
             if (api.isAuth) {
                 data["__t"] = DS.WebAuthKey();
             }
-            data["__"] = (new Date()).valueOf();
+            if(!jq)
+                data["__"] = (new Date()).valueOf();
             var url = getAPI(api);
             if (xhrs[url]) {
                 return;
@@ -57,7 +59,8 @@
             $.ajax({
                 url: url,
                 data: data,
-                dataType: "jsonp",
+                dataType: "json",
+                type:"POST",
                 success: function (result) { fnCallback(result); delete data; delete result; },
                 complete: function () {
                     delete xhrs[url];

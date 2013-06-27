@@ -115,6 +115,7 @@
         var isTap = false;
         $.extend(settings, options);
         $(window).bind("scroll",function(){
+            //window.scrollY
             if(!isTap && settings.load && $(window).scrollTop() == ($(document).height() - $(window).height())){
                 settings.load();
             }

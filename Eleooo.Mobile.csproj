@@ -58,6 +58,7 @@
     <Content Include="js\application.js" />
     <Content Include="js\lib\cordova.js" />
     <Content Include="js\lib\jquery-1.7.js" />
+    <Content Include="js\lib\json2.js" />
     <Content Include="js\lib\mobiscroll.custom-2.5.4.min.js" />
     <Content Include="js\templates.js" />
     <Content Include="js\lib\zepto.js" />
@@ -68,6 +69,7 @@
     <Content Include="src\complier\BuildCSS.js" />
     <Content Include="src\complier\BuildJQuery.js" />
     <Content Include="src\complier\BuildJS.js" />
+    <Content Include="src\complier\BuildJSON2.js" />
     <Content Include="src\complier\BuildView.js" />
     <Content Include="src\complier\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
@@ -79,6 +81,7 @@
     <Content Include="src\lib\jquery\jquery.mobile.js" />
     <Content Include="src\lib\jquery\jquery.mobile.min.js" />
     <Content Include="MuSelect.htm" />
+    <Content Include="src\lib\json2.js" />
     <Content Include="src\lib\zepto\mobiscroll.zepto.js" />
     <Content Include="src\lib\zepto\selector.js" />
     <Content Include="src\lib\zepto\touch.js" />
