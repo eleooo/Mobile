@@ -88,7 +88,7 @@
     <Content Include="src\lib\zepto\zepto.js" />
     <Content Include="src\presenter\Finance.js" />
     <Content Include="src\presenter\Sale.js" />
-    <Content Include="src\WebSocket.js" />
+    <Content Include="src\WebPusher.js" />
     <Content Include="views\menuItem.html" />
     <Content Include="src\presenter\Hall.js" />
     <Content Include="src\presenter\Menu.js" />

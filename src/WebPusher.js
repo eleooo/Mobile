@@ -2,37 +2,38 @@
 /// <reference path="DS.js" />
 
 (function () {
-    var _PushServices = function (pusher) {
-        var _pusher = pusher;
+    var _WebPusher = function (location) {
+        var _location = location;
         var state = {
             CONNECTING: 0,
             OPEN: 1,
             CLOSING: 2,
             CLOSED: 3
         };
-        var ws = false;
+        var ps = false, connecting = false;
         var commands = {};
         var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
         function _connect() {
             app.logInfo("Socket type:" + type);
-            if (type) {
-                ws = false;
-                var _ws = new window[type](_pusher);
+            if (type && !connecting) {
+                ps ? ps.close() : ps = false;
+                connecting = true;
+                var _ps = new window[type](_location);
                 if ($D.IE) {
-                    _ws.onopen = onopen;
-                    _ws.onmessage = onmessage;
-                    _ws.onclose = onclose;
-                    _ws.onerror = onerror;
+                    _ps.onopen = function (evt) { onopen(_ps, evt); }
+                    _ps.onmessage = onmessage;
+                    _ps.onclose = onclose;
+                    _ps.onerror = onerror;
                 } else {
-                    _ws.addEventListener('open', onopen);
-                    _ws.addEventListener('message', onmessage);
-                    _ws.addEventListener('close', onclose);
-                    _ws.addEventListener('error', onerror);
+                    _ps.addEventListener('open', function (evt) { onopen(_ps, evt); });
+                    _ps.addEventListener('message', onmessage);
+                    _ps.addEventListener('close', onclose);
+                    _ps.addEventListener('error', onerror);
                 }
                 commands["Login"] = app.logError;
             }
         }
-        function loginWS() {
+        function loginPS() {
             var data = { Date: DS.LatestUpdateOn(),
                 UserId: DS.UserID(),
                 CompanyId: DS.CompanyID(),
@@ -43,11 +44,10 @@
             };
             sendMessage("Login-" + DS.WebAuthKey(), data);
         }
-        function onopen(event) {
-            ws = event.target || event;
-            console.log("web socket onopen calling...");
-            console.log(JSON.stringify(event));
-            loginWS();
+        function onopen(_ps, event) {
+            connecting = false;
+            ps = _ps;
+            loginPS();
         }
         function onerror(event) {
             console.log(event);
@@ -65,22 +65,23 @@
             if (typeof (message) != 'string')
                 message = JSON.stringify(message);
             if (isConnected()) {
-                ws.send(cmd + " " + message);
+                ps.send(cmd + " " + message);
             }
         }
         function onclose(event) {
-            if (ws == false) {
-                app.showtips("无法连接到推送服务器.", false, true);
+            connecting = false;
+            if (ps == false) {
+                app.showtips("无法连接到推送服务器.");
             }
             else
-                ws = false;
+                ps = false;
         }
         function isConnected() {
-            return ws && ws.readyState == state.OPEN;
+            return ps && ps.readyState == state.OPEN;
         }
         return {
             Inited: function () {
-                return !(ws === false);
+                return !(ps === false);
             },
             Connected: function () {
                 return isConnected();
@@ -103,10 +104,10 @@
                 }
             },
             close: function () {
-                if (ws)
-                    ws.close();
+                if (ps)
+                    ps.close();
             }
         };
     }
-    window.PushServices = _PushServices;
+    window.WebPusher = _WebPusher;
 })();

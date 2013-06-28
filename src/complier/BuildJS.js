@@ -6,7 +6,7 @@ var fileArray = [
 "../Common.js",
 "../DataStorage.js",
 "../EleoooWrapper.js",
-"../WebSocket.js",
+"../WebPusher.js",
 "../Application.js"];
 //read all view presenter 
 var fs = require('fs');

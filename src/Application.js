@@ -16,7 +16,7 @@
         var oldViewName = [];
         var voice = false;
         var isbackground = false;
-        var _ws = false;
+        var _ps = false;
         function getPresenter(view) {
             var presenter = presenters[view];
             if (presenter === undefined) {
@@ -27,7 +27,7 @@
             return presenter;
         }
         function ready() {
-            _ws = new PushServices($D.pusher);
+            _ps = new WebPusher($D.pusher);
             if (!$D.WIN) {
                 document.addEventListener("online", _online, false);
                 document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
@@ -80,19 +80,19 @@
                 else ready();
             });
         }
-        function _initWS(orderPusher) {
-            if (!app.hasNetwork()) {
+        function _initPS(orderPusher) {
+            if (!app.ol()) {
                 app.logError("没有检测到网络连接.", true);
                 return;
             }
-            if (!_ws.Connected()) {
-                _ws.connect();
-                _ws.regCommmand("Notify", function (evt) {
+            if (!_ps.Connected()) {
+                _ps.connect();
+                _ps.regCommmand("Notify", function (evt) {
                     var msg = evt.data.title + ':' + evt.data.message;
-                    app.showtips(msg, undefined, false);
+                    app.showtips(msg);
                 });
                 if (orderPusher)
-                    _ws.regCommmand("Order", orderPusher);
+                    _ps.regCommmand("Order", orderPusher);
             }
         }
         function initView(presenter, view, arg, isReturn) {
@@ -177,13 +177,13 @@
             //event.preventDefault();
         }
         function _online() {
-            app.initWS();
+            p.initPS();
         }
-        p.initWS = function () {
-            _initWS(presenters[orderListViewName].onPushOrder);
+        p.initPS = function () {
+            _initPS(presenters[orderListViewName].onPushOrder);
         },
-        p.wsInited = function () {
-            return _ws.Inited();
+        p.psInited = function () {
+            return _ps.Inited();
         },
         p.goback = function () {
             var view = oldViewName.pop() || orderListViewName;
@@ -246,19 +246,19 @@
                 if ($.isFunction(presenter.reset))
                     presenter.reset();
             }
-            _ws.close();
+            _ps.close();
             oldViewName = [];
             //Array.clear(oldViewName);
             p.showLogin();
         }
         p.notify = function (message) {
-            p.showtips(message, false, false);
+            p.showtips(message);
         }
-        p.logInfo = function (message, isPusher) {
-            p.showtips(message, false, false);
+        p.logInfo = function (message, tops) {
+            p.showtips(message);
             console.log(message);
-            if (!isPusher)
-                _ws.log(message);
+            if (tops)
+                _ps.log(message);
         }
         p.trace = function (message, isPusher) {
             p.logInfo(message, isPusher);
@@ -293,9 +293,9 @@
         p.isCordovaApp = function () {
             return !$D.WIN;
         }
-        p.hasNetwork = function () {
+        p.ol = function () {
             if ($D.WIN)
-                return true;
+                return navigator.onLine;
             else {
                 var networkState = navigator.connection.type;
                 return networkState != Connection.UNKNOWN && networkState != Connection.NONE;
@@ -345,7 +345,7 @@
             }
         },
         p.isSocket = function () {
-            return _ws.support();
+            return _ps.support();
         },
         p.platform = function () {
             return $D.WIN ? navigator.platform : device.platform;

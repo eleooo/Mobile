@@ -154,11 +154,11 @@
             });
             _itemInfo["ItemLimit"] = parseInt(itemLimits.find(':checked').val());
             if (_itemInfo.ItemSum < _itemInfo.ItemNeedPay) {
-                app.showtips("现金支付额不能大于促销总额.", undefined, false);
+                app.showtips("现金支付额不能大于促销总额.");
                 return false;
             }
             if (!(_itemInfo.ItemPoint >= 0.5 && _itemInfo.ItemPoint <= 1.5)) {
-                app.showtips("抢购积分必须在0.5-1.5之间.", undefined, false);
+                app.showtips("抢购积分必须在0.5-1.5之间.");
                 return false;
             }
             return true;
@@ -197,7 +197,7 @@
         }
         p.takeaPic = function (el) {
             if (!app.isCordovaApp()) {
-                app.showtips("暂不支持此功能.", undefined, true);
+                app.showtips("暂不支持此功能.");
                 return;
             }
             navigator.camera.getPicture(_takePicData, function (ex) { }, { quality: 30, destinationType: Camera.DestinationType.DATA_URL });
@@ -209,7 +209,7 @@
                     img: imgData || ''
                 };
                 WS.SaveItem(arg, function (result) {
-                    app.showtips(result.message, undefined, true);
+                    app.showtips(result.message);
                 });
             }
         }
@@ -280,14 +280,14 @@
                 if (result.code > -1) {
                     app.showRush(result.data);
                 } else
-                    app.showtips(result.message, undefined, true);
+                    app.showtips(result.message);
             });
         }
         p.delItem = function (el) {
             WS.delItem({ id: el.attr('data-id') }, function (result) {
                 if (result.code > -1)
                     saleList.find("#_" + el.attr('data-id')).remove();
-                app.showtips(result.message, undefined, true);
+                app.showtips(result.message);
             });
         }
     }

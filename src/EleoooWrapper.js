@@ -42,7 +42,7 @@
             return app.getUrl() + '/public/RestHandler.ashx/' + api.name + "/" + api.action;
         }
         function execute(api, data, fnCallback) {
-            if (!app.hasNetwork()) {
+            if (!app.ol()) {
                 fnCallback({ code: -1, message: 'No network connect.' });
                 return;
             }
@@ -59,7 +59,7 @@
             $.ajax({
                 url: url,
                 data: data,
-                dataType: "json",
+                dataType: "jsonp",
                 type:"POST",
                 success: function (result) { fnCallback(result); delete data; delete result; },
                 complete: function () {

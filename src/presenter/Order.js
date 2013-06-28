@@ -165,10 +165,10 @@
             isLoading = true;
             WS.GetOrders(args, function (result) {
                 if (result.code > -1) {
-                    if (pageIndex == 0 && !app.wsInited()) {
+                    if (pageIndex == 0 && !app.psInited()) {
                         DS.LatestUpdateOn(getMaxDate(result.data.orders, args.d1));
                         if (app.isSocket())
-                            app.initWS();
+                            app.initPS();
                         else if (flag == 0) {
                             flag = 1;
                             SynOrderList();
