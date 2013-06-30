@@ -57,6 +57,7 @@
     <Content Include="index.html" />
     <Content Include="js\application.js" />
     <Content Include="js\lib\cordova.js" />
+    <Content Include="js\lib\iscroll.js" />
     <Content Include="js\lib\jquery-1.7.js" />
     <Content Include="js\lib\json2.js" />
     <Content Include="js\lib\mobiscroll.custom-2.5.4.min.js" />
@@ -74,8 +75,10 @@
     <Content Include="src\complier\BuildZepto.js" />
     <Content Include="src\httpsvr.js" />
     <Content Include="src\lib\android\cordova.js" />
-    <Content Include="src\lib\android\phonegap-websocket.js" />
+    <Content Include="src\lib\android\statusbarnotification.js" />
+    <Content Include="src\lib\android\webSocket.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
+    <Content Include="src\lib\iscroll.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />
     <Content Include="src\lib\jquery\jquery.mobile.js" />
@@ -89,6 +92,7 @@
     <Content Include="src\presenter\Finance.js" />
     <Content Include="src\presenter\Sale.js" />
     <Content Include="src\WebPusher.js" />
+    <Content Include="views\hall.html" />
     <Content Include="views\menuItem.html" />
     <Content Include="src\presenter\Hall.js" />
     <Content Include="src\presenter\Menu.js" />
@@ -249,6 +253,7 @@
     <Content Include="views\rush.html" />
     <Content Include="views\rushRecord.html" />
     <Content Include="views\rushRecordItem.html" />
+    <Content Include="views\rushView.html" />
     <Content Include="views\sale.html" />
     <Content Include="views\saleItem.html" />
     <Content Include="views\saleList.html" />

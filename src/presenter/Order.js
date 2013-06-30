@@ -4,10 +4,11 @@
 
 (function () {
     var _OrderList = function () {
-        var container, state, txtUserPhone, _box = false;
+        var container, content, txtUserPhone, _box = false;
         var s1, s2;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false, flag = 0;
+        var scroller = false;
         var statusText = {
             notstarted: "待处理",
             inprogress: "处理中",
@@ -16,6 +17,7 @@
             canceled: "已取消",
             completed: "订餐成功"
         };
+        var childView = ['OrderHandle', 'Temp'];
         var p = _OrderList.prototype;
         function getSumInfoObj() {
             var sumInfo = {
@@ -68,7 +70,7 @@
                 });
                 container.append(items);
             }
-            state.before(container);
+            content.append(container);
             calcItemsInfo(items);
         }
         function getOrderStatus(item) {
@@ -121,6 +123,9 @@
             data.summary.sumok.add(item.getAttribute("data-ordersumok"));
             data.summary.sumcash.add(item.getAttribute("data-orderpaycash"));
             data.summary.sumpoint.add(item.getAttribute("data-orderpoint"));
+        }
+        function visible() {
+            return _box.css('display') !== 'none';
         }
         function filterOrderList() {
             var status = $(this).attr("data-status");
@@ -183,6 +188,9 @@
                         }
                     }
                     if (fn) { fn(); }
+                    if (visible())
+                        scroller.refresh();
+                    scroller.refresh();
                 }
                 else
                     app.logInfo(result.message);
@@ -207,23 +215,26 @@
             if (el) _box = el;
             return _box;
         }
-        p.reset = function () {
-            pageCount = 1;
-            pageIndex = 0;
-            isLoading = false;
-            flag = 0;
-            container.html("");
+        p.reset = function (by) {
+            if (!(by in childView)) {
+                pageCount = 1;
+                pageIndex = 0;
+                isLoading = false;
+                flag = 0;
+                container.html("");
+            }
         }
-        p.show = function () {
-            $(window).lazyload({ load: getOrders });
-            //getOrders(false, SynOrderList);
-            getOrders(false);
+        p.show = function (arg, by) {
+            //$(window).lazyload({ load: getOrders });
+            if (!(by in childView)) {
+                getOrders(false);
+            }
         }
         p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
             app.bindDateSelector("txtOrderListEndDate", _box);
             container = $("#orderContainer", _box);
-            state = $("#state", _box);
+            content = $(".content", _box);
             s1 = $("#s1");
             s2 = $("#s2");
             $("a", s1).tap(filterOrderList);
@@ -241,6 +252,13 @@
                     txtUserPhone.val(txtUserPhone.attr("defVal"));
             });
             txtUserPhone.val(txtUserPhone.attr("defVal"));
+            scroller = new IScroll(_box.children(".content").get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getOrders(false);
+                    
+                }
+            });
         }
         p.onPushOrder = function (result) {
             if (result.data.length > 0) {
@@ -248,10 +266,8 @@
                 DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
                 processRender(result.data, true);
                 isLoading = false;
-                if (result.hasNew && _box.css('display') == 'none') {
-                    app.notify("你有新的订单需要处理.");
-                    if (app.isCordovaApp())
-                        navigator.notification.beep(2);
+                if (result.hasNew && !visible()) {
+                    app.notify("你有新的订单需要处理.", "乐多分");
                 }
             }
         }
@@ -449,6 +465,7 @@
         var fPath = false;
         var hasRf = false;
         var id = 0;
+        var scroller;
         function sendVoiceMessageCore(message) {
             if (hasRf) {
                 var options = new FileUploadOptions();
@@ -532,6 +549,7 @@
                     renderTempList(result.data.temps);
                     $("#phone", _box).text(result.data.MemberPhoneNumber);
                     $("#timespan", _box).text(result.data.Timespan);
+                    scroller.refresh();
                 }
             });
         }
@@ -540,7 +558,7 @@
             return _box;
         }
         p.show = function (arg) {
-            hasRf = false;
+            p.reset();
             getTempsList(arg);
         }
         p.reset = function () {
@@ -551,6 +569,7 @@
             tempContainer = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });
+            scroller = new IScroll(tempContainer.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));

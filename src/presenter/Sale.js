@@ -7,6 +7,8 @@
         var pageIndex = 0, pageCount = 1;
         var menuContainer, pBox, _box = false;
         var curDir = false, itemInfo;
+        var childView = 'Rush';
+        var scroller, isLoading;
         var p = _Sale.prototype;
         function getItemObj() {
             var d = new Date().format("yyyy-MM-dd");
@@ -72,9 +74,10 @@
             pBox.append(menuContainer);
         }
         function getMenuList() {
-            if (pageIndex >= pageCount)
+            if (pageIndex >= pageCount || isLoading)
                 return;
             var args = { p: pageIndex + 1 };
+            isLoading = true;
             WS.GetMenus(args, function (result) {
                 if (pageIndex == 0)
                     menuContainer.html('');
@@ -83,6 +86,8 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
+                scroller.refresh();
+                isLoading = false;
             });
         }
         p.box = function (el) {
@@ -90,25 +95,31 @@
                 _box = el;
             return _box;
         }
-        p.reset = function () {
-            pageIndex = 0;
-            pageCount = 1;
-            menuContainer.html('');
-        }
-        p.show = function (arg) {
-            if (arg) {
+        p.reset = function (by) {
+            if (by !== childView) {
                 pageIndex = 0;
                 pageCount = 1;
+                menuContainer.html('');
+                isLoading = false;
             }
+        }
+        p.show = function (arg, by) {
+            p.reset(by);
             itemInfo = [];
             menuContainer.find("input.red").removeClass('red').addClass('green');
-            if (pageIndex == 0)
+            if (by !== childView) {
                 getMenuList();
-            menuContainer.lazyload({ load: getMenuList });
+            }
         }
         p.init = function () {
             menuContainer = $("#saleContainer");
             pBox = menuContainer.parent();
+            scroller = new IScroll(pBox.get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getMenuList();
+                }
+            });
         }
         p.toggleSale = function (el) {
             if (el.hasClass('red')) {
@@ -136,6 +147,7 @@
         var _itemInfo = false, _box = false;
         var imgItem, inputs, itemLimits;
         var imgData = false;
+        var scroller;
         function _takePicData(data) {
             imgData = data;
             imgItem.attr("src", "data:image/jpeg;base64," + data);
@@ -174,6 +186,7 @@
             itemLimits = $("input[name='ItemLimit']", _box);
             app.bindDateSelector("ItemDate", _box);
             app.bindDateSelector("ItemEndDate", _box);
+            scroller = new IScroll(_box.find('.wrap').get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
         }
         p.show = function (arg) {
             _itemInfo = arg;
@@ -194,6 +207,7 @@
                 imgItem.show();
             } else
                 imgItem.hide();
+            scroller.refresh();
         }
         p.takeaPic = function (el) {
             if (!app.isCordovaApp()) {
@@ -217,7 +231,9 @@
     var _SaleList = function () {
         var pageIndex = 0, pageCount = 1;
         var saleList, pBox, _box = false;
+        var childView = ['Rush', 'RushRecord'];
         var p = _SaleList.prototype;
+        var scroller, isLoading;
         function renderSaleList(items) {
             var item, i;
             saleList.remove();
@@ -231,9 +247,10 @@
             pBox.append(saleList);
         }
         function getSaleList() {
-            if (pageIndex >= pageCount)
+            if (pageIndex >= pageCount || isLoading)
                 return;
             var arg = { d1: $("#txtSaleListBeginDate", _box).val(), d2: $("#txtSaleListEndDate", _box).val(), p: pageIndex + 1 };
+            isLoading = true;
             WS.GetItems(arg, function (result) {
                 if (result.code > -1) {
                     if (pageIndex == 0)
@@ -242,16 +259,21 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
+                scroller.refresh();
+                isLoading = false;
             });
         }
         p.box = function (el) {
             if (el) _box = el;
             return _box;
         }
-        p.reset = function () {
-            pageIndex = 0;
-            pageCount = 0;
-            saleList.html('');
+        p.reset = function (by) {
+            if (!(by in childView)) {
+                pageIndex = 0;
+                pageCount = 0;
+                isLoading = false;
+                saleList.html('');
+            }
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
@@ -264,11 +286,17 @@
             pBox = saleList.parent();
             app.bindDateSelector("txtSaleListBeginDate", _box);
             app.bindDateSelector("txtSaleListEndDate", _box);
+            scroller = new IScroll(saleList.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getSaleList();
+                }
+            });
         }
-        p.show = function () {
-            p.reset();
-            getSaleList();
-            saleList.lazyload({ load: getSaleList });
+        p.show = function (arg, by) {
+            if (!(by in childView)) {
+                getSaleList();
+            }
         }
         p.showSaleList = function () {
             pageCount = 1;
@@ -295,6 +323,7 @@
         var pageIndex = 0, pageCount = 1;
         var rushList, pBox, ctAmount, ctPoint, _box = false;
         var cSum = numeral(0), pSum = numeral(0);
+        var scroller, isLoading;
         var p = _RushRecord.prototype;
         function renderRush(items) {
             var item, itemEl, i;
@@ -317,9 +346,10 @@
             ctPoint.text(pSum.format('0.00'));
         }
         function getRushList() {
-            if (pageIndex >= pageCount)
+            if (pageIndex >= pageCount || isLoading)
                 return;
             var arg = { d1: $("#txtRushRecordBeginDate", _box).val(), d2: $("#txtRushRecordEndDate", _box).val(), p: pageIndex + 1 };
+            isLoading = true;
             WS.GetRushItems(arg, function (result) {
                 if (result.code > -1) {
                     if (pageIndex == 0)
@@ -328,6 +358,8 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
+                scroller.refresh();
+                isLoading = false;
             });
         }
         p.box = function (el) {
@@ -338,6 +370,7 @@
             rushList.html('');
             pageCount = 1;
             pageIndex = 0;
+            isLoading = false;
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
@@ -351,6 +384,12 @@
             app.bindDateSelector("txtRushRecordEndDate", _box);
             ctAmount = $("#amountSum", _box);
             ctPoint = $("#pointSum", _box);
+            scroller = new IScroll(rushList.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getRushList();
+                }
+            });
         }
         p.show = function () {
             p.reset();

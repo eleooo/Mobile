@@ -14,21 +14,21 @@
         var commands = {};
         var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
         function _connect() {
-            app.logInfo("Socket type:" + type);
+            //app.logInfo("Socket type:" + type);
             if (type && !connecting) {
                 ps ? ps.close() : ps = false;
                 connecting = true;
                 var _ps = new window[type](_location);
-                if ($D.IE) {
-                    _ps.onopen = function (evt) { onopen(_ps, evt); }
-                    _ps.onmessage = onmessage;
-                    _ps.onclose = onclose;
-                    _ps.onerror = onerror;
-                } else {
+                if ('addEventListener' in _ps) {
                     _ps.addEventListener('open', function (evt) { onopen(_ps, evt); });
                     _ps.addEventListener('message', onmessage);
                     _ps.addEventListener('close', onclose);
                     _ps.addEventListener('error', onerror);
+                } else {
+                    _ps.onopen = function (evt) { onopen(_ps, evt); }
+                    _ps.onmessage = onmessage;
+                    _ps.onclose = onclose;
+                    _ps.onerror = onerror;
                 }
                 commands["Login"] = app.logError;
             }

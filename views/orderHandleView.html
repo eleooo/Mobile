@@ -5,7 +5,7 @@
     <img src="images/clock.png" alt="" style="margin-left: 20px;" />
     <span>{{=it.Timespan}}</span>
 </div>
-<div class="content">
+<div class="content orderHandle">
     <ul class="h_order">
 {{for(var i = 0;i<it.details.length;i++){}}
 {{var item = it.details[i];app.OrderHandle.processItem(item);}}

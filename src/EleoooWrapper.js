@@ -43,16 +43,17 @@
         }
         function execute(api, data, fnCallback) {
             if (!app.ol()) {
-                fnCallback({ code: -1, message: 'No network connect.' });
+                fnCallback({ code: -1, message: '网络没有连接.' });
                 return;
             }
             data = data || {};
             if (api.isAuth) {
                 data["__t"] = DS.WebAuthKey();
             }
-            if(!jq)
-                data["__"] = (new Date()).valueOf();
             var url = getAPI(api);
+            //console.log("begin call api:"+url);
+            //console.log(JSON.stringify(data));
+
             if (xhrs[url]) {
                 return;
             }
@@ -61,6 +62,7 @@
                 data: data,
                 dataType: "jsonp",
                 type:"POST",
+                cache:false,
                 success: function (result) { fnCallback(result); delete data; delete result; },
                 complete: function () {
                     delete xhrs[url];
@@ -90,7 +92,7 @@
                 });
             },
             SendPassword: function (phoneNum, fnCallback) {
-                execute(WebAPI.SendPassword, { userPhone: phoneNum }, fnCallback);
+                execute(WebAPI.SendPassword, { phone: phoneNum }, fnCallback);
             },
             Ver:function(){
                 execute(WebAPI.Ver,undefined,function(result){

@@ -8,6 +8,7 @@
         var pageIndex = 0, pageCount = 1;
         var txtMenuName, menuContainer, wrap, _box;
         var curDir = false;
+        var scroller;
         var p = _Menu.prototype;
         function getDirItem(dirId, dirName) {
             if (curDir && curDir.attr('data-id') == dirId)
@@ -54,6 +55,7 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
+                scroller.refresh();
             });
         }
         function getInputQueryVal() {
@@ -67,7 +69,6 @@
         }
         p.show = function () {
             getMenuList();
-            menuContainer.lazyload({ load: getMenuList });
         }
         p.reset = function () {
             pageIndex = 0;
@@ -84,6 +85,12 @@
             });
             menuContainer = $("#menuContainer", _box);
             wrap = menuContainer.parent();
+            scroller = new IScroll(wrap.get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getMenuList();
+                }
+            });
         }
         p.changePrice = function (el) {
             var item = $(el);
@@ -126,6 +133,7 @@
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).remove();
+                    scroller.refresh();
                 }
             });
         }

@@ -2,26 +2,18 @@
     <div class="deal_btn"><a href="javascript:void(0);" tap="app.showHall">餐厅信息</a></div>
     会员点评
     </header>
-<!--<div class="deal_link">
-    <a href="javascript:void(0);" data-type="True" tap="filterReview">已回复</a> 
-    <a href="javascript:void(0);" data-type="False" tap="filterReview">未回复</a>
-</div>-->
 <div class="title-header">
-<!--    <div class="mall_cate">
-        <label data-type="All" id="mall_cate">
-            默认</label><em></em></div>-->
     <div class="th-int">
         <input type="text" class="date" value="{{=it.beginDate}}" id="txtBeginReviewDate" />
         至
         <input type="text" class="date" value="{{=it.endDate}}" id="txtEndReviewDate" />
-        <span class="qry_btn">
-            <a href="javascript:void(0);" tap="showReview">查询</a></span>
+        <span class="qry_btn"><a href="javascript:void(0);" tap="showReview">查询</a></span>
     </div>
 </div>
-<div class="content" style="padding-top: 85px;">
-    <div class="rw_number" id="rw_number">
-        好评：<i>0</i>中评：<i>0</i>差评：<i>0</i></div>
+<div class="rw_number" id="rw_number">
+    好评：<i>0</i>中评：<i>0</i>差评：<i>0</i></div>
+<div class="content reviewContent">
     <!--已回复-->
-    <ul class="reviewList" id="reviewList">
+    <ul class="scroller reviewList" id="reviewList">
     </ul>
 </div>

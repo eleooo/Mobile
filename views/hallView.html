@@ -1,27 +1,19 @@
-﻿<header><div class="deal_btn"><a href="javascript:void(0);" tap="app.logout">退出登录</a></div>
-            <a href="javascript:void(0);" class="return" tap="app.goback"></a>餐厅信息
-    </header>
-<div>
-    <div class="wrap">
-        <ul class="detail rush">
-            <li>本店账号：<input type="text" class="input" value="{{=it.p}}" id="txtPhone" /></li>
-            <li class="open_time">营业时间：<input type="text" class="input" value="{{=it.CompanyWorkTime}}" style="width: 120px;" id="txtWorkingTime" />
-                <a href="javascript:void(0);">
-                    <img src="images/add.png" alt="" align="absmiddle" tap="addWorkingtime" /></a></li>
-            <li>起送金额：<input type="number" class="input" value="{{=it.OnSetSum}}" id="txtOnSetSum" /></li>
-            <li>登录密码：<input type="password" class="input" value="" id="p1" /></li>
-            <li>确认密码：<input type="password" class="input" value="" id="p2" /></li>
-            <li class="link">当前状态：<img src="images/{{=(it.IsSuspend?'off':'on')}}.png" alt="" tap="changeStatus" /></li>
-            <li class="link">
-                <div class="d_right">
-                    {{=it.Area}}第<span class="price">{{=it.Ranking1}}</span>名</div>
-                本店人气：<span class="price">{{=it.Amount}}</span></li>
-            <li class="link">
-                <div class="d_right">
-                    {{=it.Area}}第<span class="price">{{=it.Ranking2}}</span>名</div>
-                送餐速度：<span class="price">{{=it.OrderElapsed}}</span></li>
-            <li>
-                <input type="button" class="btn green" value="保存" tap="saveMyInfo" /></li>
-        </ul>
-    </div>
-</div>
+﻿<li>本店账号：<input type="text" class="input" value="{{=it.p}}" id="txtPhone" /></li>
+<li class="open_time">营业时间：<input type="text" class="input" value="{{=it.CompanyWorkTime}}" style="width: 120px;" id="txtWorkingTime" />
+    <a href="javascript:void(0);">
+        <img src="images/add.png" alt="" align="absmiddle" tap="addWorkingtime" /></a></li>
+<li>起送金额：<input type="number" class="input" value="{{=it.OnSetSum}}" id="txtOnSetSum" /></li>
+<li>登录密码：<input type="password" class="input" value="" id="p1" /></li>
+<li>确认密码：<input type="password" class="input" value="" id="p2" /></li>
+<li class="link">当前状态：<img src="images/{{=(it.IsSuspend?'off':'on')}}.png" alt="" tap="changeStatus" /></li>
+<li class="link">
+    <div class="d_right">
+        {{=it.Area}}第<span class="price">{{=it.Ranking1}}</span>名</div>
+    本店人气：<span class="price">{{=it.Amount}}</span></li>
+<li class="link">
+    <div class="d_right">
+        {{=it.Area}}第<span class="price">{{=it.Ranking2}}</span>名</div>
+    送餐速度：<span class="price">{{=it.OrderElapsed}}</span></li>
+<li>
+    <input type="button" class="btn green" value="保存" tap="saveMyInfo" /></li>
+<li style="line-height: 10px; border-bottom: 0px;"></li>

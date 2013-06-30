@@ -6,6 +6,7 @@
     var _Hall = function () {
         var myInfo = {};
         var txtphone, txtWorkingTime, txtOnSetSum, p1, p2, _box = false;
+        var scroller, ctHall;
         var p = _Hall.prototype;
         function getInputData() {
             myInfo["p"] = txtphone.val();
@@ -21,7 +22,7 @@
             return _box;
         }
         p.reset = function () {
-            _box.html('');
+            ctHall.html('');
         }
         p.show = function () {
             WS.GetMyInfo(function (result) {
@@ -29,21 +30,19 @@
                 myInfo["p"] = DS.UserPhone();
                 myInfo["CompanyWorkTime"] = myInfo["CompanyWorkTime"] || "";
                 myInfo["OnSetSum"] = myInfo["OnSetSum"] || "";
-                _box.html(VT["HallView"](myInfo));
+                ctHall.html(VT["HallView"](myInfo));
+
+                txtphone = $("#txtPhone", _box);
+                txtWorkingTime = $("#txtWorkingTime", _box);
+                txtOnSetSum = $("#txtOnSetSum", _box);
+                p1 = $("#p1", _box);
+                p2 = $("#p2", _box);
+                scroller.refresh();
             });
         }
         p.init = function () {
-            txtphone = $("#txtPhone", _box);
-            txtWorkingTime = $("#txtWorkingTime", _box);
-            txtOnSetSum = $("#txtOnSetSum", _box);
-            p1 = $("#p1", _box);
-            p2 = $("#p2", _box);
-        }
-        p.onClose = function () {
-            //            getInputData();
-            //            delete myInfo["p1"];
-            //            delete myInfo["p2"];
-            //            DS.ViewCache("Hall", myInfo);
+            ctHall = $("#ctHall", _box);
+            scroller = new IScroll(ctHall.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
         }
         p.addWorkingtime = function (el) {
             var val = prompt("请输入新营业时间,格式如:10:00-11:00");

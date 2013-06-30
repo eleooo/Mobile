@@ -4,9 +4,14 @@
     var _Review = function () {
         var reviewList = false, pList, mall_cate = false, rw_num = false, deal_link = false, _box;
         var pageIndex = 0;
+        var scroller, isLoading;
         var p = _Review.prototype;
 
         function showReviewList() {
+            if (isLoading)
+                return;
+            else
+                isLoading = true; ;
             var args = {
                 t: 4,
                 b: DS.CompanyID(),
@@ -46,7 +51,9 @@
                         pList.append(reviewList);
                     }
                     pageIndex++;
+                    scroller.refresh();
                 }
+                isLoading = false;
             });
         }
 
@@ -59,8 +66,8 @@
             reviewList.html('');
         }
         p.show = function () {
+            p.reset();
             showReviewList();
-            reviewList.lazyload({ load: showReviewList });
         }
         p.init = function (isReturn) {
             reviewList = $("#reviewList", _box);
@@ -75,6 +82,12 @@
             //                deal_link.toggle();
             //                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
             //            });
+            scroller = new IScroll(pList.get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('bounceTime', function () {
+                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                    getMenuList();
+                }
+            });
         }
         p.renderView = function (fnCallback) {
             var d = new Date();

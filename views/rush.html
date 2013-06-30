@@ -2,8 +2,8 @@
     <a href="javascript:void(0)" class="return" tap="app.goback"></a>
     抢购条件
     </header>
-<div class="wrap">
-    <ul class="detail rush">
+<div class="wrap rushwrap">
+    <ul class="scroller detail rush">
         <li><span>积分兑换：</span><input class="input" type="number" id="ItemPoint" t="dec" /></li>
         <li><span>现金支付：</span><input class="input" type="number" id="ItemNeedPay" t="dec" /></li>
         <li><span>投放数量：</span><input type="number" class="input" value="" id="ItemAmount" t="int" /></li>
@@ -20,5 +20,6 @@
         </li>
         <li>
             <input type="button" class="btn green" value="提交" tap="saveItem" /></li>
+        <li style="line-height:10px; border-bottom:0px;"></li>
     </ul>
 </div>

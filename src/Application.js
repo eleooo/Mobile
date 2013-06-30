@@ -39,7 +39,7 @@
                         app.confirm('你确定要退出程序吗?',
                                 undefined,
                                 '确定,取消',
-                                function (btn) { btn == '1' ? navigator.app.exitApp() : void (0); }
+                                function (btn) { btn == '1' ? (_ps.close(), navigator.app.exitApp()) : void (0); }
                                 );
                     }
                 }, true);
@@ -47,17 +47,26 @@
                     //this function is used to prevent duplicate "tap" events
                     var tag = event.target.nodeName.toUpperCase();
                     if (!(tag in ["INPUT", "TEXTAREA"])) {
-                        console.log('touchend : ' + tag);
+
                         event.preventDefault();
                         event.stopPropagation();
                         return false;
                     }
                 });
+                document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
             }
             _body = $("body");
             footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
                 var v = evt.currentTarget.getAttribute('t');
                 p[v].call(this, evt);
+                evt.preventDefault();
+                evt.stopPropagation();
+            });
+            footernav.find("span").bind("tap", function (evt) {
+                var v = evt.currentTarget.parentNode.getAttribute('t');
+                p[v].call(this, evt);
+                evt.preventDefault();
+                evt.stopPropagation();
             });
             spinner = $("#spinner", _body);
             prompter = $("#prompter", _body).bind("tap", app.hideTips);
@@ -67,9 +76,12 @@
             $(window.applicationCache).bind("downloading", function () {
                 app.showtips("正在更新程序...");
             }).bind("updateready", function () {
+                this.swapCache();
                 app.alert("请重启应用程序.", "更新完成", "退出程序", function () {
                     !$D.WIN ? navigator.app.exitApp() : document.location.reload();
                 });
+            }).bind("cached", function () {
+                app.showtips("更新完成.");
             });
         }
         p.init = function () {
@@ -88,8 +100,7 @@
             if (!_ps.Connected()) {
                 _ps.connect();
                 _ps.regCommmand("Notify", function (evt) {
-                    var msg = evt.data.title + ':' + evt.data.message;
-                    app.showtips(msg);
+                    app.notify(evt.data.message, evt.data.title);
                 });
                 if (orderPusher)
                     _ps.regCommmand("Order", orderPusher);
@@ -98,7 +109,7 @@
         function initView(presenter, view, arg, isReturn) {
             if (presenter.box() !== false && presenter.box() !== undefined)
                 return false;
-            presenter.box($("<div></div>").hide().bind("tap", touchTap).appendTo(_body));
+            presenter.box($("<div class='left'></div>").hide().bind("tap", touchTap).appendTo(_body));
             if (!$.isFunction(VT[view])) {
                 if ($.isFunction(presenter.init))
                     presenter.init();
@@ -122,7 +133,7 @@
         function _showView(presenter, view, arg, isReturn) {
             if (currentView) {
                 var curPresenter = getPresenter(currentView);
-                $.isFunction(curPresenter.onClose) ? curPresenter.onClose() : void (0);
+                $.isFunction(curPresenter.reset) ? curPresenter.reset(view) : void (0);
                 curPresenter.box().hide();
                 if (!isReturn)
                     oldViewName.push(currentView);
@@ -143,14 +154,13 @@
             });
             isFound ? footer.show() : footer.hide();
             if ($.isFunction(presenter.show))
-                presenter.show(arg);
+                presenter.show(arg,currentView);
             presenter.box().show();
             currentView = view;
         }
         function showView(view, arg, isReturn) {
             if (view === currentView)
                 return;
-            $(window).unbind("scroll");
             var presenter = getPresenter(view);
             if (!initView(presenter, view, arg, isReturn)) {
                 _showView(presenter, view, arg, isReturn);
@@ -171,7 +181,8 @@
                 var fn = getObject(fnName);
                 if ($.isFunction(fn)) {
                     fn.call(tar, tar, event);
-                    //event.stopImmediatePropagation();
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
                 }
             }
             //event.preventDefault();
@@ -244,15 +255,20 @@
             for (v in presenters) {
                 presenter = presenters[v];
                 if ($.isFunction(presenter.reset))
-                    presenter.reset();
+                    presenter.reset(null);
             }
             _ps.close();
             oldViewName = [];
             //Array.clear(oldViewName);
             p.showLogin();
         }
-        p.notify = function (message) {
-            p.showtips(message);
+        p.notify = function (message, title) {
+            if ($D.WIN || !isbackground) {
+                p.showtips((title ? title + ':' : '') + message);
+            } else {
+                window.plugins.statusBarNotification.notify(title, message);
+                navigator.notification.beep(2);
+            }
         }
         p.logInfo = function (message, tops) {
             p.showtips(message);
@@ -264,10 +280,11 @@
             p.logInfo(message, isPusher);
         }
         p.logError = function (message) {
+            p.showtips(message);
             console.log(message);
         }
         p.bindDateSelector = function (txtBox, box) {
-            $("#" + txtBox, box).scroller("destroy").scroller({
+            return $("#" + txtBox, box).scroller("destroy").scroller({
                 preset: "date",
                 theme: 'android',
                 mode: 'scroller',
@@ -357,11 +374,3 @@
     window.app = new Application();
     app.init();
 })();
-
-
-//String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
-//this.appView.getSettings().setAppCachePath(appCachePath);
-//this.appView.getSettings().setDomStorageEnabled(true);
-//this.appView.getSettings().setAppCacheMaxSize(1024 * 1024 * 15);
-//this.appView.getSettings().setAllowFileAccess(true);
-//this.appView.getSettings().setAppCacheEnabled(true); 
