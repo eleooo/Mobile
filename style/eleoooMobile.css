@@ -14,29 +14,18 @@
     position: absolute;
     overflow: hidden;
     width: 100%;
-    -webkit-text-size-adjust: none;
-    -moz-text-size-adjust: none;
-    -ms-text-size-adjust: none;
-    -o-text-size-adjust: none;
-    text-size-adjust: none;
-    z-index: 0;
+    z-index: 1;
 }
 .wrap {
     left: 0px;
     position: absolute;
     overflow: hidden;
     width: 100%;
-    -webkit-text-size-adjust: none;
-    -moz-text-size-adjust: none;
-    -ms-text-size-adjust: none;
-    -o-text-size-adjust: none;
-    text-size-adjust: none;
-    z-index: 0;
+    z-index: 1;
 }
 
 .scroller {
     position: absolute;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
     width: 100%;
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
@@ -48,6 +37,7 @@
     margin: 0;
     width: 100%;
     text-align: left;
+    z-index: 1;
 }
 
 .left {
@@ -74,7 +64,7 @@ header {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = #f98f2e, endColorstr = #f0731e, GradientType = 0);
     border-bottom: 1px solid #9f4900;
     text-shadow: 0px -1px 1px #505050;
-    z-index: 1;
+    z-index: 10;
 }
 header .leftHeader {
     text-align: left;
@@ -96,18 +86,16 @@ footer {
     width: 100%;
     border-top: 1px solid #202023;
     padding-top: 3px;
-    z-index: 1;
+    z-index: 10;
 }
 .spinner {
     padding: 7px 10px 6px 10px;
     position: absolute;
     bottom: 100px;
-    z-index: 2;
     background-color: Black;
     filter: alpha(opacity=10);
     opacity: 0.1;
     right: 20px;
-    display: none;
 }
 .prompter {
     left: 2px;
@@ -119,11 +107,12 @@ footer {
     background-color: #0099FF;
 }
 .hide {
-    z-index: 0;
+    z-index: -1;
     display: none;
+    visibility:hidden;
 }
 .top {
-    z-index: 2;
+    z-index: 100;
 }
 .rw_footer {
     background: -webkit-linear-gradient(#404144, #313237);
@@ -140,7 +129,7 @@ footer {
     border-top: 1px solid #636363;
     padding: 8px 0;
     overflow: hidden;
-    z-index: 1;
+    z-index: 10;
 }
 .logo {
     text-align: center;
@@ -294,7 +283,7 @@ footer a.nav_on .finance {
     position: absolute;
     top: 49px;
     left: 0px;
-    z-index: 1;
+    z-index: 2;
 }
 .th-int {
     padding: 0 15px;
@@ -319,7 +308,7 @@ footer a.nav_on .finance {
 }
 /* container content postion begin */
 .orderList {
-    bottom: 90px;
+    bottom: 85px;
     top: 85px;
 }
 .saleList {
@@ -354,7 +343,7 @@ footer a.nav_on .finance {
 
 .orderList li {
     vertical-align: middle;
-    padding: 8px 5px;
+    padding: 8px 5px 5px 5px;
     border-bottom: 1px solid #e5e5e5;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = #ffffff, endColorstr = #f3f3f3, GradientType = 0);
     background: -webkit-linear-gradient(#fff, #f3f3f3);
@@ -400,13 +389,13 @@ footer a.nav_on .finance {
     background: #595a60;
     color: #fff;
     line-height: 16px;
-    padding: 10px 10px 14px 10px;
+    padding: 5px;
     font-size: 12px;
     position: absolute;
     bottom: 50px;
     left: 0px;
     width: 100%;
-    z-index: 1;
+    z-index: 2;
 }
 .state a {
     color: #fff;
@@ -635,7 +624,7 @@ span.time {
     border: 1px solid #c5c5c5;
     border-bottom: none;
     background: #fff;
-    width: 98%;
+    width: 94%;
 }
 .detail li {
     border-bottom: 1px solid #c5c5c5;
@@ -819,6 +808,7 @@ span.time {
 }
 .temp li {
     padding: 10px 0;
+    width:98%;
 }
 .temp li time {
     display: block;
@@ -856,7 +846,6 @@ span.time {
 }
 .temp li.shop {
     text-align: right;
-    position: relative;
     padding-right: 16px;
     padding-left: 0px;
 }
@@ -992,7 +981,7 @@ span.time {
     bottom: 55px;
     width: 100%;
     display: none;
-    z-index: 1;
+    z-index: 2;
 }
 .temp_review li {
     padding: 8px 15px;

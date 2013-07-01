@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>iScroll demo: No transition</title>
+    <link href="css/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/lib/iscroll.js"></script>
+    <script type="text/javascript" src="js/lib/zepto.js"></script>
+    <script src="src/Common.js" type="text/javascript"></script>
+    <script src="js/templates.js" type="text/javascript"></script>
+    <script src="src/DataStorage.js" type="text/javascript"></script>
+    <script src="src/EleoooWrapper.js" type="text/javascript"></script>
+    <script src="src/Application.js" type="text/javascript"></script>
+    <script src="src/presenter/Order.js" type="text/javascript"></script>
+    <script src="src/presenter/Login.js" type="text/javascript"></script>
+    <script src="src/WebPusher.js" type="text/javascript"></script>
+    <link href="css/mobiscroll.custom-2.5.4.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/lib/mobiscroll.custom-2.5.4.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        var $D = { appName: '乐多分管理系统',
+            IE: false,
+            WIN: true,
+            type: 'GET',
+            dataType: 'jsonp',
+            pusher: "ws://223.4.96.154:30000/",
+            url: "http://www.eleooo.com"
+            //url: "http://192.168.0.104:80"
+        };
+        var statusText = {
+            notstarted: "待处理",
+            inprogress: "处理中",
+            modified: "已修改",
+            urge: "催餐中",
+            canceled: "已取消",
+            completed: "订餐成功"
+        };
+        var Scroller = function () {
+            var myScroll;
+            var container;
+            var index = 0;
+            function loaded() {
+                container = $("#container");
+                myScroll = new IScroll(container.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+                myScroll.on('scrollEnd', function () {
+                    if (Math.abs(myScroll.y) >= Math.abs(myScroll.maxScrollY)) {
+                        pullData();
+                    }
+                });
+            }
+
+            function pullData() {
+                var args = {
+                    d1: '2013-06-01',
+                    d2: '2013-07-01',
+                    c: DS.CompanyID(),
+                    p: index + 1
+                };
+                WS.GetOrders(args, function (result) {
+                    var orderData = result.data.orders;
+                    var item, oldItem, order, status;
+                    for (var i = 0; i < orderData.length; i++) {
+                        order = orderData[i];
+                        order["status"] = getOrderStatus(order);
+                        item = $(VT["OrderListItem"](order));
+                        for (var o in order) {
+                            if (o && o != "ID" && o != "status")
+                                item.attr("data-" + o.toLowerCase(), order[o]);
+                        }
+                        oldItem = container.find("#_" + order.ID);
+                        if (oldItem.length == 0) {
+                            container.append(item);
+                        }
+                        else
+                            oldItem.replaceWith(item);
+                    }
+                });
+                //container.append(arr.join(''));
+                myScroll.refresh();
+                index = index + 1;
+            }
+            function getOrderStatus(item) {
+                var status = '', cls = 'red';
+                if (item.OrderStatus == 2) {
+                    status = "notstarted";
+                } else if (item.OrderStatus == 3) {
+                    status = "modified";
+                    cls = 'yellow';
+                } else if (item.OrderStatus == 4) {
+                    if (item.OrderDateUpload > item.OrderDate) {
+                        status = "urge";
+                    } else {
+                        status = "inprogress";
+                        cls = 'green';
+                    }
+                } else if (item.OrderStatus == 5) {
+                    status = "canceled";
+                    cls = 'dark';
+                } else if (item.OrderStatus == 6) {
+                    status = "completed";
+                    cls = 'dark';
+                }
+
+                return { status: status, text: statusText[status], cls: cls };
+            }
+            Scroller.prototype.init = function () {
+                document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+                $(document).ready(loaded);
+            }
+        };
+        //var s = new Scroller();
+        //s.init();
+</script>
+    <!--    <style type="text/css">
+        * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+        html { -ms-touch-action: none; }
+        body, ul, li { padding: 0; margin: 0; border: 0; }
+        body { font-size: 12px; font-family: ubuntu, helvetica, arial; overflow: hidden; /* this is important to prevent the whole page to bounce */ }
+        #header { position: absolute; z-index: 2; top: 0; left: 0; width: 100%; height: 45px; line-height: 45px; background: #CD235C; padding: 0; color: #eee; font-size: 20px; text-align: center; font-weight: bold; }
+        #footer { position: absolute; z-index: 2; bottom: 0; left: 0; width: 100%; height: 48px; background: #444; padding: 0; border-top: 1px solid #444; }
+        #wrapper { position: absolute; z-index: 1; top: 45px; bottom: 48px; left: 0; width: 100%; background: #ccc; overflow: hidden; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; -ms-text-size-adjust: none; -o-text-size-adjust: none; text-size-adjust: none; }
+        #scroller { position: absolute; z-index: 1; -webkit-tap-highlight-color: rgba(0,0,0,0); width: 100%; -webkit-transform: translateZ(0); -moz-transform: translateZ(0); -ms-transform: translateZ(0); -o-transform: translateZ(0); transform: translateZ(0); }
+        #scroller ul { list-style: none; padding: 0; margin: 0; width: 100%; text-align: left; }
+        #scroller li { padding: 0 10px; height: 40px; line-height: 40px; border-bottom: 1px solid #ccc; border-top: 1px solid #fff; background-color: #fafafa; font-size: 14px; }
+    </style>-->
+</head>
+<body>
+    <div id="spinner" class="spinner">
+        <img src="images/spinner.gif" alt="loading..." /></div>
+    <div id="prompter" class="prompter hide">
+    </div>
+    <footer id="footer">
+    	<a href="javascript:void(0);" v=",OrderList," t="showOrderList"><span class="order">订单</span></a>
+    	<a href="javascript:void(0);" v=",Menu," t="showMenu"><span class="menu">菜单</span></a>
+    	<a href="javascript:void(0);" v=",Sale,RushRecord,SaleList," t="showSale"><span class="sale">促销</span> </a>
+    	<a href="javascript:void(0);" v=",Review," t="showReview"><span class="service">客服 </span></a>
+    	<a href="javascript:void(0);" v=",Detail,Balance," t="showDetail"><span class="finance">财务</span></a>
+    </footer>
+    <!--<div class="left">
+        <header class="leftHeader">
+    <div class="search"><input class="input s_input" type="tel" value="" defVal="输入会员账号搜索" id="txtOrderListUserPhone"/></div>
+    订单记录
+    </header>
+        <div class="title-header">
+            <div class="th-int">
+                <input type="text" class="date" value="" id="txtOrderListBeginDate" />
+                至
+                <input type="text" class="date" value="" id="txtOrderListEndDate" />
+                <span class="qry_btn"><a href="javascript:void(0);" tap="showOrderList">查询</a></span>
+            </div>
+        </div>
+        <div class="content orderList">
+            <ul class="scroller" id="container">
+            </ul>
+        </div>
+        <div class="state" id="state">
+            <div class="s1" id="s1">
+                <a href="javascript:void(0)" data-status="notstarted"><i class="i_red">0</i>待处理</a> <a href="javascript:void(0)" data-status="modified"><i class="i_yellow">0</i>已修改</a>
+                <a href="javascript:void(0)" data-status="urge"><i class="i_red">0</i>催餐中</a> <a href="javascript:void(0)" data-status="canceled"><i class="i_yellow">0</i>已取消</a>
+                <a href="javascript:void(0)" data-status="all">全部</a>
+            </div>
+            <div class="s2" id="s2">
+                总计<i data-status="sumok">0.00</i> 现金<i data-status="sum">0.00</i> 储值<i data-status="sumcash">0.00</i> 积分<i data-status="sumpoint">0.00</i> <span>返回</span>
+            </div>
+        </div>
+    </div>-->
+</body>
+</html>

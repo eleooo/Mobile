@@ -18,6 +18,7 @@
             ctList = $("#fList", _box).hide();
             app.bindDateSelector("txtDetailBeginDate", _box);
             app.bindDateSelector("txtDetailEndDate", _box);
+            //scroller = new IScroll(ctList.parent().get(0), { bounceTime: 50, useTransition: false });
         }
         p.reset = function () {
             ctList.html('');
@@ -38,6 +39,7 @@
     }
     var _Balance = function () {
         var ctList, _box = false;
+        var scroller;
         var p = _Balance.prototype;
         p.box = function (el) {
             if (el) _box = el;
@@ -52,6 +54,7 @@
             ctList = $("#dList", _box).hide();
             app.bindDateSelector("txtBalanceBeginDate", _box);
             app.bindDateSelector("txtBalanceEndDate", _box);
+            scroller = new IScroll(ctList.parent().get(0), { bounceTime: 50, useTransition: false });
         }
         p.reset = function () {
             ctList.html('');
@@ -67,6 +70,7 @@
                     ctList.show();
                 else
                     ctList.hide();
+                scroller.refresh();
             });
         }
     }

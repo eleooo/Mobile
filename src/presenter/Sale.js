@@ -60,7 +60,7 @@
         function renderMenu(menus) {
             var dir, menu, item;
             curDir = false;
-            menuContainer.remove();
+            //menuContainer.remove();
             for (var i = 0; i < menus.length; i++) {
                 menu = menus[i];
                 dir = getDirItem(menu.dirid, menu.dirname);
@@ -71,7 +71,7 @@
                 else
                     item.replaceWith(m);
             }
-            pBox.append(menuContainer);
+            //pBox.append(menuContainer);
         }
         function getMenuList() {
             if (pageIndex >= pageCount || isLoading)
@@ -86,9 +86,7 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
-                setTimeout(function () {
-                    scroller.refresh();
-                }, 100);
+                scroller.refresh();
                 isLoading = false;
             });
         }
@@ -240,7 +238,7 @@
         var scroller, isLoading;
         function renderSaleList(items) {
             var item, i;
-            saleList.remove();
+            //saleList.remove();
             for (i = 0; i < items.length; i++) {
                 item = saleList.find("#_" + items[i].ItemID);
                 if (item.length == 0)
@@ -248,7 +246,7 @@
                 else
                     saleList.replaceWith(VT['SaleListItem'](items[i]));
             }
-            pBox.append(saleList);
+            //pBox.append(saleList);
         }
         function getSaleList() {
             if (pageIndex >= pageCount || isLoading)
@@ -263,9 +261,7 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
-                setTimeout(function () {
-                    scroller.refresh();
-                }, 100);
+                scroller.refresh();
                 isLoading = false;
             });
         }
@@ -274,7 +270,7 @@
             return _box;
         }
         p.reset = function (by) {
-            if (!(by in childView)) {
+            if (childView.indexOf(by) === -1) {
                 pageIndex = 0;
                 pageCount = 0;
                 isLoading = false;
@@ -300,7 +296,7 @@
             });
         }
         p.show = function (arg, by) {
-            if (!(by in childView)) {
+            if (childView.indexOf(by) === -1) {
                 getSaleList();
             }
         }
@@ -319,8 +315,10 @@
         }
         p.delItem = function (el) {
             WS.delItem({ id: el.attr('data-id') }, function (result) {
-                if (result.code > -1)
+                if (result.code > -1) {
                     saleList.find("#_" + el.attr('data-id')).remove();
+                    scroller.refresh();
+                }
                 app.showtips(result.message);
             });
         }
@@ -333,7 +331,7 @@
         var p = _RushRecord.prototype;
         function renderRush(items) {
             var item, itemEl, i;
-            rushList.remove();
+            //rushList.remove();
             for (i = 0; i < items.length; i++) {
                 item = items[i];
                 itemEl = rushList.find("#_" + item.ItemID);
@@ -347,7 +345,7 @@
                     rushList.append(VT["RushRecordItem"](item));
                 }
             }
-            pBox.before(rushList);
+            //pBox.before(rushList);
             ctAmount.text(cSum.format('0'));
             ctPoint.text(pSum.format('0.00'));
         }
@@ -364,9 +362,7 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
-                setTimeout(function () {
-                    scroller.refresh();
-                }, 100);
+                scroller.refresh();
                 isLoading = false;
             });
         }
@@ -402,7 +398,6 @@
         p.show = function () {
             p.reset();
             getRushList();
-            rushList.lazyload({ load: getRushList });
         }
         p.showRushList = function () {
             getRushList();

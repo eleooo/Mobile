@@ -32,7 +32,7 @@
                         var id = 0, html = '';
                         var item;
                         //var filter = mall_cate.attr("data-type");
-                        reviewList.remove();
+                        //reviewList.remove();
                         for (var i = 0; i < len; i++) {
                             id = result.data.html[index];
                             html = result.data.html[index + 1];
@@ -48,12 +48,10 @@
                             }
                             index = index + 2;
                         }
-                        pList.append(reviewList);
+                        //pList.append(reviewList);
                     }
                     pageIndex++;
-                    setTimeout(function () {
-                        scroller.refresh();
-                    }, 100);
+                    scroller.refresh();
                 }
                 isLoading = false;
             });

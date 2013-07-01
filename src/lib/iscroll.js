@@ -654,6 +654,10 @@ var IScroll = (function (window, document, Math) {
         },
 
         _execEvent: function (type) {
+//            console.log("exec event:" + type);
+//            console.log('maxScrollY:' + this.maxScrollY + ' y:' + this.y);
+//            console.log('scroller.height:' + $(this.scroller).css('height'));
+//            console.log('wrapper.height:' + $(this.wrapper).css('height'));
             if (!this._events[type]) {
                 return;
             }

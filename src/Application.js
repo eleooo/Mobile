@@ -13,7 +13,7 @@
         var currentView = false;
         var footernav = false, footer = false;
         var orderListViewName = "OrderList";
-        var oldViewName = [];
+        var oldViewName = [], toggleEl = ["INPUT", "TEXTAREA"];
         var voice = false;
         var isbackground = false;
         var _ps = false;
@@ -46,10 +46,9 @@
                 document.addEventListener("touchend", function (event) {
                     //this function is used to prevent duplicate "tap" events
                     var tag = event.target.nodeName.toUpperCase();
-                    if (!(tag in ["INPUT", "TEXTAREA"])) {
-
+                    if (toggleEl.indexOf(tag) === -1) {
                         event.preventDefault();
-                        event.stopPropagation();
+                        //event.stopPropagation();
                         return false;
                     }
                 });
@@ -60,13 +59,13 @@
                 var v = evt.currentTarget.getAttribute('t');
                 p[v].call(this, evt);
                 evt.preventDefault();
-                evt.stopPropagation();
+                //evt.stopPropagation();
             });
             footernav.find("span").bind("tap", function (evt) {
                 var v = evt.currentTarget.parentNode.getAttribute('t');
                 p[v].call(this, evt);
                 evt.preventDefault();
-                evt.stopPropagation();
+                //evt.stopPropagation();
             });
             spinner = $("#spinner", _body);
             prompter = $("#prompter", _body).bind("tap", app.hideTips);
@@ -109,7 +108,9 @@
         function initView(presenter, view, arg, isReturn) {
             if (presenter.box() !== false && presenter.box() !== undefined)
                 return false;
-            presenter.box($("<div class='left'></div>").hide().bind("tap", touchTap).appendTo(_body));
+            var box = $("<div class='left'></div>").hide().bind("tap", touchTap);
+            spinner.before(box);
+            presenter.box(box);
             if (!$.isFunction(VT[view])) {
                 if ($.isFunction(presenter.init))
                     presenter.init();
@@ -131,8 +132,9 @@
             }
         }
         function _showView(presenter, view, arg, isReturn) {
+            var curPresenter = false;
             if (currentView) {
-                var curPresenter = getPresenter(currentView);
+                curPresenter = getPresenter(currentView);
                 $.isFunction(curPresenter.reset) ? curPresenter.reset(view) : void (0);
                 curPresenter.box().hide();
                 if (!isReturn)
@@ -153,9 +155,9 @@
                     el.className = '';
             });
             isFound ? footer.show() : footer.hide();
+            curPresenter ? (curPresenter.box().hide(), presenter.box().show()) : presenter.box().show();
             if ($.isFunction(presenter.show))
-                presenter.show(arg,currentView);
-            presenter.box().show();
+                presenter.show(arg, currentView);
             currentView = view;
         }
         function showView(view, arg, isReturn) {
@@ -188,6 +190,9 @@
             //event.preventDefault();
         }
         function _online() {
+            if (!DS.WebAuthKey()) {
+                p.showLogin();
+            }
             p.initPS();
         }
         p.initPS = function () {
@@ -201,6 +206,9 @@
             showView(view, undefined, true);
         }
         p.showLogin = function (arg) {
+            _ps.close();
+            DS.IsAutoLogin(false);
+            DS.WebAuthKey(false);
             showView("Login", arg);
         }
         p.showBalance = function (arg) {
@@ -214,52 +222,39 @@
         }
         p.showDetail = function (arg) {
             showView("Detail", arg);
-            return false;
         }
         p.showMenu = function (arg) {
             showView("Menu", arg);
-            return false;
         }
         p.showHall = function (arg) {
             showView("Hall", arg);
-            return false;
         }
         p.showReview = function (arg) {
             showView("Review", arg);
-            return false;
         }
         p.showRush = function (arg) {
             showView("Rush", arg);
-            return false;
         }
         p.showRushRecord = function (arg) {
             showView("RushRecord", arg);
-            return false;
         }
         p.showSale = function (arg) {
             showView("Sale", arg);
-            return false;
         }
         p.showSaleList = function (arg) {
             showView("SaleList", arg);
-            return false;
         }
         p.showTemp = function (arg) {
             showView("Temp", arg);
-            return false;
         }
         p.logout = function () {
-            DS.IsAutoLogin(false);
-            DS.WebAuthKey(null);
             var v, presenter;
             for (v in presenters) {
                 presenter = presenters[v];
                 if ($.isFunction(presenter.reset))
                     presenter.reset(null);
             }
-            _ps.close();
             oldViewName = [];
-            //Array.clear(oldViewName);
             p.showLogin();
         }
         p.notify = function (message, title) {
@@ -284,14 +279,16 @@
             console.log(message);
         }
         p.bindDateSelector = function (txtBox, box) {
-            return $("#" + txtBox, box).scroller("destroy").scroller({
-                preset: "date",
-                theme: 'android',
-                mode: 'scroller',
-                display: 'modal',
-                lang: 'zh',
-                dateFormat: 'yy-mm-dd'
-            });
+            if ($.fn.scroller) {
+                return $("#" + txtBox, box).scroller("destroy").scroller({
+                    preset: "date",
+                    theme: 'android',
+                    mode: 'scroller',
+                    display: 'modal',
+                    lang: 'zh',
+                    dateFormat: 'yy-mm-dd'
+                });
+            }
         }
         p.inbackground = function () {
             return isbackground;
@@ -319,7 +316,8 @@
             }
         },
         p.spinner = function (isShow) {
-            isShow ? spinner.show() : spinner.hide();
+            return;
+            isShow ? spinner.get(0).className = 'spinner top' : spinner.get(0).className = 'spinner hide';
         }
         p.hideTips = function () {
             prompter.addClass("hide").removeClass('top');

@@ -108,22 +108,22 @@
         a.splice(b, 1);
     };
 })(window);
-(function(window,document) {
-    $.fn.lazyload = function(options) {
-        var elements = this;
-        var settings = {load : null};
-        var isTap = false;
-        $.extend(settings, options);
-        $(window).bind("scroll",function(){
-            //window.scrollY
-            if(!isTap && settings.load && $(window).scrollTop() == ($(document).height() - $(window).height())){
-                settings.load();
-            }
-        });
-        
-        return this;
-    };
-})(window, document);
+//(function(window,document) {
+//    $.fn.lazyload = function(options) {
+//        var elements = this;
+//        var settings = {load : null};
+//        var isTap = false;
+//        $.extend(settings, options);
+//        $(window).bind("scroll",function(){
+//            //window.scrollY
+//            if(!isTap && settings.load && $(window).scrollTop() == ($(document).height() - $(window).height())){
+//                settings.load();
+//            }
+//        });
+//        
+//        return this;
+//    };
+//})(window, document);
 /*!
  * numeral.js
  * version : 1.4.9

@@ -66,6 +66,7 @@
     <Content Include="MuSelect\css\multi-select.css" />
     <Content Include="MuSelect\img\switch.png" />
     <Content Include="MuSelect\js\jquery.multi-select.js" />
+    <Content Include="scroll.html" />
     <Content Include="src\complier\BuildCordova.js" />
     <Content Include="src\complier\BuildCSS.js" />
     <Content Include="src\complier\BuildIScroll.js" />
@@ -247,6 +248,7 @@
     <Content Include="images\voice2.png" />
     <Content Include="views\login.html" />
     <Content Include="views\menu.html" />
+    <Content Include="views\orderHandle.html" />
     <Content Include="views\orderHandleView.html" />
     <Content Include="views\orderList.html" />
     <Content Include="views\orderListItem.html" />

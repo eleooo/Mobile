@@ -56,7 +56,7 @@
                 oldItem = container.find("#_" + order.ID);
                 if (oldItem.length == 0) {
                     if (isSyn) {
-                        container.fist().before(item);
+                        container.firstChild().before(item);
                     } else
                         container.append(item);
                 }
@@ -64,12 +64,12 @@
                     oldItem.replaceWith(item);
             }
             var items = container.find("li");
-            //            if (isSyn) {
-            //                items.remove().sort(function (a, b) {
-            //                    return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
-            //                });
-            //                container.append(items);
-            //            }
+            if (isSyn) {
+                items.remove().sort(function (a, b) {
+                    return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
+                });
+                //container.append(items);
+            }
             //content.append(container);
             calcItemsInfo(items);
         }
@@ -188,10 +188,8 @@
                         }
                     }
                     if (fn) { fn(); }
-                    setTimeout(function () {
-                        if (visible())
-                            scroller.refresh();
-                    }, 100);
+                    if (visible())
+                        scroller.refresh();
                 }
                 else
                     app.logInfo(result.message);
@@ -217,7 +215,7 @@
             return _box;
         }
         p.reset = function (by) {
-            if (!(by in childView)) {
+            if (childView.indexOf(by) === -1) {
                 pageCount = 1;
                 pageIndex = 0;
                 isLoading = false;
@@ -226,10 +224,7 @@
             }
         }
         p.show = function (arg, by) {
-            //$(window).lazyload({ load: getOrders });
-            if (!(by in childView)) {
-                getOrders(false);
-            }
+            childView.indexOf(by) === -1 ? getOrders(false) : void (0);
         }
         p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
@@ -293,7 +288,7 @@
         var orders = {}, _order = {};
         var p = _OrderHandle.prototype;
         var chgPriceLog = {}, outOfStockLog = {}, isProcess = false;
-
+        var scroller, cthandler, cthnum, cthts;
         function __calcOrderSum() {
             var order;
             var sum = numeral(0);
@@ -401,18 +396,26 @@
             el.find("input").attr("checked", true);
         }
         p.init = function () {
-
+            cthandler = $("#cthandler", _box);
+            cthnum = $("#cthnum", _box);
+            cthts = $("#cthts", _box);
+            scroller = new IScroll(cthandler.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
         }
         p.reset = function () {
-            _box.html('');
+            cthandler.html('');
+            cthnum.text('');
+            cthts.text('');
         }
         p.show = function (arg) {
             p.reset();
             WS.OrderDetail(arg, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
-                    _box.html(VT["OrderHandleView"](_order));
+                    cthnum.text(_order.MemberPhoneNumber);
+                    cthts.text(_order.Timespan);
+                    cthandler.html(VT["OrderHandleView"](_order));
                     reviewContainer = $("#reviewContainer", _box);
+                    scroller.refresh();
                 }
                 else
                     app.logError(result.message);
@@ -455,6 +458,7 @@
         }
         p.toggleReview = function () {
             reviewContainer.toggle();
+            scroller.refresh();
         }
     };
 
@@ -481,6 +485,7 @@
                     if (result.code > -1) {
                         renderTempItem(result.data);
                         $("#txtMessage", _box).val("");
+                        scroller.refresh();
                     }
                 }, function (error) {
                     app.logError(error.source);
@@ -498,6 +503,7 @@
                         hasRf = false;
                         renderTempItem(result.data);
                         $("#txtMessage", _box).val("");
+                        scroller.refresh();
                     }
                 });
         }
@@ -550,9 +556,7 @@
                     renderTempList(result.data.temps);
                     $("#phone", _box).text(result.data.MemberPhoneNumber);
                     $("#timespan", _box).text(result.data.Timespan);
-                    setTimeout(function () {
-                        scroller.refresh();
-                    }, 100);
+                    scroller.refresh();
                 }
             });
         }
@@ -572,7 +576,7 @@
             tempContainer = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });
-            scroller = new IScroll(tempContainer.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(tempContainer.parent().get(0), { bounceTime: 50, useTransition: false });
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));

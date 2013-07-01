@@ -27,7 +27,7 @@
         }
         function renderMenu(menus) {
             var dir, menu, item;
-            menuContainer.remove();
+            //menuContainer.remove();
             curDir = false;
             for (var i = 0; i < menus.length; i++) {
                 menu = menus[i];
@@ -39,7 +39,7 @@
                 else
                     item.replaceWith(m);
             }
-            wrap.append(menuContainer);
+            //wrap.append(menuContainer);
         }
         function getMenuList() {
             if (pageIndex >= pageCount)
@@ -55,9 +55,7 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
-                setTimeout(function () {
-                    scroller.refresh();
-                }, 100);
+                scroller.refresh();
             });
         }
         function getInputQueryVal() {
@@ -70,6 +68,7 @@
             return _box;
         }
         p.show = function () {
+            p.reset();
             getMenuList();
         }
         p.reset = function () {
@@ -135,9 +134,7 @@
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).remove();
-                    setTimeout(function () {
-                        scroller.refresh();
-                    }, 100);
+                    scroller.refresh();
                 }
             });
         }

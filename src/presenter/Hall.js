@@ -37,9 +37,7 @@
                 txtOnSetSum = $("#txtOnSetSum", _box);
                 p1 = $("#p1", _box);
                 p2 = $("#p2", _box);
-                setTimeout(function () {
-                    scroller.refresh();
-                }, 100);
+                scroller.refresh();
             });
         }
         p.init = function () {

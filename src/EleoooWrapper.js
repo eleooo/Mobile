@@ -63,7 +63,7 @@
                 dataType: $D.dataType || "json",
                 type: $D.type || "POST",
                 cache:false,
-                success: function (result) { fnCallback(result); delete data; delete result; },
+                success: function (result) {fnCallback(result); delete data; delete result; },
                 complete: function () {
                     delete xhrs[url];
                     app.spinner(false);
