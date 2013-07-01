@@ -86,7 +86,9 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
-                scroller.refresh();
+                setTimeout(function () {
+                    scroller.refresh();
+                }, 100);
                 isLoading = false;
             });
         }
@@ -114,8 +116,8 @@
         p.init = function () {
             menuContainer = $("#saleContainer");
             pBox = menuContainer.parent();
-            scroller = new IScroll(pBox.get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
-            scroller.on('bounceTime', function () {
+            scroller = new IScroll(pBox.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();
                 }
@@ -207,7 +209,9 @@
                 imgItem.show();
             } else
                 imgItem.hide();
-            scroller.refresh();
+            setTimeout(function () {
+                scroller.refresh();
+            }, 100);
         }
         p.takeaPic = function (el) {
             if (!app.isCordovaApp()) {
@@ -259,7 +263,9 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
-                scroller.refresh();
+                setTimeout(function () {
+                    scroller.refresh();
+                }, 100);
                 isLoading = false;
             });
         }
@@ -286,8 +292,8 @@
             pBox = saleList.parent();
             app.bindDateSelector("txtSaleListBeginDate", _box);
             app.bindDateSelector("txtSaleListEndDate", _box);
-            scroller = new IScroll(saleList.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
-            scroller.on('bounceTime', function () {
+            scroller = new IScroll(saleList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getSaleList();
                 }
@@ -358,7 +364,9 @@
                     pageIndex = pageIndex + 1;
                     pageCount = result.data.pageCount;
                 }
-                scroller.refresh();
+                setTimeout(function () {
+                    scroller.refresh();
+                }, 100);
                 isLoading = false;
             });
         }
@@ -384,8 +392,8 @@
             app.bindDateSelector("txtRushRecordEndDate", _box);
             ctAmount = $("#amountSum", _box);
             ctPoint = $("#pointSum", _box);
-            scroller = new IScroll(rushList.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
-            scroller.on('bounceTime', function () {
+            scroller = new IScroll(rushList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getRushList();
                 }

@@ -37,12 +37,14 @@
                 txtOnSetSum = $("#txtOnSetSum", _box);
                 p1 = $("#p1", _box);
                 p2 = $("#p2", _box);
-                scroller.refresh();
+                setTimeout(function () {
+                    scroller.refresh();
+                }, 100);
             });
         }
         p.init = function () {
             ctHall = $("#ctHall", _box);
-            scroller = new IScroll(ctHall.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
         }
         p.addWorkingtime = function (el) {
             var val = prompt("请输入新营业时间,格式如:10:00-11:00");

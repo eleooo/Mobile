@@ -17,6 +17,8 @@
         var $D = { appName: '乐多分管理系统',
             IE: false,
             WIN: false,
+            type: 'GET',
+            dataType:'jsonp',
             pusher: "ws://223.4.96.154:30000/",
             url: "http://www.eleooo.com"
             //url: "http://192.168.0.104:80"
@@ -27,7 +29,7 @@
             var android = document.location.href.indexOf('?v=android');
             if (android > 0)
                 document.writeln('<script src="js/lib/cordova.js" type="text/javascript"><\/script>');
-            if ($D.IE || $D.WIN)
+            if (!($D.IE || $D.WIN))
                 document.writeln('<script src="js/lib/jquery-1.7.js" type="text/javascript"><\/script>');
             else
                 document.writeln('<script src="js/lib/zepto.js" type="text/javascript"><\/script>');

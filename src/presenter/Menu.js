@@ -55,7 +55,9 @@
                     pageIndex++;
                     pageCount = result.data.pageCount;
                 }
-                scroller.refresh();
+                setTimeout(function () {
+                    scroller.refresh();
+                }, 100);
             });
         }
         function getInputQueryVal() {
@@ -85,8 +87,8 @@
             });
             menuContainer = $("#menuContainer", _box);
             wrap = menuContainer.parent();
-            scroller = new IScroll(wrap.get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
-            scroller.on('bounceTime', function () {
+            scroller = new IScroll(wrap.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();
                 }
@@ -133,7 +135,9 @@
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
                     menuContainer.find("#_" + args.id).remove();
-                    scroller.refresh();
+                    setTimeout(function () {
+                        scroller.refresh();
+                    }, 100);
                 }
             });
         }

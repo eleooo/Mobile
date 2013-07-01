@@ -68,6 +68,7 @@
     <Content Include="MuSelect\js\jquery.multi-select.js" />
     <Content Include="src\complier\BuildCordova.js" />
     <Content Include="src\complier\BuildCSS.js" />
+    <Content Include="src\complier\BuildIScroll.js" />
     <Content Include="src\complier\BuildJQuery.js" />
     <Content Include="src\complier\BuildJS.js" />
     <Content Include="src\complier\BuildJSON2.js" />

@@ -501,9 +501,9 @@ var IScroll = (function (window, document, Math) {
             this.initiated = 0;
             this.endTime = utils.getTime();
 
-            // reset if we are outside of the boundaries
+            // reset if we are outside of the boundaries 600
             if (this.resetPosition(this.options.bounceTime)) {
-                this._execEvent('bounceTime');
+                this._execEvent('scrollEnd'); //add on 2013-07-01
                 return;
             }
 
@@ -556,7 +556,6 @@ var IScroll = (function (window, document, Math) {
                 this.scrollTo(newX, newY, time, easing);
                 return;
             }
-
             this._execEvent('scrollEnd');
         },
 

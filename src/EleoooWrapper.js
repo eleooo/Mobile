@@ -60,8 +60,8 @@
             $.ajax({
                 url: url,
                 data: data,
-                dataType: "jsonp",
-                type:"POST",
+                dataType: $D.dataType || "json",
+                type: $D.type || "POST",
                 cache:false,
                 success: function (result) { fnCallback(result); delete data; delete result; },
                 complete: function () {
