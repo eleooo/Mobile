@@ -25,18 +25,20 @@
                     rw_num.eq(1).text(result.data.normal);
                     rw_num.eq(2).text(result.data.bad);
                     if (result.data.html.length == 0 && pageIndex == 0) {
-                        reviewList.html('');
+                        reviewList.html('').attr('empty', 1);
                     } else {
                         var len = result.data.html.length / 2;
                         var index = 0;
                         var id = 0, html = '';
                         var item;
+                        var isEmpty = reviewList.attr('empty') == '1';
+                        var tempContainer = isEmpty ? reviewList.clone() : reviewList;
                         //var filter = mall_cate.attr("data-type");
                         //reviewList.remove();
                         for (var i = 0; i < len; i++) {
                             id = result.data.html[index];
                             html = result.data.html[index + 1];
-                            item = reviewList.find("#item" + id);
+                            item = tempContainer.find("#item" + id);
                             if (item.length > 0)
                                 item.replaceWith(html);
                             else {
@@ -44,11 +46,14 @@
                                 //                                if (filter != 'All' && filter != item.attr("data-reply")) {
                                 //                                    item.hide();
                                 //                                }
-                                reviewList.append(item);
+                                tempContainer.append(item);
                             }
                             index = index + 2;
                         }
-                        //pList.append(reviewList);
+                        if (isEmpty)
+                            reviewList.html(tempContainer.html());
+                        if (len > 0)
+                            reviewList.attr('empty', 0);
                     }
                     pageIndex++;
                     scroller.refresh();
@@ -63,7 +68,7 @@
         }
         p.reset = function () {
             pageIndex = 0;
-            reviewList.html('');
+            reviewList.html('').attr('empty',1);
         }
         p.show = function () {
             p.reset();
@@ -82,7 +87,7 @@
             //                deal_link.toggle();
             //                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
             //            });
-            scroller = new IScroll(pList.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(pList.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();

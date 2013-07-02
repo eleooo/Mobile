@@ -6,18 +6,18 @@
 (function () {
     var _Menu = function () {
         var pageIndex = 0, pageCount = 1;
-        var txtMenuName, menuContainer, wrap, _box;
+        var txtMenuName, container, wrap, _box;
         var curDir = false;
         var scroller;
         var p = _Menu.prototype;
-        function getDirItem(dirId, dirName) {
+        function getDirItem(ct, dirId, dirName) {
             if (curDir && curDir.attr('data-id') == dirId)
                 return curDir;
             else {
-                curDir = $("#__" + dirId, menuContainer);
+                curDir = $("#__" + dirId, ct);
                 if (curDir.length == 0) {
                     curDir = $("<li id='__" + dirId + "' data-id='" + dirId + "'><h2>" + dirName + "</h2></li>");
-                    menuContainer.append(curDir);
+                    ct.append(curDir);
                 }
                 return curDir;
             }
@@ -26,12 +26,13 @@
             return VT["MenuItem"](menu);
         }
         function renderMenu(menus) {
-            var dir, menu, item;
-            //menuContainer.remove();
+            var dir, menu, item, i;
+            var isEmpty = container.attr('empty') == '1';
+            var tempContainer = isEmpty ? container.clone() : container;
             curDir = false;
-            for (var i = 0; i < menus.length; i++) {
+            for (i = 0; i < menus.length; i++) {
                 menu = menus[i];
-                dir = getDirItem(menu.dirid, menu.dirname);
+                dir = getDirItem(tempContainer, menu.dirid, menu.dirname);
                 item = dir.find("#_" + menu.id);
                 var m = getMenuItem(menu);
                 if (item.length == 0)
@@ -39,7 +40,10 @@
                 else
                     item.replaceWith(m);
             }
-            //wrap.append(menuContainer);
+            if (isEmpty)
+                container.html(tempContainer.html());
+            if (i > 0)
+                container.attr('empty', 0);
         }
         function getMenuList() {
             if (pageIndex >= pageCount)
@@ -49,7 +53,7 @@
             };
             WS.GetMenus(args, function (result) {
                 if (pageIndex == 0)
-                    menuContainer.html('');
+                    container.html('').attr('empty', 1);
                 if (result.code > -1) {
                     renderMenu(result.data.menus);
                     pageIndex++;
@@ -74,7 +78,7 @@
         p.reset = function () {
             pageIndex = 0;
             pageCount = 1;
-            menuContainer.html('');
+            container.html('').attr('empty', 1);
         }
         p.init = function () {
             txtMenuName = $("#txtMenuName", _box).focusin(function () {
@@ -84,9 +88,9 @@
                 if ($(this).val() == '')
                     $(this).val($(this).attr('defVal'));
             });
-            menuContainer = $("#menuContainer", _box);
-            wrap = menuContainer.parent();
-            scroller = new IScroll(wrap.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            container = $("#menuContainer", _box);
+            wrap = container.parent();
+            scroller = new IScroll(wrap.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();
@@ -108,7 +112,7 @@
             };
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
+                    container.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
             });
         }
@@ -121,7 +125,7 @@
             };
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#_" + args.id).replaceWith(getMenuItem(result.data));
+                    container.find("#_" + args.id).replaceWith(getMenuItem(result.data));
                 }
             });
         }
@@ -133,15 +137,13 @@
             };
             WS.SaveMenus(args, function (result) {
                 if (result.code > -1) {
-                    menuContainer.find("#_" + args.id).remove();
+                    container.find("#_" + args.id).remove();
                     scroller.refresh();
                 }
             });
         }
         p.searchMenu = function () {
-            pageCount = 1;
-            pageIndex = 0;
-            getMenuList();
+            p.show();
         }
     }
     window.$_Menu = _Menu;

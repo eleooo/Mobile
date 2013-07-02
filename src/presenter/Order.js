@@ -44,7 +44,8 @@
             //            setSummaryInfo(viewData);
 
             var item, oldItem, order, status;
-            //container.remove();
+            var isEmpty = container.attr('empty') === '1';
+            var tempContainer = isEmpty ? container.clone() : container;
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
                 order["status"] = getOrderStatus(order);
@@ -53,24 +54,25 @@
                     if (o && o != "ID" && o != "status")
                         item.attr("data-" + o.toLowerCase(), order[o]);
                 }
-                oldItem = container.find("#_" + order.ID);
+                oldItem = tempContainer.find("#_" + order.ID);
                 if (oldItem.length == 0) {
                     if (isSyn) {
-                        container.firstChild().before(item);
+                        tempContainer.firstChild().before(item);
                     } else
-                        container.append(item);
+                        tempContainer.append(item);
                 }
                 else
                     oldItem.replaceWith(item);
             }
-            var items = container.find("li");
+            var items = tempContainer.find("li");
             if (isSyn) {
                 items.remove().sort(function (a, b) {
                     return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
                 });
-                //container.append(items);
             }
-            //content.append(container);
+            if (isEmpty)
+                container.html(tempContainer.html());
+            container.attr('empty', 0);
             calcItemsInfo(items);
         }
         function getOrderStatus(item) {
@@ -220,7 +222,7 @@
                 pageIndex = 0;
                 isLoading = false;
                 flag = 0;
-                container.html("");
+                container.html("").attr('empty', 1);
             }
         }
         p.show = function (arg, by) {
@@ -248,7 +250,7 @@
                     txtUserPhone.val(txtUserPhone.attr("defVal"));
             });
             txtUserPhone.val(txtUserPhone.attr("defVal"));
-            scroller = new IScroll(_box.children(".content").get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(_box.children(".content").get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getOrders(false);
@@ -399,7 +401,7 @@
             cthandler = $("#cthandler", _box);
             cthnum = $("#cthnum", _box);
             cthts = $("#cthts", _box);
-            scroller = new IScroll(cthandler.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(cthandler.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
         }
         p.reset = function () {
             cthandler.html('');
@@ -464,7 +466,7 @@
 
     var _Temp = function () {
         var p = _Temp.prototype, _box = false;
-        var tempContainer = false;
+        var container = false;
         var rv = false;
         var rfUrl = "voice.wav";
         var fPath = false;
@@ -483,7 +485,7 @@
                     hasRf = false;
                     var result = JSON.parse(r.responseText);
                     if (result.code > -1) {
-                        renderTempItem(result.data);
+                        renderTempItem(container, result.data);
                         $("#txtMessage", _box).val("");
                         scroller.refresh();
                     }
@@ -501,24 +503,29 @@
                         app.logError(result.message);
                     else {
                         hasRf = false;
-                        renderTempItem(result.data);
+                        renderTempItem(container, result.data);
                         $("#txtMessage", _box).val("");
                         scroller.refresh();
                     }
                 });
         }
-        function renderTempItem(item) {
-            var el = tempContainer.find("#_" + item.id);
+        function renderTempItem(ct, item) {
+            var el = ct.find("#_" + item.id);
             if (el.length > 0) {
                 el.replaceWith(VT["TempItem"](item));
             } else {
-                tempContainer.append(VT["TempItem"](item));
+                ct.append(VT["TempItem"](item));
             }
         }
         function renderTempList(data) {
+            var isempty = container.attr('empty') === '1';
+            var tempContainer = isempty ? container.clone() : container;
             for (var i = 0; i < data.length; i++) {
-                renderTempItem(data[i]);
+                renderTempItem(tempContainer, data[i]);
             }
+            if (isempty)
+                container.html(tempContainer.html());
+            container.attr('empty', 0);
         }
         function recordVoice(isTouchStarting) {
             if (!app.isCordovaApp() && isTouchStarting) {
@@ -570,13 +577,13 @@
         }
         p.reset = function () {
             hasRf = false;
-            tempContainer.html('');
+            container.html('').attr('empty', 1);
         }
         p.init = function () {
-            tempContainer = $("#tempContainer", _box);
+            container = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });
-            scroller = new IScroll(tempContainer.parent().get(0), { bounceTime: 50, useTransition: false });
+            scroller = new IScroll(container.parent().get(0), { bounceTime: 50 });
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));

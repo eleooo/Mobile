@@ -42,7 +42,7 @@
         }
         p.init = function () {
             ctHall = $("#ctHall", _box);
-            scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true, useTransition: false });
+            scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true});
         }
         p.addWorkingtime = function (el) {
             var val = prompt("请输入新营业时间,格式如:10:00-11:00");

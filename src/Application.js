@@ -316,7 +316,6 @@
             }
         },
         p.spinner = function (isShow) {
-            return;
             isShow ? spinner.get(0).className = 'spinner top' : spinner.get(0).className = 'spinner hide';
         }
         p.hideTips = function () {
