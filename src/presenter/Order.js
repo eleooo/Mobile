@@ -43,9 +43,11 @@
             //            container.html(VT["OrderListContainer"](viewData));
             //            setSummaryInfo(viewData);
 
-            var item, oldItem, order, status;
+            var item, oldItem, order, status, firstChild = false;
             var isEmpty = container.attr('empty') === '1';
             var tempContainer = isEmpty ? container.clone() : container;
+            if (isSyn)
+                firstChild = tempContainer.children().first();
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
                 order["status"] = getOrderStatus(order);
@@ -56,20 +58,24 @@
                 }
                 oldItem = tempContainer.find("#_" + order.ID);
                 if (oldItem.length == 0) {
-                    if (isSyn) {
-                        tempContainer.firstChild().before(item);
-                    } else
+                    if (isSyn && firstChild && firstChild.length > 0) {
+                        firstChild.before(item);
+                        firstChild = item;
+                    } else {
+                        if (firstChild && firstChild.length == 0)
+                            firstChild = item;
                         tempContainer.append(item);
+                    }
                 }
                 else
                     oldItem.replaceWith(item);
             }
             var items = tempContainer.find("li");
-            if (isSyn) {
-                items.remove().sort(function (a, b) {
-                    return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
-                });
-            }
+            //            if (isSyn) {
+            //                items.remove().sort(function (a, b) {
+            //                    return parseInt(b.getAttribute("data-id")) - parseInt(a.getAttribute("data-id"));
+            //                });
+            //            }
             if (isEmpty)
                 container.html(tempContainer.html());
             container.attr('empty', 0);
