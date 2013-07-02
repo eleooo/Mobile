@@ -256,7 +256,7 @@
                     txtUserPhone.val(txtUserPhone.attr("defVal"));
             });
             txtUserPhone.val(txtUserPhone.attr("defVal"));
-            scroller = new IScroll(_box.children(".content").get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(_box.find(".content").get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getOrders(false);
@@ -407,7 +407,7 @@
             cthandler = $("#cthandler", _box);
             cthnum = $("#cthnum", _box);
             cthts = $("#cthts", _box);
-            scroller = new IScroll(cthandler.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(cthandler.parent().get(0));
         }
         p.reset = function () {
             cthandler.html('');
@@ -589,7 +589,7 @@
             container = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });
-            scroller = new IScroll(container.parent().get(0), { bounceTime: 50 });
+            scroller = app.iscroll(container.parent().get(0), false);
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));

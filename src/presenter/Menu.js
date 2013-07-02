@@ -90,7 +90,8 @@
             });
             container = $("#menuContainer", _box);
             wrap = container.parent();
-            scroller = new IScroll(wrap.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(wrap.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(wrap.get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();

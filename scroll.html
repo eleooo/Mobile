@@ -17,7 +17,6 @@
     <script src="src/WebPusher.js" type="text/javascript"></script>
     <link href="css/mobiscroll.custom-2.5.4.min.css" rel="stylesheet" type="text/css" />
     <script src="js/lib/mobiscroll.custom-2.5.4.min.js" type="text/javascript"></script>
-
     <script type="text/javascript">
         var $D = { appName: '乐多分管理系统',
             IE: false,
@@ -42,7 +41,7 @@
             var index = 0;
             function loaded() {
                 container = $("#container");
-                myScroll = new IScroll(container.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false });
+                myScroll = new IScroll(container.parent().get(0), { scrollbars: true, interactiveScrollbars: true, useTransition: false, HWCompositing: false, useTransform: false });
                 myScroll.on('scrollEnd', function () {
                     if (Math.abs(myScroll.y) >= Math.abs(myScroll.maxScrollY)) {
                         pullData();
@@ -111,7 +110,7 @@
         };
         //var s = new Scroller();
         //s.init();
-</script>
+    </script>
     <!--    <style type="text/css">
         * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
         html { -ms-touch-action: none; }

@@ -118,7 +118,8 @@
         p.init = function () {
             container = $("#saleContainer");
             pBox = container.parent();
-            scroller = new IScroll(pBox.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(pBox.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(pBox.get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();
@@ -190,7 +191,8 @@
             itemLimits = $("input[name='ItemLimit']", _box);
             app.bindDateSelector("ItemDate", _box);
             app.bindDateSelector("ItemEndDate", _box);
-            scroller = new IScroll(_box.find('.wrap').get(0), { scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(_box.find('.wrap').get(0), { scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(_box.find('.wrap').get(0));
         }
         p.show = function (arg) {
             _itemInfo = arg;
@@ -296,7 +298,8 @@
             pBox = saleList.parent();
             app.bindDateSelector("txtSaleListBeginDate", _box);
             app.bindDateSelector("txtSaleListEndDate", _box);
-            scroller = new IScroll(saleList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(saleList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(saleList.parent().get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getSaleList();
@@ -399,7 +402,8 @@
             app.bindDateSelector("txtRushRecordEndDate", _box);
             ctAmount = $("#amountSum", _box);
             ctPoint = $("#pointSum", _box);
-            scroller = new IScroll(rushList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(rushList.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(rushList.parent().get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getRushList();

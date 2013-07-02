@@ -91,6 +91,11 @@
                 else ready();
             });
         }
+        p.iscroll = function (el, scrollbars) {
+            if (scrollbars === undefined)
+                scrollbars = true;
+            return new IScroll(el, { scrollbars: scrollbars, interactiveScrollbars: scrollbars, useTransition: false, HWCompositing: true, useTransform: true });
+        }
         function _initPS(orderPusher) {
             if (!app.ol()) {
                 app.logError("没有检测到网络连接.", true);
@@ -317,6 +322,9 @@
         },
         p.spinner = function (isShow) {
             isShow ? spinner.get(0).className = 'spinner top' : spinner.get(0).className = 'spinner hide';
+            //redraw current view;
+            if (currentView)
+                presenters[currentView].box().width();
         }
         p.hideTips = function () {
             prompter.addClass("hide").removeClass('top');

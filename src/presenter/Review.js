@@ -68,7 +68,7 @@
         }
         p.reset = function () {
             pageIndex = 0;
-            reviewList.html('').attr('empty',1);
+            reviewList.html('').attr('empty', 1);
         }
         p.show = function () {
             p.reset();
@@ -87,7 +87,8 @@
             //                deal_link.toggle();
             //                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
             //            });
-            scroller = new IScroll(pList.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            //scroller = new IScroll(pList.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
+            scroller = app.iscroll(pList.get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();

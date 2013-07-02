@@ -21,6 +21,10 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
 body {
     overflow: hidden;
 }
+/*body div, body UL {
+    -webkit-transform: translate3d(0,0,0);
+}
+*/
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
