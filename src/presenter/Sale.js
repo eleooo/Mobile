@@ -4,9 +4,9 @@
 
 (function () {
     var _Sale = function () {
-        var pageIndex = 0, pageCount = 1;
+        //var pageIndex = 0, pageCount = 1;
         var container, pBox, _box = false;
-        var curDir = false, itemInfo;
+        var curDir = false, itemInfo, dirInfos;
         var childView = 'Rush';
         var scroller, isLoading;
         var p = _Sale.prototype;
@@ -43,52 +43,76 @@
             return obj;
         }
         function getDirItem(ct, dirId, dirName) {
-            if (curDir && curDir.attr('data-id') == dirId)
+            if (curDir && curDir.id == dirId)
                 return curDir;
             else {
-                curDir = $("#__" + dirId, ct);
-                if (curDir.length == 0) {
-                    curDir = $("<li id='__" + dirId + "' data-id='" + dirId + "'><h2 style=\"color: #333; cursor: pointer;\" tap=\"toggleMenus\">" + dirName + "</h2></li>");
-                    ct.append(curDir);
+                var dc = ct.find("#__" + dirId);
+                if (dc.length == 0) {
+                    dc = $("<li><h2 style=\"color: #333; cursor: pointer;\" tap='toggleMenus' data-id='" + dirId + "'>" + dirName + "</h2><div id='__" + dirId + "' data-id='" + dirId + "' style='display:none'></div></li>");
+                    ct.append(dc);
+                    var di = { s: 1, i: 0, d: dc.find("#__" + dirId), v: false, id: dirId, c: 0 };
+                    dirInfos[dirId] = di;
+                } else {
+                    di = dirInfos[dirId];
+                    di.d = dc;
                 }
-                return curDir;
+                return di;
+            }
+        }
+        function renderDirs(ct, dirs) {
+            var i, dr, di;
+            for (i = 0; i < dirs.length; i++) {
+                dr = dirs[i];
+                di = getDirItem(ct, dr.id, dr.name);
+                if (i == 0) {
+                    di.d.show();
+                    di.v = true;
+                    curDir = di;
+                }
             }
         }
         function getMenuItem(menu) {
             return VT["SaleItem"](menu);
         }
-        function renderMenu(menus) {
-            var dir, menu, item, i;
-            curDir = false;
-            var isEmpty = container.attr('empty') === '1';
+        function renderMenu(data) {
+            var di, menu, item, i;
+            var isEmpty = container.attr('empty') == '1';
             var tempContainer = isEmpty ? container.clone() : container;
+            var menus = data.menus;
+            if (data.dirs && data.dirs.length > 0)
+                renderDirs(tempContainer, data.dirs);
             for (i = 0; i < menus.length; i++) {
                 menu = menus[i];
-                dir = getDirItem(tempContainer, menu.dirid, menu.dirname);
-                item = dir.find("#_" + menu.id);
+                di = getDirItem(tempContainer, menu.dirid);
+                item = di.d.find("#_" + menu.id);
                 var m = getMenuItem(menu);
-                if (item.length == 0)
-                    dir.append(m);
+                if (item.length == 0) {
+                    di.d.append(m);
+                    di.c = di.c + 1;
+                }
                 else
                     item.replaceWith(m);
             }
-            if (isEmpty)
+            if (isEmpty) {
                 container.html(tempContainer.html());
+                for (i in dirInfos)
+                    dirInfos[i].d = container.find("#__" + i);
+            }
             if (i > 0)
                 container.attr('empty', 0);
         }
         function getMenuList() {
-            if (pageIndex >= pageCount || isLoading)
+            if (isLoading || (curDir && curDir.s && curDir.i >= curDir.s))
                 return;
-            var args = { p: pageIndex + 1 };
+            var args = { p: curDir.i || 1,
+                d: curDir.id || 0
+            };
             isLoading = true;
             WS.GetMenus(args, function (result) {
-                if (pageIndex == 0)
-                    container.html('').attr('empty', 1);
                 if (result.code > -1) {
-                    renderMenu(result.data.menus);
-                    pageIndex++;
-                    pageCount = result.data.pageCount;
+                    renderMenu(result.data);
+                    curDir.i = curDir.i + 1;
+                    curDir.s = result.data.pageCount;
                 }
                 scroller.refresh();
                 isLoading = false;
@@ -101,8 +125,8 @@
         }
         p.reset = function (by) {
             if (by !== childView) {
-                pageIndex = 0;
-                pageCount = 1;
+                dirInfos = {};
+                curDir = false;
                 container.html('').attr('empty', 1);
                 isLoading = false;
             }
@@ -144,8 +168,30 @@
                 });
             }
         }
-        p.toggleMenu = function (el) {
-            el.siblings().toggle();
+        p.toggleMenus = function (el) {
+            if (isLoading) return;
+            var di = dirInfos[el.attr('data-id')];
+            //{ s: 1, i: 0, d: dr, v: false };
+            if (di.v) {
+                if (curDir && di.id == curDir.id) curDir = false;
+                el.siblings("#__" + di.id).hide();
+                scroller.refresh();
+                di.v = false;
+            } else {
+                if (curDir) {
+                    curDir.d.hide();
+                    //container.find("#__" + curDir.id).hide();
+                    curDir.v = false;
+                }
+                curDir = di;
+                //el.siblings("#__" + di.id).show();
+                di.v = true;
+                di.d.show();
+                if (di.c <= 0)
+                    getMenuList();
+                else
+                    scroller.refresh();
+            }
         }
     }
     var _Rush = function () {

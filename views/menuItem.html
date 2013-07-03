@@ -5,6 +5,6 @@
         <span>单价：{{=numeral(it.price).format("0.00")}}</span> 调价:<input name="" type="number" class="input zq" onchange="app.Menu.changePrice(this);"
             data-id="{{=it.id}}" data-price="{{=it.price}}" />
         <input name="input" type="button" value="{{=it.isoutofstock?'缺货':'有货'}}" class="{{=it.isoutofstock?'red':'green'}}" tap="outOfStockItem" data-id="{{=it.id}}" data-isout="{{=it.isoutofstock}}" />
-        <input name="" type="button" value="删除" class="red" tap="deleteItem" data-id="{{=it.id}}" />
+        <input name="" type="button" value="删除" class="red" tap="deleteItem" data-id="{{=it.id}}" data-dir="{{it.dirid}}" />
     </div>
 </div>

@@ -228,6 +228,7 @@
                 pageIndex = 0;
                 isLoading = false;
                 flag = 0;
+                txtUserPhone.val(txtUserPhone.attr("defVal"));
                 container.html("").attr('empty', 1);
             }
         }
@@ -241,7 +242,7 @@
             content = $(".content", _box);
             s1 = $("#s1");
             s2 = $("#s2");
-            //$("a", s1).tap(filterOrderList);
+            $("a", s1).tap(filterOrderList);
             $("span", s2).tap(function () {
                 s1.show();
                 s2.hide();
@@ -255,7 +256,7 @@
                 if (!val || val.length == 0)
                     txtUserPhone.val(txtUserPhone.attr("defVal"));
             });
-            txtUserPhone.val(txtUserPhone.attr("defVal"));
+            
             scroller = app.iscroll(_box.find(".content").get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
@@ -270,8 +271,9 @@
                 DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
                 processRender(result.data, true);
                 isLoading = false;
-                if (result.hasNew && !visible()) {
-                    app.notify("你有新的订单需要处理.", "乐多分");
+                if (result.hasNew) {
+                    //app.notify("你有新的订单需要处理.", "乐多分");
+                    navigator.notification.beep(2);
                 }
             }
         }
