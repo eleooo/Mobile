@@ -15,7 +15,7 @@
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.init = function () {
-            ctList = $("#fList", _box).hide();
+            ctList = $("#fList", _box);
             app.bindDateSelector("txtDetailBeginDate", _box);
             app.bindDateSelector("txtDetailEndDate", _box);
             //scroller = new IScroll(ctList.parent().get(0), { bounceTime: 50, useTransition: false });
@@ -30,10 +30,6 @@
             };
             WS.GetFinance(arg, function (result) {
                 ctList.html(result.data);
-                if (result.data)
-                    ctList.show();
-                else
-                    ctList.hide();
             });
         }
     }
@@ -51,7 +47,7 @@
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.init = function () {
-            ctList = $("#dList", _box).hide();
+            ctList = $("#dList", _box);
             app.bindDateSelector("txtBalanceBeginDate", _box);
             app.bindDateSelector("txtBalanceEndDate", _box);
             //scroller = new IScroll(ctList.parent().get(0), { bounceTime: 50 });
@@ -67,10 +63,6 @@
             };
             WS.GetFinance(arg, function (result) {
                 ctList.html(result.data);
-                if (result.data)
-                    ctList.show();
-                else
-                    ctList.hide();
                 scroller.refresh();
             });
         }

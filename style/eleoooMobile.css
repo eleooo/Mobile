@@ -27,11 +27,11 @@
 .scroller {
     position: absolute;
     width: 100%;
-    /*-webkit-transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
     -ms-transform: translateZ(0);
     -o-transform: translateZ(0);
-    transform: translateZ(0);*/
+    transform: translateZ(0);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -103,9 +103,12 @@ footer {
     position: absolute;
     bottom: 100px;
     background-color: Black;
-    filter: alpha(opacity=10);
-    opacity: 0.1;
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+    -webkit-opacity:0.5;
+    opacity:0.5;
     right: 20px;
+    border-radius:2px;
 }
 .prompter {
     left: 2px;
@@ -118,7 +121,6 @@ footer {
 }
 .hide {
     z-index: -1;
-    display: none;
     visibility:hidden;
 }
 .top {

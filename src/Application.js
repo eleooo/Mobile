@@ -113,7 +113,7 @@
         function initView(presenter, view, arg, isReturn) {
             if (presenter.box() !== false && presenter.box() !== undefined)
                 return false;
-            var box = $("<div class='left'></div>").hide().bind("tap", touchTap);
+            var box = $("<div class='left'></div>").addClass('hide').bind("tap", touchTap);
             spinner.before(box);
             presenter.box(box);
             if (!$.isFunction(VT[view])) {
@@ -141,7 +141,7 @@
             if (currentView) {
                 curPresenter = getPresenter(currentView);
                 $.isFunction(curPresenter.reset) ? curPresenter.reset(view) : void (0);
-                curPresenter.box().hide();
+                //curPresenter.box().add
                 if (!isReturn)
                     oldViewName.push(currentView);
                 if (voice) {
@@ -159,8 +159,8 @@
                 else
                     el.className = '';
             });
-            isFound ? footer.show() : footer.hide();
-            curPresenter ? (curPresenter.box().hide(), presenter.box().show()) : presenter.box().show();
+            isFound ? footer.get(0).className = '' : footer.get(0).className = 'hide';
+            curPresenter ? (curPresenter.box().addClass('hide'), presenter.box().removeClass('hide')) : presenter.box().removeClass('hide');
             if ($.isFunction(presenter.show))
                 presenter.show(arg, currentView);
             currentView = view;
@@ -323,8 +323,8 @@
         p.spinner = function (isShow) {
             isShow ? spinner.get(0).className = 'spinner top' : spinner.get(0).className = 'spinner hide';
             //redraw current view;
-            if (currentView)
-                presenters[currentView].box().width();
+            //            if (currentView)
+            //                presenters[currentView].box().width();
         }
         p.hideTips = function () {
             prompter.addClass("hide").removeClass('top');

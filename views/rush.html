@@ -6,9 +6,12 @@
     <ul class="scroller detail rush">
         <li><span>积分兑换：</span><input class="input" type="number" id="ItemPoint" t="dec" /></li>
         <li><span>现金支付：</span><input class="input" type="number" id="ItemNeedPay" t="dec" /></li>
-        <li><span>投放数量：</span><input type="number" class="input" value="" id="ItemAmount" t="int" /></li>
-        <li><span>消费频率：</span><input type="number" class="input" value="" id="OrderFreqLimit" t="int" /></li>
-        <li><span>单次金额：</span><input type="number" class="input" value="" id="OrderSumLimit" t="dec" /></li>
+        <li><span>投放数量：</span><input type="number" class="input" value="" id="ItemAmount"
+            t="int" /></li>
+        <li><span>消费频率：</span><input type="number" class="input" value="" id="OrderFreqLimit"
+            t="int" /></li>
+        <li><span>单次金额：</span><input type="number" class="input" value="" id="OrderSumLimit"
+            t="dec" /></li>
         <li><span>投放周期：</span><input type="text" class="input" value="" id="ItemDate" /></li>
         <li><span>至：</span><input type="text" class="input" value="" id="ItemEndDate" /></li>
         <li><span>促销时段：</span><input class="input" type="text"></li>
@@ -16,10 +19,10 @@
             name="ItemLimit" type="radio" value="2" />本期限一次</li>
         <li><span>上传图片：</span><a href="javascript:void(0)" tap="takeaPic"><img src="images/camera.png"
             alt="" /></a>
-            <img src="" alt="" id="ItemPic" />
+            <img src="" alt="" id="ItemPic" class='hide' style='width: 120px; height: 120px' />
         </li>
         <li>
             <input type="button" class="btn green" value="提交" tap="saveItem" /></li>
-        <li style="line-height:10px; border-bottom:0px;"></li>
+        <li style="line-height: 10px; border-bottom: 0px;"></li>
     </ul>
 </div>

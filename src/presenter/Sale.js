@@ -210,9 +210,9 @@
             imgData = false;
             if (v) {
                 imgItem.attr("src", v);
-                imgItem.show();
+                imgItem.removeClass('hide');
             } else
-                imgItem.hide();
+                imgItem.addClass('hide');
             setTimeout(function () {
                 scroller.refresh();
             }, 100);
