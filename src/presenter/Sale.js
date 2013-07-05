@@ -32,7 +32,7 @@
                 ItemLimit: 3, //抢购次数
                 ItemPic: null,
                 ItemSum: sumPrice.value(), //总额
-                CompanyID: null,
+                CompanyID: DS.CompanyID(),
                 ItemInfo: JSON.stringify(itemInfo),
                 ItemStatus: 1,
                 ItemID: 0
@@ -205,17 +205,17 @@
             imgItem.show();
         }
         function getInputdata() {
-            var v, att;
+            var v, t;
             inputs.each(function (i, el) {
                 v = el.value;
-                att = el.getAttribute('t');
+                t = el.getAttribute('t');
                 if (t == 'dec')
                     v = parseFloat(v) || 0;
                 else if (t == 'int')
                     v = parseInt(v) || 0;
                 _itemInfo[el.id] = v;
             });
-            _itemInfo["ItemLimit"] = parseInt(itemLimits.find(':checked').val());
+            _itemInfo["ItemLimit"] = parseInt(itemLimits.find('input:checked').val());
             if (_itemInfo.ItemSum < _itemInfo.ItemNeedPay) {
                 app.showtips("现金支付额不能大于促销总额.");
                 return false;
@@ -233,35 +233,33 @@
         }
         p.init = function () {
             imgItem = $("#ItemPic", _box);
-            inputs = $("input .input", _box);
-            itemLimits = $("input[name='ItemLimit']", _box);
+            inputs = $(".input", _box);
+            itemLimits = $(".link", _box);
             app.bindDateSelector("ItemDate", _box);
             app.bindDateSelector("ItemEndDate", _box);
             //scroller = new IScroll(_box.find('.wrap').get(0), { scrollbars: true, interactiveScrollbars: true });
-            scroller = app.iscroll(_box.find('.wrap').get(0));
+            scroller = app.iscroll(_box.find('.wrap').get(0), { scrollbars: false });
         }
         p.show = function (arg) {
             _itemInfo = arg;
-            var v, att;
+            //console.log(JSON.stringify(_itemInfo));
+            var v, t;
             inputs.each(function (i, el) {
                 v = _itemInfo[el.id];
-                att = el.getAttribute('t');
+                t = el.getAttribute('t');
                 if (v && t == 'dec')
                     v = numeral(v).format('0.00');
                 el.value = v || '';
             });
             v = _itemInfo["ItemLimit"];
-            itemLimits.find("[value='" + v + "']").attr('checked', true);
+            itemLimits.find("input[value='" + v + "']").attr('checked', true);
             v = _itemInfo["ItemPic"];
             imgData = false;
             if (v) {
                 imgItem.attr("src", v);
-                imgItem.removeClass('hide');
-            } else
-                imgItem.addClass('hide');
-            setTimeout(function () {
-                scroller.refresh();
-            }, 100);
+                imgItem.show();
+            } else imgItem.hide();
+            scroller.refresh();
         }
         p.takeaPic = function (el) {
             if (!app.isCordovaApp()) {
@@ -273,10 +271,14 @@
         p.saveItem = function (el) {
             if (getInputdata()) {
                 var arg = {
-                    item: JSON.stringifty(_itemInfo),
+                    item: JSON.stringify(_itemInfo),
                     img: imgData || ''
                 };
                 WS.SaveItem(arg, function (result) {
+                    if (result.code == 0) {
+                        _itemInfo = result.data;
+                        imgData = false;
+                    }
                     app.showtips(result.message);
                 });
             }

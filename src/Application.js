@@ -91,10 +91,19 @@
                 else ready();
             });
         }
-        p.iscroll = function (el, scrollbars) {
-            if (scrollbars === undefined)
-                scrollbars = true;
-            return new IScroll(el, { scrollbars: scrollbars, interactiveScrollbars: scrollbars, useTransition: false, HWCompositing: true, useTransform: true });
+        p.iscroll = function (el, opts) {
+            opts = opts || {};
+            if (!('scrollbars' in opts)) {
+                opts["scrollbars"] = true;
+                opts["interactiveScrollbars"] = true;
+            }
+            if (!("useTransition" in opts))
+                opts["useTransition"] = false;
+            if (!("HWCompositing" in opts))
+                opts["HWCompositing"] = true;
+            if (!("useTransform" in opts))
+                opts["useTransform"] = true;
+            return new IScroll(el, opts);
         }
         function _initPS(orderPusher) {
             if (!app.ol()) {

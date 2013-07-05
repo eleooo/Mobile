@@ -80,6 +80,7 @@
     <Content Include="src\lib\android\statusbarnotification.js" />
     <Content Include="src\lib\android\webSocket.js" />
     <Content Include="src\lib\dot-packer\compilejs.js" />
+    <Content Include="src\lib\iscroll-lite.js" />
     <Content Include="src\lib\iscroll.js" />
     <Content Include="src\lib\jquery\jquery-1.7.js" />
     <Content Include="src\lib\jquery\jquery-1.7.min.js" />

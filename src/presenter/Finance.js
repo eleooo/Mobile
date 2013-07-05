@@ -51,7 +51,7 @@
             app.bindDateSelector("txtBalanceBeginDate", _box);
             app.bindDateSelector("txtBalanceEndDate", _box);
             //scroller = new IScroll(ctList.parent().get(0), { bounceTime: 50 });
-            scroller = app.iscroll(ctList.parent().get(0), false);
+            scroller = app.iscroll(ctList.parent().get(0), { scrollbars: false });
         }
         p.reset = function () {
             ctList.html('');

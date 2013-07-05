@@ -591,7 +591,7 @@
             container = $("#tempContainer", _box);
             $("#recordVoice", _box).bind("touchstart", function () { recordVoice(true); })
                              .bind("touchend", function () { recordVoice(false); });
-            scroller = app.iscroll(container.parent().get(0), false);
+            scroller = app.iscroll(container.parent().get(0), { scrollbars: false });
         }
         p.playVoice = function (el) {
             app.play(el.attr('voice'));
