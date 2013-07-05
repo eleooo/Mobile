@@ -1,5 +1,4 @@
-﻿/// <reference path="../js/app.js" />
-/// <reference path="lib/jquery/jquery-1.7.js" />
+﻿/// <reference path="Application.js" />
 
 //API's execute success return format: {code:0,message:'',data{}},execute fail return format:{code:-1,message''}
 //Login success result:{code:0,message:'success',data{ UserID:0,UserPhone:'',WebAuthKey:'',CompanyID:0 }}
@@ -63,7 +62,16 @@
                 dataType: $D.dataType || "json",
                 type: $D.type || "POST",
                 cache:false,
-                success: function (result) {fnCallback(result); delete data; delete result; },
+                success: function (result) {
+                    if(result.code === -100 && api.isAuth){
+                        app.logout();
+                        app.showtips(result.message);
+                        return;
+                    }
+                    fnCallback(result); 
+                    delete data; 
+                    delete result; 
+                },
                 complete: function () {
                     delete xhrs[url];
                     app.spinner(false);
