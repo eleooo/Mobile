@@ -579,8 +579,7 @@ Math.min(distanceX, 1000)
         },
 
         resetPosition: function (time) {
-            var x = this.x,
-y = this.y;
+            var x = this.x,y = this.y;
 
             time = time || 0;
 

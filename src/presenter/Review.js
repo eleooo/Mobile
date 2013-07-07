@@ -13,7 +13,7 @@
             else
                 isLoading = true; ;
             var args = {
-                t: 4,
+                t: 3,
                 b: DS.CompanyID(),
                 i: pageIndex + 1,
                 d1: $("#txtBeginReviewDate", _box).val(),
@@ -91,7 +91,7 @@
             scroller = app.iscroll(pList.get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
-                    getMenuList();
+                    showReviewList();
                 }
             });
         }
@@ -101,6 +101,7 @@
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.showReview = function () {
+            p.reset();
             showReviewList();
         }
         p.filterReview = function (el) {
@@ -124,6 +125,7 @@
         }
         p.showReplyBox = function (el) {
             $("#box" + el.attr("data-id"), reviewList).toggle();
+            scroller.refresh();
         }
         p.replyFaceBook = function (el) {
             var val = $("#txtbox" + el.attr("data-id"), reviewList).val();
@@ -136,6 +138,7 @@
                 if (result.code >= 0) {
                     var html = result.data.replace('[0]', val);
                     $("#item" + args.fbID, reviewList).append(html).find(".rw4,.rw5").remove();
+                    scroller.refresh();
                     app.logInfo("回复成功.");
                 } else
                     app.logInfo(result.message);

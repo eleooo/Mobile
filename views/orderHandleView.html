@@ -16,7 +16,7 @@
     <li>总计：<span class="price">{{=numeral(it.OrderSumOk).format('0.00')}}</span> 其中送餐费 <span class="price">{{=numeral(it.ServiceSum).format('0.00')}}</span> </li>
     <li>备注：{{=it.OrderMemo}} </li>
     <li>地址：{{=it.Address}} </li>
-    <li class="em_review" tap="toggleReview">回复<em></em></li>
+    <li class="em_review"><span tap="toggleReview">回复<em></em></span></li>
 </ul>
 <ul class="review" id="reviewContainer">
     <li><a href="javascript:void(0)" tap="selectMsn">

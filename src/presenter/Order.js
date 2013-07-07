@@ -6,6 +6,7 @@
     var _OrderList = function () {
         var container, content, txtUserPhone, _box = false;
         var s1, s2;
+        var cFilter;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false, flag = 0;
         var scroller = false;
@@ -18,6 +19,7 @@
             completed: "订餐成功"
         };
         var childView = ['OrderHandle', 'Temp'];
+        var unHandle = ['canceled', 'completed'];
         var p = _OrderList.prototype;
         function getSumInfoObj() {
             var sumInfo = {
@@ -48,14 +50,17 @@
             var tempContainer = isEmpty ? container.clone() : container;
             if (isSyn)
                 firstChild = tempContainer.children().first();
+            var isFilter = cFilter !== 'all';
             for (var i = 0; i < orderData.length; i++) {
                 order = orderData[i];
-                order["status"] = getOrderStatus(order);
+                status = getOrderStatus(order);
+                order["status"] = status;
                 item = $(VT["OrderListItem"](order));
                 for (var o in order) {
                     if (o && o != "ID" && o != "status")
                         item.attr("data-" + o.toLowerCase(), order[o]);
                 }
+                isFilter && cFilter !== status.status ? item.hide() : item.show();
                 oldItem = tempContainer.find("#_" + order.ID);
                 if (oldItem.length == 0) {
                     if (isSyn && firstChild && firstChild.length > 0) {
@@ -120,6 +125,7 @@
             for (var s in data.summary) {
                 $("i[data-status='" + s + "']", s2).text(data.summary[s].format('0.00'));
             }
+            $("i[data-status='all']", s2).text(data.counter.all.format('0'));
         }
         function calcItemInfo(item, data) {
             var status = item.getAttribute("data-status");
@@ -157,6 +163,7 @@
             }
             setSummaryInfo(sumInfo);
             delete sumInfo;
+            cFilter = status;
         }
         function getOrders(isSyn, fn) {
             if (isLoading) {
@@ -230,6 +237,7 @@
                 flag = 0;
                 txtUserPhone.val(txtUserPhone.attr("defVal"));
                 container.html("").attr('empty', 1);
+                cFilter = 'notstarted';
             }
         }
         p.show = function (arg, by) {
@@ -256,7 +264,7 @@
                 if (!val || val.length == 0)
                     txtUserPhone.val(txtUserPhone.attr("defVal"));
             });
-            
+
             scroller = app.iscroll(_box.find(".content").get(0));
             scroller.on('scrollEnd', function () {
                 if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
@@ -285,7 +293,8 @@
             app.showTemp(el.attr("data-id"));
         }
         p.showHandleView = function (el) {
-            app.showOrderHandle(el.attr("data-id"));
+            if (unHandle.indexOf(el.attr('data-status')) === -1)
+                app.showOrderHandle(el.attr("data-id"));
         }
         p.showOrderList = function (el) {
             p.reset();
@@ -383,6 +392,7 @@
                 order["NewPrice"] = NewPrice;
                 __appendChgPriceLog(menuId, order);
                 $('input[value="1"]', reviewContainer).eq(1).attr("checked", true);
+                scroller.scrollTo(0, scroller.maxScrollY);
             }
         }
         p.outOfStock = function (el) {
@@ -400,6 +410,7 @@
                 }
                 __appendOutOfStockLog(menuId, order);
                 $('input[value="1"]', reviewContainer).eq(0).attr("checked", true);
+                scroller.scrollTo(0, scroller.maxScrollY);
             }
         }
         p.selectMsn = function (el) {
@@ -421,11 +432,12 @@
             WS.OrderDetail(arg, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
-                    cthnum.text(_order.MemberPhoneNumber);
+                    cthnum.text(_order.MemberPhoneNumber).attr('href', 'tel:' + _order.MemberPhoneNumber);
                     cthts.text(_order.Timespan);
                     cthandler.html(VT["OrderHandleView"](_order));
                     reviewContainer = $("#reviewContainer", _box);
                     scroller.refresh();
+                    scroller.scrollTo(0, scroller.maxScrollY);
                 }
                 else
                     app.logError(result.message);
@@ -569,7 +581,7 @@
             WS.callServices("GetOrderTemps", { id: orderid }, function (result) {
                 if (result.code == 0) {
                     renderTempList(result.data.temps);
-                    $("#phone", _box).text(result.data.MemberPhoneNumber);
+                    $("#phone", _box).text(result.data.MemberPhoneNumber).attr('href', 'tel:' + result.data.MemberPhoneNumber);
                     $("#timespan", _box).text(result.data.Timespan);
                     scroller.refresh();
                 }

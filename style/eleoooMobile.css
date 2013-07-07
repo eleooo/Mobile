@@ -324,7 +324,7 @@ footer a.nav_on .finance {
 }
 .saleList {
     bottom: 51px;
-    top: 51px;
+    top: 80px;
 }
 .orderHandle {
     top: 80px;
@@ -481,6 +481,7 @@ footer a.nav_on .finance {
     border-bottom: 1px solid #cbcbcb;
     color: #242424;
 }
+.m_order h2 label{ display:inline-block;}
 .m_order li h2 {
     color: #333;
 }
@@ -535,7 +536,6 @@ footer a.nav_on .finance {
     margin: 15px;
     border-radius: 5px;
     border: 1px solid #c5c5c5;
-    display: none;
 }
 .review li {
     vertical-align: middle;
@@ -597,7 +597,6 @@ span.time {
     background: -ms-linear-gradient(#fff, #f3f3f3);
     background: linear-gradient(#fff, #f3f3f3);
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#f3f3f3));
-    cursor: pointer;
     padding: 5px 15px;
     color: #948b7e;
     line-height: 20px;
@@ -834,7 +833,7 @@ span.time {
     border-radius: 5px;
     padding: 12px 10px;
     color: #fff;
-    margin-left: 20px;
+    
     position: relative;
     line-height: 20px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
@@ -990,7 +989,7 @@ span.time {
     background: #fff;
     bottom: 55px;
     width: 100%;
-    display: none;
+    display:none;
     z-index: 2;
 }
 .temp_review li {

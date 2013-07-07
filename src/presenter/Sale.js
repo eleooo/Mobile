@@ -48,7 +48,7 @@
             else {
                 var dc = ct.find("#__" + dirId);
                 if (dc.length == 0) {
-                    dc = $("<li><h2 style=\"color: #333; cursor: pointer;\" tap='toggleMenus' data-id='" + dirId + "'>" + dirName + "</h2><div id='__" + dirId + "' data-id='" + dirId + "' style='display:none'></div></li>");
+                    dc = $("<li><h2 style=\"color: #333;\"><label tap='toggleMenus' data-id='" + dirId + "'>" + dirName + "</label></h2><div id='__" + dirId + "' data-id='" + dirId + "' style='display:none'></div></li>");
                     ct.append(dc);
                     var di = { s: 1, i: 0, d: dc.find("#__" + dirId), v: false, id: dirId, c: 0 };
                     dirInfos[dirId] = di;
@@ -64,11 +64,11 @@
             for (i = 0; i < dirs.length; i++) {
                 dr = dirs[i];
                 di = getDirItem(ct, dr.id, dr.name);
-                if (i == 0) {
-                    di.d.show();
-                    di.v = true;
-                    curDir = di;
-                }
+                //if (i == 0) {
+                //    di.d.show();
+                //    di.v = true;
+                //    curDir = di;
+                //}
             }
         }
         function getMenuItem(menu) {
@@ -145,14 +145,14 @@
             //scroller = new IScroll(pBox.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
             scroller = app.iscroll(pBox.get(0));
             scroller.on('scrollEnd', function () {
-                if (Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
+                if (curDir && Math.abs(scroller.y) >= Math.abs(scroller.maxScrollY)) {
                     getMenuList();
                 }
             });
         }
         p.toggleSale = function (el) {
             if (el.hasClass('red')) {
-                app.confirm("还需要继续选择菜单吗?", "促销方案", "继续选择,下一步", function (ret) {
+                app.confirm("是否继续添加促销餐点?", "促销方案", "是，继续添加,不，下一步", function (ret) {
                     if (ret == '1') {
                         Array.remove(itemInfo, parseInt(el.attr('data-id')));
                         el.removeClass('red').addClass('green');
@@ -162,7 +162,7 @@
             } else {
                 itemInfo.push(parseInt(el.attr('data-id')));
                 el.removeClass('green').addClass('red');
-                app.confirm("还需要继续选择菜单吗?", "促销方案", "继续选择,下一步", function (ret) {
+                app.confirm("是否继续添加促销餐点?", "促销方案", "是，继续添加,不，下一步", function (ret) {
                     if (ret != '1')
                         app.showRush(getItemObj());
                 });
@@ -174,7 +174,7 @@
             //{ s: 1, i: 0, d: dr, v: false };
             if (di.v) {
                 if (curDir && di.id == curDir.id) curDir = false;
-                el.siblings("#__" + di.id).hide();
+                di.d.hide();
                 scroller.refresh();
                 di.v = false;
             } else {
@@ -203,6 +203,7 @@
             imgData = data;
             imgItem.attr("src", "data:image/jpeg;base64," + data);
             imgItem.show();
+            scroller.refresh();
         }
         function getInputdata() {
             var v, t;
@@ -266,7 +267,7 @@
                 app.showtips("暂不支持此功能.");
                 return;
             }
-            navigator.camera.getPicture(_takePicData, function (ex) { }, { quality: 30, destinationType: Camera.DestinationType.DATA_URL });
+            navigator.camera.getPicture(_takePicData, function (ex) { scroller.refresh(); }, { quality: 30, destinationType: Camera.DestinationType.DATA_URL });
         }
         p.saveItem = function (el) {
             if (getInputdata()) {
@@ -287,7 +288,7 @@
     var _SaleList = function () {
         var pageIndex = 0, pageCount = 1;
         var saleList, pBox, _box = false;
-        var childView = ['Rush', 'RushRecord'];
+        var childView = ['RushRecord'];
         var p = _SaleList.prototype;
         var scroller, isLoading;
         function renderSaleList(items) {
@@ -295,11 +296,11 @@
             var isEmpty = saleList.attr('empty') == '1';
             var tempContainer = isEmpty ? saleList.clone() : saleList;
             for (i = 0; i < items.length; i++) {
-                item = saleList.find("#_" + items[i].ItemID);
+                item = tempContainer.find("#_" + items[i].ItemID);
                 if (item.length == 0)
-                    saleList.append(VT['SaleListItem'](items[i]));
+                    tempContainer.append(VT['SaleListItem'](items[i]));
                 else
-                    saleList.replaceWith(VT['SaleListItem'](items[i]));
+                    tempContainer.replaceWith(VT['SaleListItem'](items[i]));
             }
             if (isEmpty)
                 saleList.html(tempContainer.html());
@@ -330,7 +331,7 @@
         p.reset = function (by) {
             if (childView.indexOf(by) === -1) {
                 pageIndex = 0;
-                pageCount = 0;
+                pageCount = 1;
                 isLoading = false;
                 saleList.html('').attr('empty', 1);
             }

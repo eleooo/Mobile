@@ -45,7 +45,7 @@
             scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true});
         }
         p.addWorkingtime = function (el) {
-            var val = prompt("请输入新营业时间,格式如:10:00-11:00");
+            var val = prompt("请输入新增的营业时段,如:10:00-11:00");
             if (val) {
                 var v = txtWorkingTime.val();
                 if (v)
