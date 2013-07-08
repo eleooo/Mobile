@@ -143,26 +143,26 @@
         }
         function filterOrderList() {
             var status = $(this).attr("data-status");
-            var sumInfo = getSumInfoObj();
+            //var sumInfo = getSumInfoObj();
             if (status == 'all') {
                 s1.hide();
                 s2.show();
-                //$("li", container).show();
-                $("li", container).show().each(function (i, el) {
-                    calcItemInfo(el, sumInfo);
-                });
+                $("li", container).show();
+                //$("li", container).show().each(function (i, el) {
+                //   calcItemInfo(el, sumInfo);
+                //});
             } else {
                 container.find("li").each(function (i, el) {
                     if (el.getAttribute("data-status") == status) {
                         el.style.display = "list-item";
-                        calcItemInfo(el, sumInfo);
+                        //calcItemInfo(el, sumInfo);
                     }
                     else
                         el.style.display = "none";
                 });
             }
-            setSummaryInfo(sumInfo);
-            delete sumInfo;
+            //setSummaryInfo(sumInfo);
+            //delete sumInfo;
             cFilter = status;
         }
         function getOrders(isSyn, fn) {

@@ -191,16 +191,18 @@
         }
         function touchTap(event) {
             //app.trace("tapping...");
-            var tar = $(event.target);
-            var fnName = tar.attr(event.type) || (tar = tar.parent("[tap]"), tar.attr(event.type));
+            var tar = event.target;
+            while (tar.nodeName !== 'BODY' && !tar.hasAttribute('tap')) tar = tar.parentNode;
+            var fnName = tar.getAttribute('tap');
             if (fnName) {
                 var fn = getObject(fnName);
                 if ($.isFunction(fn)) {
-                    fn.call(tar, tar, event);
+                    fn.call(tar, $(tar), event);
                     event.stopImmediatePropagation();
                     event.preventDefault();
                 }
             }
+            if ($.isFunction(event.cancelTouch)) event.cancelTouch();
             //event.preventDefault();
         }
         function _online() {

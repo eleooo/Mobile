@@ -48,7 +48,7 @@
             else {
                 var dc = ct.find("#__" + dirId);
                 if (dc.length == 0) {
-                    dc = $("<li><h2 style=\"color: #333;\"><label tap='toggleMenus' data-id='" + dirId + "'>" + dirName + "</label></h2><div id='__" + dirId + "' data-id='" + dirId + "' style='display:none'></div></li>");
+                    dc = $("<li><h2 style=\"color: #333;\" tap='toggleMenus' data-id='" + dirId + "'>" + dirName + "</h2><div id='__" + dirId + "' data-id='" + dirId + "' style='display:none'></div></li>");
                     ct.append(dc);
                     var di = { s: 1, i: 0, d: dc.find("#__" + dirId), v: false, id: dirId, c: 0 };
                     dirInfos[dirId] = di;
@@ -203,7 +203,9 @@
             imgData = data;
             imgItem.attr("src", "data:image/jpeg;base64," + data);
             imgItem.show();
-            scroller.refresh();
+            setTimeout(function () {
+                scroller.refresh();
+            }, 100);
         }
         function getInputdata() {
             var v, t;
