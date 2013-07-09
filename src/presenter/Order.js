@@ -164,6 +164,7 @@
             //setSummaryInfo(sumInfo);
             //delete sumInfo;
             cFilter = status;
+            scroller.refresh();
         }
         function getOrders(isSyn, fn) {
             if (isLoading) {
@@ -279,10 +280,10 @@
                 DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
                 processRender(result.data, true);
                 isLoading = false;
-                if (result.hasNew) {
-                    //app.notify("你有新的订单需要处理.", "乐多分");
-                    navigator.notification.beep(2);
-                }
+                //if (result.hasNew) {
+                //app.notify("你有新的订单需要处理.", "乐多分");
+                navigator.notification.beep(2);
+                //}
             }
         }
         p.renderView = function (fnCallback) {

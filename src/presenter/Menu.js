@@ -88,8 +88,9 @@
             });
         }
         function getInputQueryVal() {
-            var v = txtMenuName.val();
-            return (v == txtMenuName.attr('defVal')) ? "" : v;
+            return '';
+            //var v = txtMenuName.val();
+            //return (v == txtMenuName.attr('defVal')) ? "" : v;
         }
 
         p.box = function (el) {
@@ -104,17 +105,17 @@
             dirInfos = {};
             isLoading = false;
             curDir = false;
-            txtMenuName.val('');
+            //txtMenuName.val('');
             container.html('').attr('empty', 1);
         }
         p.init = function () {
-            txtMenuName = $("#txtMenuName", _box).focusin(function () {
-                if ($(this).val() == $(this).attr('defVal'))
-                    $(this).val('');
-            }).focusout(function () {
-                if ($(this).val() == '')
-                    $(this).val($(this).attr('defVal'));
-            });
+            //            txtMenuName = $("#txtMenuName", _box).focusin(function () {
+            //                if ($(this).val() == $(this).attr('defVal'))
+            //                    $(this).val('');
+            //            }).focusout(function () {
+            //                if ($(this).val() == '')
+            //                    $(this).val($(this).attr('defVal'));
+            //            });
             container = $("#menuContainer", _box);
             wrap = container.parent();
             scroller = app.iscroll(wrap.get(0));

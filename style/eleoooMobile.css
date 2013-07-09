@@ -319,7 +319,7 @@ footer a.nav_on .finance {
 }
 /* container content postion begin */
 .orderList {
-    bottom: 85px;
+    bottom: 90px;
     top: 85px;
 }
 .saleList {
@@ -400,7 +400,7 @@ footer a.nav_on .finance {
     background: #595a60;
     color: #fff;
     line-height: 16px;
-    padding: 5px;
+    padding: 6px 10px 10px;
     font-size: 12px;
     position: absolute;
     bottom: 50px;
@@ -411,7 +411,9 @@ footer a.nav_on .finance {
 .state a {
     color: #fff;
     text-decoration: none;
-    padding: 0 5px 0 0;
+    display: inline-block;
+    line-height: 22px;
+    padding: 0 5px;
 }
 .state, .state img {
     vertical-align: middle;
@@ -443,14 +445,16 @@ footer a.nav_on .finance {
     background: url(../images/u_sprite_0325.png) -40px top;
 }
 .return {
-    display: block;
-    position: absolute;
-    background: url(../images/u_sprite_0325.png) left -24px;
-    width: 19px;
-    height: 23px;
-    left: 15px;
-    top: 10px;
+	display: block;
+	position: absolute;
+	width: 100px;
+	height: 48px;
+	line-height:48px;
+	left:15px;
+	top:3px;
+	text-align:left;
 }
+
 .h_order li {
     background: #fff;
     border-bottom: 1px solid #DCDCDC;
@@ -653,7 +657,6 @@ span.time {
 .rush li span {
     text-align: right;
     display: inline-block;
-    width: 70px !important;
 }
 .rush li img {
     vertical-align: middle;
