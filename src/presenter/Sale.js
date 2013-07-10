@@ -374,6 +374,15 @@
                     app.showtips(result.message);
             });
         }
+        p.chgStatus = function (el) {
+            WS.delItem({ id: el.attr('data-id'), t: 'a' }, function (result) {
+                if (result.code > -1) {
+                    var status = el.attr('data-status') !== 'true';
+                    el.text(status ? '正常' : '停用');
+                    el.attr('data-status', status);
+                }
+            });
+        }
         p.delItem = function (el) {
             WS.delItem({ id: el.attr('data-id') }, function (result) {
                 if (result.code > -1) {

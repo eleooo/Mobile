@@ -51,6 +51,7 @@
     <Content Include="css\css.css" />
     <Content Include="default.htm" />
     <Content Include="images\camera.png" />
+    <Content Include="images\return.png" />
     <Content Include="images\spinner.gif" />
     <Content Include="images\key.png" />
     <Content Include="images\wp_icons.png" />
