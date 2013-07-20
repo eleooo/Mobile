@@ -1,10 +1,9 @@
 /**
- * @preserve WebSocket.js v0.3.0 (c) 2013 knowledgecode | MIT licensed
- */
+* @preserve WebSocket.js v0.3.0 (c) 2013 knowledgecode | MIT licensed
+*/
 /*jslint browser: true */
 (function () {
     'use strict';
-
     var identifier = 0,
         socks = [],
         WebSocket = function (uri, protocol, origin) {
@@ -17,7 +16,7 @@
                 return function () {
                     return id;
                 };
-            }(identifier));
+            } (identifier));
 
             this.onopen = function () {
             };
@@ -50,23 +49,23 @@
             /*jslint plusplus: true */
             window.cordova.exec(
                 function (data) {
-                    
+
                     setTimeout(function () {
-                     //   console.log(data); 
+                        //   console.log(data); 
                         switch (data.event) {
-                        
-                        case 'onopen':
-                            that.onopen(data);
-                            break;
-                        case 'onmessage':
-                            data.data = data.value;
-                            that.onmessage(data);
-                            break;
-                        case 'onclose':
-                            data.data = data.value;
-                            that.onclose(data);
-                            delete socks[that.getId()];
-                            break;
+
+                            case 'onopen':
+                                that.onopen(data);
+                                break;
+                            case 'onmessage':
+                                data.data = data.value;
+                                that.onmessage(data);
+                                break;
+                            case 'onclose':
+                                data.data = data.value;
+                                that.onclose(data);
+                                delete socks[that.getId()];
+                                break;
                         }
                     }, 0);
                 },
@@ -82,6 +81,6 @@
     if (!window.plugins) {
         window.plugins = {};
     }
-    window.WebSocket = window.WebSocket || WebSocket;
-
-}());
+    window.plugins["WebSocket"] = WebSocket;
+    //window.WebSocket = window.WebSocket || WebSocket;
+})(window);

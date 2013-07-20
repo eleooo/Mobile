@@ -1,4 +1,4 @@
-﻿<li id="_{{=it.ID}}" data-id="{{=it.ID}}" data-status="{{=it.status.status}}" >
-<span><img src="images/user.png" alt="" align="absmiddle" tap="showTempView" data-id="{{=it.ID}}" /></span> 
-<span tap="showTempView" data-id="{{=it.ID}}">{{=it.MemberPhoneNumber}}<u tap="showTempView" data-id="{{=it.ID}}">NO.{{=it.OrderNum}}</u></span>
-<span class="pRight"><input name="" type="button" class="dr_btn {{=it.status.cls}}" value="{{=it.status.text}}" tap="showHandleView" data-id="{{=it.ID}}" data-status="{{=it.status.status}}" /></span></li>
+﻿<li id="_{{=it.ID}}" data-id="{{=it.ID}}" data-status="{{=it.status.status}}" tap="showTempView">
+<span><img src="images/user.png" alt="" align="absmiddle" data-id="{{=it.ID}}" /></span> 
+<span>{{=it.MemberPhoneNumber}}<u>NO.{{=(it.OrderCode.match(/[1-9][0-9]{0,3}$/) || [it.OrderCode]).join('')}}</u></span>
+<span class="pRight" tap="showHandleView" data-id="{{=it.ID}}" data-status="{{=it.status.status}}"><input type="button" class="dr_btn {{=it.status.cls}}" value="{{=it.status.text}}" /></span></li>

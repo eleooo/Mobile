@@ -6,7 +6,7 @@
     var _OrderList = function () {
         var container, content, txtUserPhone, _box = false;
         var s1, s2;
-        var cFilter;
+        var cFilter, crtn;
         var pageIndex = 0, pageCount = 1;
         var isLoading = false, flag = 0;
         var scroller = false;
@@ -19,7 +19,6 @@
             completed: "订餐成功"
         };
         var childView = ['OrderHandle', 'Temp'];
-        var unHandle = ['canceled', 'completed'];
         var p = _OrderList.prototype;
         function getSumInfoObj() {
             var sumInfo = {
@@ -44,7 +43,8 @@
             //            };
             //            container.html(VT["OrderListContainer"](viewData));
             //            setSummaryInfo(viewData);
-
+            //SZ0101022012122500002
+            //'SZ0101022012122500002'.match(/[1-9][0-9]{0,3}$/) || []).join('')
             var item, oldItem, order, status, firstChild = false;
             var isEmpty = container.attr('empty') === '1';
             var tempContainer = isEmpty ? container.clone() : container;
@@ -60,7 +60,7 @@
                     if (o && o != "ID" && o != "status")
                         item.attr("data-" + o.toLowerCase(), order[o]);
                 }
-                isFilter && cFilter !== status.status ? item.hide() : item.show();
+                isFilter && ((cFilter !== false && cFilter !== status.status) || (cFilter === false && status.status === 'canceled')) ? item.hide() : item.show();
                 oldItem = tempContainer.find("#_" + order.ID);
                 if (oldItem.length == 0) {
                     if (isSyn && firstChild && firstChild.length > 0) {
@@ -94,7 +94,7 @@
                 status = "modified";
                 cls = 'yellow';
             } else if (item.OrderStatus == 4) {
-                if (item.OrderDateUpload > item.OrderDate) {
+                if (item.OrderDateUpload > item.OrderDate && item.MsnType != 5 && item.MsnType != 3) {
                     status = "urge";
                 } else {
                     status = "inprogress";
@@ -105,7 +105,7 @@
                 cls = 'dark';
             } else if (item.OrderStatus == 6) {
                 status = "completed";
-                cls = 'dark';
+                cls = item.OrderDateDeliver > item.OrderDate ? 'dark' : 'green';
             }
 
             return { status: status, text: statusText[status], cls: cls };
@@ -139,10 +139,12 @@
             data.summary.sumpoint.add(item.getAttribute("data-orderpoint"));
         }
         function visible() {
-            return _box.css('display') !== 'none';
+            return app.cview() === 'OrderList';
+            //return _box.css('display') !== 'none';
+            //return !_box.hasClass('hide');
         }
-        function filterOrderList() {
-            var status = $(this).attr("data-status");
+        function filterOrderList(status, isret) {
+            if (status == cFilter) return;
             //var sumInfo = getSumInfoObj();
             if (status == 'all') {
                 s1.hide();
@@ -178,7 +180,7 @@
                 d2: $("#txtOrderListEndDate", _box).val(),
                 c: DS.CompanyID(),
                 p: pageIndex + 1,
-                q: getInputPhone()
+                q: txtUserPhone.val()
             };
             if (isSyn) {
                 args["t"] = DS.LatestUpdateOn();
@@ -187,6 +189,7 @@
             WS.GetOrders(args, function (result) {
                 if (result.code > -1) {
                     if (pageIndex == 0 && !app.psInited()) {
+                        //app.showtips("connect ps 0");
                         DS.LatestUpdateOn(getMaxDate(result.data.orders, args.d1));
                         if (app.isSocket())
                             app.initPS();
@@ -218,14 +221,18 @@
                 }, 5000);
             }
         }
-        function getInputPhone() {
-            val = txtUserPhone.val();
-            if (val == txtUserPhone.attr('defVal'))
-                return "";
-            else
-                return val;
+        p.goback = function () {
+            crtn.hide();
+            container.find("li").each(function (i, el) {
+                el.getAttribute('data-status') === 'canceled' ? el.style.display = "none" : el.style.display = "list-item";
+            });
+            if (cFilter == 'all') {
+                s1.show();
+                s2.hide();
+            }
+            cFilter = false;
+            scroller.refresh();
         }
-
         p.box = function (el) {
             if (el) _box = el;
             return _box;
@@ -236,35 +243,41 @@
                 pageIndex = 0;
                 isLoading = false;
                 flag = 0;
-                txtUserPhone.val(txtUserPhone.attr("defVal"));
+                txtUserPhone.val('');
                 container.html("").attr('empty', 1);
-                cFilter = 'notstarted';
+                cFilter = false;
+                crtn.hide();
             }
         }
         p.show = function (arg, by) {
-            childView.indexOf(by) === -1 ? getOrders(false) : void (0);
+            childView.indexOf(by) === -1 ? (p.reset(by), getOrders(false)) : void (0);
         }
         p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
             app.bindDateSelector("txtOrderListEndDate", _box);
             container = $("#orderContainer", _box);
             content = $(".content", _box);
+            crtn = $(".return", _box);
             s1 = $("#s1");
             s2 = $("#s2");
-            $("a", s1).tap(filterOrderList);
+            $("a", s1).tap(function () {
+                filterOrderList($(this).attr("data-status"));
+                cFilter ? crtn.show() : void (0);
+            });
             $("span", s2).tap(function () {
                 s1.show();
                 s2.hide();
             });
-            txtUserPhone = $("#txtOrderListUserPhone", _box).focusin(function () {
-                val = txtUserPhone.val();
-                if (val == txtUserPhone.attr('defVal'))
-                    txtUserPhone.val("");
-            }).focusout(function () {
-                val = txtUserPhone.val();
-                if (!val || val.length == 0)
-                    txtUserPhone.val(txtUserPhone.attr("defVal"));
-            });
+            txtUserPhone = $("#txtOrderListUserPhone", _box);
+            //            txtUserPhone = $("#txtOrderListUserPhone", _box).focusin(function () {
+            //                val = txtUserPhone.val();
+            //                if (val == txtUserPhone.attr('defVal'))
+            //                    txtUserPhone.val("");
+            //            }).focusout(function () {
+            //                val = txtUserPhone.val();
+            //                if (!val || val.length == 0)
+            //                    txtUserPhone.val(txtUserPhone.attr("defVal"));
+            //            });
 
             scroller = app.iscroll(_box.find(".content").get(0));
             scroller.on('scrollEnd', function () {
@@ -280,10 +293,10 @@
                 DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
                 processRender(result.data, true);
                 isLoading = false;
-                //if (result.hasNew) {
-                //app.notify("你有新的订单需要处理.", "乐多分");
-                navigator.notification.beep(2);
-                //}
+                if (result.hasNew && !$D.WIN) {
+                    //app.notify("你有新的订单需要处理.", "乐多分");
+                    navigator.notification.beep(2);
+                }
             }
         }
         p.renderView = function (fnCallback) {
@@ -294,11 +307,18 @@
             app.showTemp(el.attr("data-id"));
         }
         p.showHandleView = function (el) {
-            if (unHandle.indexOf(el.attr('data-status')) === -1)
-                app.showOrderHandle(el.attr("data-id"));
+            //var status = el.attr('data-status');
+            //if (unHandle.indexOf(status) === -1)
+            app.showOrderHandle({ id: el.attr("data-id"), status: el.attr('data-status') });
         }
         p.showOrderList = function (el) {
-            p.reset();
+            pageCount = 1;
+            pageIndex = 0;
+            isLoading = false;
+            container.html("").attr('empty', 1);
+            cFilter = false;
+            crtn.hide();
+            scroller.refresh();
             getOrders(false);
         }
     };
@@ -309,6 +329,7 @@
         var p = _OrderHandle.prototype;
         var chgPriceLog = {}, outOfStockLog = {}, isProcess = false;
         var scroller, cthandler, cthnum, cthts;
+        var unHandle = ['canceled', 'completed', 'inprogress'];
         function __calcOrderSum() {
             var order;
             var sum = numeral(0);
@@ -430,15 +451,16 @@
         }
         p.show = function (arg) {
             p.reset();
-            WS.OrderDetail(arg, function (result) {
+            WS.OrderDetail(arg.id, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
                     cthnum.text(_order.MemberPhoneNumber).attr('href', 'tel:' + _order.MemberPhoneNumber);
                     cthts.text(_order.Timespan);
                     cthandler.html(VT["OrderHandleView"](_order));
                     reviewContainer = $("#reviewContainer", _box);
+                    if (unHandle.indexOf(arg.status) > -1)
+                        $("#btnReview", reviewContainer).hide();
                     scroller.refresh();
-                    scroller.scrollTo(0, scroller.maxScrollY);
                 }
                 else
                     app.logError(result.message);
@@ -482,6 +504,8 @@
         p.toggleReview = function () {
             reviewContainer.toggle();
             scroller.refresh();
+            if (reviewContainer.css('display') != 'none')
+                scroller.scrollTo(0, scroller.maxScrollY);
         }
     };
 
@@ -526,6 +550,7 @@
                         hasRf = false;
                         renderTempItem(container, result.data);
                         $("#txtMessage", _box).val("");
+                        $("#temp_review", _box).hide();
                         scroller.refresh();
                     }
                 });
@@ -599,6 +624,7 @@
         p.reset = function () {
             hasRf = false;
             container.html('').attr('empty', 1);
+            $("#temp_review", _box).hide();
         }
         p.init = function () {
             container = $("#tempContainer", _box);
@@ -609,15 +635,18 @@
         p.playVoice = function (el) {
             app.play(el.attr('voice'));
         }
-        p.sendMessage = function () {
+        p.send = function () {
             var val = $("#txtMessage", _box).val();
             if (val && val.length > 0)
                 sendMessageCore(val);
             else
-                $("#temp_review", _box).toggle();
+                app.showtips("请输入发送内容.");
+        }
+        p.showqs = function (el) {
+            $("#temp_review", _box).toggle();
         }
         p.quickSend = function (el) {
-            sendMessageCore(el.text());
+            $("#txtMessage", _box).val(el.text());
             $("#temp_review", _box).toggle();
         }
     }

@@ -27,8 +27,8 @@
         }
 
         p.init = function (isReturn) {
-            txtUserPhone = $("#txtLoginUserPhone", _box).val("13800100712");
-            txtUserPwd = $("#txtLoginUserPwd", _box).val("123456");
+            txtUserPhone = $("#txtLoginUserPhone", _box);//.val("13800100712");
+            txtUserPwd = $("#txtLoginUserPwd", _box);//.val("123456");
             cbAutoLogin = $("#cbAutoLogin", _box);
             cbSavePwd = $("#cbSavePwd");
             if (DS.IsSavePwd()) {

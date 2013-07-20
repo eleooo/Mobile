@@ -5,7 +5,7 @@
         {{=it.ItemTitle}}
     </p>
     <p class="ps3">
-        <span class="t_red" data-status="{{it.ItemStatus}}" data-id="{{=it.ItemID}}" tap="chgStatus">{{=it.ItemStatus?'正常':'停用'}}</span> <span class="ps_right">
+        <span class="{{=it.ItemStatus == 'True'?'t_green':'t_red'}}" data-status="{{=it.ItemStatus.toLowerCase()}}" data-id="{{=it.ItemID}}" tap="chgStatus">{{=it.ItemStatus == 'True'?'正常':'停止'}}</span> <span class="ps_right">
             <input type="button" value="修改" class="yellow" data-id="{{=it.ItemID}}" tap="showRush" />
             <input type="button" value="删除" class="red" data-id="{{=it.ItemID}}" tap="delItem" />
         </span>

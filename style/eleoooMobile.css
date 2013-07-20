@@ -25,23 +25,22 @@
 }
 
 .scroller {
-    /*position: absolute;
-    width: 100%;*/
+    /*position: absolute;     width: 100%;*/
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
     -ms-transform: translateZ(0);
     -o-transform: translateZ(0);
     transform: translateZ(0);
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	-webkit-text-size-adjust: none;
-	-moz-text-size-adjust: none;
-	-ms-text-size-adjust: none;
-	-o-text-size-adjust: none;
-	text-size-adjust: none;    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -98,12 +97,12 @@ footer {
     position: absolute;
     bottom: 100px;
     background-color: Black;
-    filter:alpha(opacity=50);
-    -moz-opacity:0.5;
-    -webkit-opacity:0.5;
-    opacity:0.5;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -webkit-opacity: 0.5;
+    opacity: 0.5;
     right: 20px;
-    border-radius:2px;
+    border-radius: 2px;
 }
 .prompter {
     left: 2px;
@@ -116,7 +115,7 @@ footer {
 }
 .hide {
     z-index: -1;
-    visibility:hidden;
+    visibility: hidden;
 }
 .top {
     z-index: 100;
@@ -173,11 +172,12 @@ footer {
     border-radius: 18px;
     border: none;
     padding: 8px 10px;
-    width: 160px;
+    width: 95px;
     font-size: 12px;
 }
+
 .search {
-    right: 45px;
+    right: 5px;
     display: inline-block;
     position: absolute;
 }
@@ -379,6 +379,9 @@ footer a.nav_on .finance {
 }
 .orderList li span.pRight {
     float: right;
+    height: 35px;
+    width: 110px;
+    text-align: right;
 }
 .orderList li span.t_yellow, span.t_yellow {
     color: #fe7801;
@@ -441,14 +444,14 @@ footer a.nav_on .finance {
     background: url(../images/u_sprite_0325.png) -40px top;
 }
 .return {
-	display: block;
-	position: absolute;
-	width: 100px;
-	height: 48px;
-	line-height:48px;
-	left:15px;
-	top:3px;
-	text-align:left;
+    display: block;
+    position: absolute;
+    height: 48px;
+    width: 100px;
+    line-height: 48px;
+    left: 15px;
+    top: 3px;
+    text-align: left;
 }
 
 .h_order li {
@@ -481,7 +484,9 @@ footer a.nav_on .finance {
     border-bottom: 1px solid #cbcbcb;
     color: #242424;
 }
-.m_order h2 label{ display:inline-block;}
+.m_order h2 label {
+    display: inline-block;
+}
 .m_order li h2 {
     color: #333;
 }
@@ -510,6 +515,10 @@ footer a.nav_on .finance {
 .menu_down {
     color: #948B7E;
 }
+.menu_down span {
+    display: inline-block;
+    width: 80px;
+}
 .menu_down a {
     color: #E8270C;
     text-decoration: none;
@@ -536,6 +545,7 @@ footer a.nav_on .finance {
     margin: 15px;
     border-radius: 5px;
     border: 1px solid #c5c5c5;
+    display: none;
 }
 .review li {
     vertical-align: middle;
@@ -652,6 +662,12 @@ span.time {
 }
 .rush li span {
     text-align: right;
+    width: 20px;
+    display: inline-block;
+}
+.rush li label {
+    text-align: right;
+    width: 70px;
     display: inline-block;
 }
 .rush li img {
@@ -673,13 +689,14 @@ span.time {
 }
 .mall_cate {
     width: 25%;
-    float: right;
+    right: 0;
+    top: 85px;
     text-align: center;
-    margin-right: 15px;
+    margin-right: 14px;
     cursor: pointer;
     line-height: 38px;
-    display: block;
-    position: relative;
+    position: absolute;
+    z-index: 2;
 }
 .em_review {
     position: relative;
@@ -709,12 +726,15 @@ span.time {
     border-color: rgb(255, 255, 255) transparent transparent;
 }
 .deal_link {
-    top: 80px;
-    position: fixed;
+    position: absolute;
+    top: 123px;
     width: 25%;
     background: #323232;
-    right: 15px;
+    right: 0;
     line-height: 35px;
+    display: none;
+    margin-right: 14px;
+    z-index: 3;
     display: none;
 }
 .deal_link a {
@@ -815,8 +835,7 @@ span.time {
     padding: 0 15px 10px 15px;
 }
 .temp li {
-    padding: 10px 0;
-    /*width:98%;*/
+    padding: 10px 0; /*width:98%;*/
 }
 .temp li time {
     display: block;
@@ -832,9 +851,10 @@ span.time {
     border-radius: 5px;
     padding: 12px 10px;
     color: #fff;
-    
+    display: inline-block;
     position: relative;
     line-height: 20px;
+    text-align: left;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
 }
 .temp li span i {
@@ -853,8 +873,7 @@ span.time {
     position: absolute;
 }
 .temp li.shop {
-    text-align: right;
-    /*padding-right: 16px;*/
+    text-align: right; /*padding-right: 16px;*/
     padding-left: 0px;
 }
 .temp li.shop span {
@@ -863,10 +882,11 @@ span.time {
 .temp li.guest span em {
     left: -16px;
 }
-.temp li.shop span em {
+.temp li.shop em {
     border-color: transparent transparent transparent rgb(253, 131, 61);
     right: -16px;
 }
+
 .temp li.shop span i {
     left: -16px;
 }
@@ -979,16 +999,28 @@ span.time {
     width: 168px;
 }
 .rw_footer .btn {
-    padding: 2px 15px;
     font-size: 16px;
     width: 190px;
+}
+.rw_footer .add {
+    border: 0 none;
+    height: 30px;
+    padding: 2px;
+    width: 30px;
+}
+.rw_footer .send {
+    width: 50px;
+    height:40px;
+    font-size: 16px;
+    margin-left: 5px;
+    text-align: center;
 }
 .temp_review {
     position: absolute;
     background: #fff;
     bottom: 55px;
     width: 100%;
-    display:none;
+    display: none;
     z-index: 2;
 }
 .temp_review li {

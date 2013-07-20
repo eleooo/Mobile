@@ -4,20 +4,17 @@
     </header>
 <div class="wrap rushwrap">
     <ul class="scroller detail rush">
-        <li><span>积分兑换：</span><input class="input" type="number" id="ItemPoint" t="dec" /></li>
-        <li><span>现金支付：</span><input class="input" type="number" id="ItemNeedPay" t="dec" /></li>
-        <li><span>投放数量：</span><input type="number" class="input" value="" id="ItemAmount"
-            t="int" /></li>
-        <li><span>消费频率：</span><input type="number" class="input" value="" id="OrderFreqLimit"
-            t="int" /></li>
-        <li><span>单次金额：</span><input type="number" class="input" value="" id="OrderSumLimit"
-            t="dec" /></li>
-        <li><span>投放周期：</span><input type="text" class="input" value="" id="ItemDate" /></li>
-        <li><span>至：</span><input type="text" class="input" value="" id="ItemEndDate" /></li>
-        <li><span>促销时段：</span><input class="input" type="text" id="WorkingHours" /></li>
-        <li class="link"><span>抢购次数：</span><input name="ItemLimit" type="radio" value="3" />每天限一次<input
+        <li><label>积分支付：</label><input class="input" type="number" id="ItemPoint" t="dec" /></li>
+        <li><label>现金支付：</label><input class="input" type="number" id="ItemNeedPay" t="dec" /></li>
+        <li><label>投放数量：</label><input type="number" class="input" id="ItemAmount" t="int" placeholder="/天" /></li>
+        <li><label>消费频率：</label><input type="number" class="input" id="OrderFreqLimit" t="int" placeholder="上两周订餐次数"/></li>
+        <li><label>消费层次：</label><input type="number" class="input" id="OrderSumLimit" t="dec" placeholder="过往平均订餐金额" /></li>
+        <li><label>投放周期：</label><input type="text" class="input" value="" id="ItemDate" /></li>
+        <li><label>至：</label><input type="text" class="input" value="" id="ItemEndDate" /></li>
+        <li><label>促销时段：</label><input class="input" type="text" id="WorkingHours" /></li>
+        <li class="link"><label>抢购次数：</label><input name="ItemLimit" type="radio" value="3" />每天限一次<input
             name="ItemLimit" type="radio" value="2" />本期限一次</li>
-        <li><span>上传图片：</span><a href="javascript:void(0)" tap="takeaPic"><img src="images/camera.png"
+        <li><label>上传图片：</label><a href="javascript:void(0)" tap="takeaPic"><img src="images/camera.png"
             alt="" /></a>
             <img src="" alt="" id="ItemPic" style='width: 120px; height: 120px' />
         </li>

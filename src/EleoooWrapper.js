@@ -95,6 +95,7 @@
                         DS.UserID(result.data.id);
                         DS.UserPhone(result.data.p);
                         DS.WebAuthKey(result.data.t);
+                        DS.RegDate(result.data.r);
                     }
                     fnCallback(result);
                 });

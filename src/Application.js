@@ -33,7 +33,7 @@
                 document.addEventListener("resume", function () { isbackground = false; _online(); }, false);
                 document.addEventListener("pause", function () { isbackground = true; }, false);
                 document.addEventListener("backbutton", function () {
-                    if (oldViewName.length > 0) {
+                    if (oldViewName.length > 0 && currentView != 'Login') {
                         app.goback();
                     } else {
                         app.confirm('你确定要退出程序吗?',
@@ -54,6 +54,9 @@
                 });
                 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
             }
+            //            window.onerror = function (sMsg, sUrl, sLine) {
+            //                p.showtips("line:" + sLine + " <br /> message: " + sMsg + "<br/>url:" + sUrl);
+            //            }
             _body = $("body");
             footernav = (footer = $("#footer", _body)).find("a").bind("tap", function (evt) {
                 var v = evt.currentTarget.getAttribute('t');
@@ -77,7 +80,7 @@
             }).bind("updateready", function () {
                 this.swapCache();
                 app.alert("请重启应用程序.", "更新完成", "退出程序", function () {
-                    !$D.WIN ? navigator.app.exitApp() : document.location.reload();
+                    !$D.WIN ? (_ps.close(), navigator.app.exitApp()) : (_ps.close(), document.location.reload());
                 });
             }).bind("cached", function () {
                 app.showtips("更新完成.");
@@ -103,6 +106,7 @@
                 opts["HWCompositing"] = true;
             if (!("useTransform" in opts))
                 opts["useTransform"] = true;
+            opts["bindToWrapper"] = true;
             return new IScroll(el, opts);
         }
         function _initPS(orderPusher) {
@@ -122,7 +126,7 @@
         function initView(presenter, view, arg, isReturn) {
             if (presenter.box() !== false && presenter.box() !== undefined)
                 return false;
-            var box = $("<div class='left'></div>").addClass('hide').bind("tap", touchTap);
+            var box = $("<div></div>").addClass('hide').bind("tap", touchTap);
             spinner.before(box);
             presenter.box(box);
             if (!$.isFunction(VT[view])) {
@@ -274,12 +278,8 @@
             p.showLogin();
         }
         p.notify = function (message, title) {
-            if ($D.WIN || !isbackground) {
-                p.showtips((title ? title + ':' : '') + message);
-            } else {
-                window.plugins.statusBarNotification.notify(title, message);
-                navigator.notification.beep(2);
-            }
+            p.showtips((title ? title + ':' : '') + message);
+            if (!$D.WIN) navigator.notification.beep(2);
         }
         p.logInfo = function (message, tops) {
             p.showtips(message);
@@ -377,6 +377,9 @@
                 fn(ret);
             }
         },
+        p.cview = function () {
+            return currentView;
+        }
         p.isSocket = function () {
             return _ps.support();
         },

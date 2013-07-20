@@ -12,25 +12,23 @@
         };
         var ps = false, connecting = false;
         var commands = {};
-        var type = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+        var type = getWs();
+        function getWs() {
+            return !$D.WIN ? window.plugins["WebSocket"] : ("MozWebSocket" in window ? window['MozWebSocket'] : ("WebSocket" in window ? window['WebSocket'] : null));
+        }
         function _connect() {
-            //app.logInfo("Socket type:" + type);
             if (type && !connecting) {
                 ps ? ps.close() : ps = false;
                 connecting = true;
-                var _ps = new window[type](_location);
-                if ('addEventListener' in _ps) {
-                    _ps.addEventListener('open', function (evt) { onopen(_ps, evt); });
-                    _ps.addEventListener('message', onmessage);
-                    _ps.addEventListener('close', onclose);
-                    _ps.addEventListener('error', onerror);
-                } else {
-                    _ps.onopen = function (evt) { onopen(_ps, evt); }
-                    _ps.onmessage = onmessage;
-                    _ps.onclose = onclose;
-                    _ps.onerror = onerror;
-                }
-                commands["Login"] = app.logError;
+                var _ps = new type(_location);
+                //app.showtips('begin connect to ws.');
+                _ps.onopen = function (evt) { onopen(_ps, evt); }
+                _ps.onmessage = onmessage;
+                _ps.onclose = onclose;
+                _ps.onerror = onerror;
+                commands["Login"] = function (data) {
+                    app.showtips(data.message);
+                };
             }
         }
         function loginPS() {
@@ -42,7 +40,7 @@
                 Platform: app.platform(),
                 Version: app.appVer()
             };
-            sendMessage("Login-" + DS.WebAuthKey(), data);
+            sendMessage("Login", data);
         }
         function onopen(_ps, event) {
             connecting = false;
@@ -50,7 +48,9 @@
             loginPS();
         }
         function onerror(event) {
-            console.log(event);
+            connecting = false;
+            //console.log(event);
+            app.showtips(event.data);
         }
         function onmessage(event) {
             var data = event.data;
@@ -77,7 +77,7 @@
                 ps = false;
         }
         function isConnected() {
-            return ps && ps.readyState == state.OPEN;
+            return ps && (ps.readyState == undefined || ps.readyState == state.OPEN);
         }
         return {
             Inited: function () {

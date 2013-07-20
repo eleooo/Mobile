@@ -11,7 +11,17 @@
     </div>
 </div>
 <div class="rw_number" id="rw_number">
-    好评：<i>0</i>中评：<i>0</i>差评：<i>0</i></div>
+    <span tap="filter" data-type="good"> 好评：<i>0</i></span><span data-type="normal" tap="filter">中评：<i>0</i></span><span data-type="bad" tap="filter">差评：<i>0</i></span>   
+</div>
+<div class="mall_cate" tap="filterR" data-type="all">
+    <label id="rmall_cate" >
+        默认</label>
+    <em></em>
+</div>
+<!--
+<div class="deal_link">
+    <a href="javascript:void(0)" tap="filterR" data-type="true">已回复</a> <a href="javascript:void(0)" tap="filterR" data-type="false">未回复</a>
+</div>-->
 <div class="content reviewContent">
     <!--已回复-->
     <ul class="scroller reviewList" id="reviewList">

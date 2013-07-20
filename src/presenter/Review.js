@@ -5,6 +5,7 @@
         var reviewList = false, pList, mall_cate = false, rw_num = false, deal_link = false, _box;
         var pageIndex = 0;
         var scroller, isLoading;
+        var fType = { t: 'data-reply', v: 'all' };
         var p = _Review.prototype;
 
         function showReviewList() {
@@ -38,14 +39,14 @@
                         for (var i = 0; i < len; i++) {
                             id = result.data.html[index];
                             html = result.data.html[index + 1];
-                            item = tempContainer.find("#item" + id);
+                            item = tempContainer.find("#r" + id);
                             if (item.length > 0)
                                 item.replaceWith(html);
                             else {
                                 item = $(html);
-                                //                                if (filter != 'All' && filter != item.attr("data-reply")) {
-                                //                                    item.hide();
-                                //                                }
+                                if (fType.v != 'all') {
+                                    item.attr(fType.t) == fType.v ? item.show() : item.hide();
+                                }
                                 tempContainer.append(item);
                             }
                             index = index + 2;
@@ -67,7 +68,7 @@
             return _box;
         }
         p.reset = function () {
-            pageIndex = 0;
+            pageIndex = 0
             reviewList.html('').attr('empty', 1);
         }
         p.show = function () {
@@ -77,16 +78,23 @@
         p.init = function (isReturn) {
             reviewList = $("#reviewList", _box);
             pList = reviewList.parent();
-            //mall_cate = $("#mall_cate", _box);
-            //deal_link = $(".deal_link", _box);
-            rw_num = $("#rw_number > i", _box);
+//            mall_cate = $("#rmall_cate", _box).bind('mouseout', function () {
+//                mall_cate.removeClass('mall_on');
+//                deal_link.hide();
+//            });
+//            deal_link = $(".deal_link", _box).bind('mouseout', function () {
+//                console.log("mouseout");
+//                mall_cate.removeClass('mall_on');
+//                deal_link.hide();
+//            });
+            rw_num = $("#rw_number", _box).find('i');
             app.bindDateSelector("txtBeginReviewDate", _box);
             app.bindDateSelector("txtEndReviewDate", _box);
-            //            mall_cate.parent().tap(function () {
-            //                var el = $(this).toggleClass("mall_on");
-            //                deal_link.toggle();
-            //                el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
-            //            });
+//            mall_cate.parent().tap(function () {
+//                var el = $(this).toggleClass("mall_on");
+//                deal_link.toggle();
+//                //el.hasClass('mall_on') ? deal_link.css('z-index', '10000') : deal_link.css('z-index', '0');
+//            });
             //scroller = new IScroll(pList.get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
             scroller = app.iscroll(pList.get(0));
             scroller.on('scrollEnd', function () {
@@ -104,24 +112,36 @@
             p.reset();
             showReviewList();
         }
-        p.filterReview = function (el) {
+        p.filter = function (el) {
+            var dtype = el.attr("data-type");
+            reviewList.find("li").each(function (i, item) {
+                if (item.getAttribute('data-rate') === dtype)
+                    item.style.display = 'list-item';
+                else
+                    item.style.display = 'none';
+            });
+            fType.t = 'data-rate';
+            fType.v = dtype;
+            scroller.refresh();
+        }
+        p.filterR = function (el) {
             var dtype = el.attr("data-type");
             var desc = el.text();
-            if (dtype == "All")
+            if (dtype == "all")
                 reviewList.find("li").show();
             else {
-                var result = reviewList.find("li");
-                var item;
-                for (var i = 0; i < result.length; i++) {
-                    var item = result.eq(i);
-                    if (item.attr("data-reply") == dtype)
-                        item.show();
+                reviewList.find("li").each(function (i, item) {
+                    if (item.getAttribute('data-reply') === dtype)
+                        item.style.display = 'list-item';
                     else
-                        item.hide();
-                }
+                        item.style.display = 'none';
+                });
             }
-            el.attr("data-type", mall_cate.attr("data-type")).text(mall_cate.text());
-            mall_cate.attr("data-type", dtype).text(desc).trigger("tap");
+            //el.attr("data-type", mall_cate.attr("data-type")).text(mall_cate.text());
+            //mall_cate.attr("data-type", dtype).text(desc).trigger("mouseout");
+            fType.t = 'data-reply';
+            fType.v = dtype;
+            scroller.refresh();
         }
         p.showReplyBox = function (el) {
             $("#box" + el.attr("data-id"), reviewList).toggle();

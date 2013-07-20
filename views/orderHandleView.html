@@ -5,9 +5,9 @@
             <h2>
                 {{=item.DirName}}</h2>
             <div class="menu_show">
-                <span>{{=item.MenuName}}</span><span>{{=item.OrderQty}}份</span><span>{{=numeral(item.OrderSum).format('0.00')}}</span></div>
+                <span>{{=item.MenuName}}</span><span>{{=item.OrderQty}}份</span><span>{{=numeral(item.OrderSum).format('0.00')}}</span>{{=item.IsCompanyItem?'<span class="cu">促</span>':''}}</div>
             <div class="menu_down">
-                <span>单价：{{= numeral(item.OrderPrice).format('0.00')}}</span><span>调价：<input type="number" class="input zq" onchange="app.OrderHandle.changePrice(this);" data-id="{{=item.MenuId}}" data-price="{{=item.OrderPrice}}" /></span><span>
+                <span>单价：{{= numeral(item.OrderPrice).format('0.00')}}</span><label>调价：<input type="number" class="input zq" onchange="app.OrderHandle.changePrice(this);" data-id="{{=item.MenuId}}" data-price="{{=item.OrderPrice}}" /></label><span>
                 <input type="button" value="暂缺" class="green" tap="outOfStock" data-id="{{=item.MenuId}}" /></span></div>
         </li>
 {{}}}
@@ -27,8 +27,6 @@
         <input name="msnType" type="radio" value="1" data-message="" /><span>经餐厅确认：XXX价格调整为XX元。</span></a></li>
     <li><a href="javascript:void(0)" tap="selectMsn">
         <input name="msnType" type="radio" value="2" data-message="抱歉，当前暂不外送，请选择其他餐厅。" /><span>抱歉，当前暂不外送，请选择其他餐厅。</span></a></li>
-    <li><a href="javascript:void(0)" tap="selectMsn">
-        <input name="msnType" type="radio" value="4" data-message="订单已取消。" /><span>订单已取消。</span></a></li>
     <li>
         <input type="button" class="btn green" value="回复" id="btnReview" tap="confirmOrder" /></li>
 </ul>

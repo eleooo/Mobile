@@ -23,7 +23,7 @@
                 ItemTitle: names.join('+'),
                 ItemPoint: null, //积分兑换
                 ItemNeedPay: null, //现金支付
-                ItemAmount: 1, //投放数量
+                ItemAmount: 0, //投放数量
                 OrderFreqLimit: null, //消费频率
                 OrderSumLimit: null, //平均金额
                 ItemDate: d, //投放周期
@@ -229,6 +229,13 @@
             }
             return true;
         }
+        function focusin() {
+            if (this.value == this.getAttribute('defVal')) this.value = '';
+        }
+        function focusout() {
+            if (parseFloat(this.value) == NaN)
+                this.value = this.getAttribute('defVal');
+        }
         var p = _Rush.prototype;
         p.box = function (el) {
             if (el) _box = el;
@@ -237,6 +244,14 @@
         p.init = function () {
             imgItem = $("#ItemPic", _box);
             inputs = $(".input", _box);
+
+            //            var temp = $("#ItemAmount", _box);
+            //            temp.attr('defVal', temp.val()).bind("focusin", focusin).bind('focusout', focusout);
+            //            temp = $("#OrderFreqLimit", _box);
+            //            temp.attr('defVal', temp.val()).bind("focusin", focusin).bind('focusout', focusout);
+            //            temp = $("#OrderSumLimit", _box);
+            //            temp.attr('defVal', temp.val()).bind("focusin", focusin).bind('focusout', focusout);
+
             itemLimits = $(".link", _box);
             app.bindDateSelector("ItemDate", _box);
             app.bindDateSelector("ItemEndDate", _box);
@@ -340,7 +355,7 @@
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
-            var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
+            var d1 = new Date((DS.RegDate()) || d).format("yyyy-MM-dd");
             var d2 = d.DateAdd('m', 1).format("yyyy-MM-dd");
             fnCallback({ beginDate: d1, endDate: d2 });
         }
@@ -378,7 +393,8 @@
             WS.delItem({ id: el.attr('data-id'), t: 'a' }, function (result) {
                 if (result.code > -1) {
                     var status = el.attr('data-status') !== 'true';
-                    el.text(status ? '正常' : '停用');
+                    el.text(status ? '正常' : '停止');
+                    el.get(0).className = status ? 't_green' : 't_red';
                     el.attr('data-status', status);
                 }
             });
@@ -452,7 +468,7 @@
         }
         p.renderView = function (fnCallback) {
             var d = new Date();
-            var d1 = d.DateAdd('d', 1 - d.getDate()).format("yyyy-MM-dd");
+            var d1 = new Date((DS.RegDate()) || d).format("yyyy-MM-dd");
             fnCallback({ beginDate: d1, endDate: d.format("yyyy-MM-dd") });
         }
         p.init = function () {

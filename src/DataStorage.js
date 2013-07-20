@@ -38,6 +38,9 @@
             },
             IsAutoLogin: function (state) {
                 return getData("IsAutoLogin", state);
+            },
+            RegDate: function (date) {
+                return getData("RegDate", date);
             }
         };
     };

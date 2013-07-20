@@ -68,8 +68,10 @@
             (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
 
               swipeTimeout = setTimeout(function () {
-                  touch.el.trigger('swipe')
-                  touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
+              if(touch.el && $.isFunction(touch.el.trigger)){
+                      touch.el.trigger('swipe');
+                      touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)));
+                  }
                   touch = {}
               }, 0)
 
@@ -82,23 +84,24 @@
 
                   // trigger universal 'tap' with the option to cancelTouch()
                   // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
-                  if(touch.el && touch.x1 && Math.abs(touch.x1 - (touch.x2 || touch.x1)) < 3){
+                  if(touch.el && $.isFunction(touch.el.trigger)){
                       var event = $.Event('tap')
                       event.cancelTouch = cancelAll
                     touch.el.trigger(event);
                   }
                   // trigger double tap immediately
                   if (touch.isDoubleTap) {
-                      touch.el.trigger('doubleTap')
+                      //touch.el.trigger('doubleTap')
+                      touch.el && touch.el.trigger?touch.el.trigger('doubleTap'):void(0);
                       touch = {}
                   }
 
                   // trigger single tap after 250ms of inactivity
                   else {
                       touchTimeout = setTimeout(function () {
-                          touchTimeout = null
-                          touch.el.trigger('singleTap')
-                          touch = {}
+                          touchTimeout = null;
+                          touch.el && touch.el.trigger?touch.el.trigger('singleTap'):void(0);
+                          touch = {};
                       }, 250)
                   }
 

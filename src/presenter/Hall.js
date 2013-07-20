@@ -6,12 +6,16 @@
     var _Hall = function () {
         var myInfo = {};
         var txtphone, txtWorkingTime, txtOnSetSum, p1, p2, _box = false;
+        var txtServiceSum, txtCompanyProvince, txtOrderMaxAmount;
         var scroller, ctHall;
         var p = _Hall.prototype;
         function getInputData() {
             myInfo["p"] = txtphone.val();
             myInfo["CompanyWorkTime"] = txtWorkingTime.val();
             myInfo["OnSetSum"] = txtOnSetSum.val();
+            myInfo["ServiceSum"] = txtServiceSum.val();
+            myInfo["CompanyProvince"] = txtCompanyProvince.val();
+            myInfo["OrderMaxAmount"] = txtOrderMaxAmount.val();
             if (p1.val())
                 myInfo["p1"] = p1.val();
             if (p2.val())
@@ -35,6 +39,9 @@
                 txtphone = $("#txtPhone", _box);
                 txtWorkingTime = $("#txtWorkingTime", _box);
                 txtOnSetSum = $("#txtOnSetSum", _box);
+                txtServiceSum = $("#txtServiceSum", _box);
+                txtCompanyProvince = $("#txtCompanyProvince", _box);
+                txtOrderMaxAmount = $("#txtOrderMaxAmount", _box);
                 p1 = $("#p1", _box);
                 p2 = $("#p2", _box);
                 scroller.refresh();
@@ -42,7 +49,7 @@
         }
         p.init = function () {
             ctHall = $("#ctHall", _box);
-            scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true});
+            scroller = new IScroll(ctHall.parent().get(0), { bounceTime: 50, scrollbars: true, interactiveScrollbars: true });
         }
         p.addWorkingtime = function (el) {
             var val = prompt("请输入新增的营业时段,如:10:00-11:00");
