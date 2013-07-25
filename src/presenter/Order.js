@@ -325,9 +325,9 @@
 
     var _OrderHandle = function () {
         var reviewContainer = false, _box = false;
-        var orders = {}, _order = {};
+        var orders, _order;
         var p = _OrderHandle.prototype;
-        var chgPriceLog = {}, outOfStockLog = {}, isProcess = false;
+        var chgPriceLog, outOfStockLog, isProcess = false;
         var scroller, cthandler, cthnum, cthts;
         var unHandle = ['canceled', 'completed', 'inprogress'];
         function __calcOrderSum() {
@@ -445,6 +445,10 @@
             scroller = app.iscroll(cthandler.parent().get(0));
         }
         p.reset = function () {
+            orders = {};
+            _order = null;
+            chgPriceLog = {};
+            outOfStockLog = {};
             cthandler.html('');
             cthnum.text('');
             cthts.text('');
