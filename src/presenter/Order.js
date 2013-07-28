@@ -10,6 +10,7 @@
         var pageIndex = 0, pageCount = 1;
         var isLoading = false, flag = 0;
         var scroller = false;
+        var hasUgre;
         var statusText = {
             notstarted: "待处理",
             inprogress: "处理中",
@@ -96,6 +97,7 @@
             } else if (item.OrderStatus == 4) {
                 if (item.OrderDateUpload > item.OrderDate && item.MsnType != 5 && item.MsnType != 3) {
                     status = "urge";
+                    hasUgre = true;
                 } else {
                     status = "inprogress";
                     cls = 'green';
@@ -129,14 +131,17 @@
         }
         function calcItemInfo(item, data) {
             var status = item.getAttribute("data-status");
+            console.log(status);
             if (data.counter[status] != undefined) {
                 data.counter[status].add(1);
+            } 
+            if (status !== 'canceled') {
+                data.counter.all.add(1);
+                data.summary.sum.add(item.getAttribute("data-ordersum"));
+                data.summary.sumok.add(item.getAttribute("data-ordersumok"));
+                data.summary.sumcash.add(item.getAttribute("data-orderpaycash"));
+                data.summary.sumpoint.add(item.getAttribute("data-orderpoint"));
             }
-            data.counter.all.add(1);
-            data.summary.sum.add(item.getAttribute("data-ordersum"));
-            data.summary.sumok.add(item.getAttribute("data-ordersumok"));
-            data.summary.sumcash.add(item.getAttribute("data-orderpaycash"));
-            data.summary.sumpoint.add(item.getAttribute("data-orderpoint"));
         }
         function visible() {
             return app.cview() === 'OrderList';
@@ -250,7 +255,7 @@
             }
         }
         p.show = function (arg, by) {
-            childView.indexOf(by) === -1 ? (p.reset(by), getOrders(false)) : void (0);
+            childView.indexOf(by) === -1 ? (p.reset(by), getOrders(false)) : scroller.refresh();
         }
         p.init = function () {
             app.bindDateSelector("txtOrderListBeginDate", _box);
@@ -291,9 +296,10 @@
             if (result.data.length > 0) {
                 isLoading = true;
                 DS.LatestUpdateOn(result.data, DS.LatestUpdateOn());
+                hasUgre = false;
                 processRender(result.data, true);
                 isLoading = false;
-                if (result.hasNew && !$D.WIN) {
+                if ((result.hasNew || hasUgre) && !$D.WIN) {
                     //app.notify("你有新的订单需要处理.", "乐多分");
                     navigator.notification.beep(2);
                 }
@@ -329,7 +335,8 @@
         var p = _OrderHandle.prototype;
         var chgPriceLog, outOfStockLog, isProcess = false;
         var scroller, cthandler, cthnum, cthts;
-        var unHandle = ['canceled', 'completed', 'inprogress'];
+        var unHandle = ['canceled', 'completed', 'inprogress', 'urge'];
+        var _status;
         function __calcOrderSum() {
             var order;
             var sum = numeral(0);
@@ -447,6 +454,7 @@
         p.reset = function () {
             orders = {};
             _order = null;
+            _status = false;
             chgPriceLog = {};
             outOfStockLog = {};
             cthandler.html('');
@@ -455,6 +463,7 @@
         }
         p.show = function (arg) {
             p.reset();
+            _status = arg.status;
             WS.OrderDetail(arg.id, function (result) {
                 if (result.code == 0) {
                     _order = result.data;
@@ -462,8 +471,6 @@
                     cthts.text(_order.Timespan);
                     cthandler.html(VT["OrderHandleView"](_order));
                     reviewContainer = $("#reviewContainer", _box);
-                    if (unHandle.indexOf(arg.status) > -1)
-                        $("#btnReview", reviewContainer).hide();
                     scroller.refresh();
                 }
                 else
@@ -506,6 +513,7 @@
             });
         }
         p.toggleReview = function () {
+            if (unHandle.indexOf(_status) > -1) return;
             reviewContainer.toggle();
             scroller.refresh();
             if (reviewContainer.css('display') != 'none')
@@ -537,6 +545,7 @@
                         renderTempItem(container, result.data);
                         $("#txtMessage", _box).val("");
                         scroller.refresh();
+                        scroller.scrollTo(0, scroller.maxScrollY);
                     }
                 }, function (error) {
                     app.logError(error.source);
@@ -556,6 +565,7 @@
                         $("#txtMessage", _box).val("");
                         $("#temp_review", _box).hide();
                         scroller.refresh();
+                        scroller.scrollTo(0, scroller.maxScrollY);
                     }
                 });
         }
@@ -628,6 +638,7 @@
         p.reset = function () {
             hasRf = false;
             container.html('').attr('empty', 1);
+            $("#txtMessage", _box).val("");
             $("#temp_review", _box).hide();
         }
         p.init = function () {

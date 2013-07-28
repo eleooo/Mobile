@@ -157,7 +157,7 @@
             WS.ReplyFacebook(args, function (result) {
                 if (result.code >= 0) {
                     var html = result.data.replace('[0]', val);
-                    $("#item" + args.fbID, reviewList).append(html).find(".rw4,.rw5").remove();
+                    $("#r" + args.fbID, reviewList).append(html).find(".rw4,.rw5").remove();
                     scroller.refresh();
                     app.logInfo("回复成功.");
                 } else
